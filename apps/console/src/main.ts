@@ -50,6 +50,8 @@ async function boot(): Promise<void> {
     await runOnboardingAndBoot(vault, tempConfig, async () => {
       const rt = await createRuntime({ vault, vaultRoot: tempConfig.get().vaultPath });
       await rt.load();
+      const { loadBuiltInPlugins } = await import("./boot/built-in-plugins.js");
+      await loadBuiltInPlugins(rt);
       await initShell(rt);
       try { localStorage.setItem("atlas1c-vault", tempConfig.get().vaultPath); } catch { /* ignore */ }
       showScreen("home");
@@ -63,6 +65,8 @@ async function boot(): Promise<void> {
   // Normal boot - vault root exists.
   const runtime = await createRuntime({ vault, vaultRoot });
   await runtime.load();
+  const { loadBuiltInPlugins } = await import("./boot/built-in-plugins.js");
+  await loadBuiltInPlugins(runtime);
   await initShell(runtime);
   try { localStorage.setItem("atlas1c-vault", vaultRoot); } catch { /* ignore */ }
 
