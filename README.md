@@ -49,6 +49,8 @@ Atlas 1 is built to be forked. Your fork is your instance — change the plugin 
 
 Start here: [`CONTRIBUTING.md`](./CONTRIBUTING.md) — dev setup, repo layout, how to write a plugin.
 
+For the architecture overview see [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md). For the full plugin API reference see [`docs/PLUGIN_API.md`](./docs/PLUGIN_API.md).
+
 ## Repo layout
 
 - `apps/console/` — webview UI (TypeScript).
