@@ -1906,50 +1906,6 @@ document.querySelectorAll('#scr-settings .pt-btn').forEach(btn => {
   });
 });
 
-// --- Theme ---
-const themeBtn = document.getElementById('themeBtn');
-function applyTheme(t) {
-  document.documentElement.setAttribute('data-theme', t);
-  themeBtn.textContent = 'theme: ' + (t === 'dark' ? 'phosphor' : 'light');
-  document.querySelectorAll('#tweaksPanel [data-theme]').forEach(b => b.classList.toggle('on', b.dataset.theme === t));
-}
-themeBtn.addEventListener('click', () => {
-  const cur = document.documentElement.getAttribute('data-theme') || 'light';
-  const next = cur === 'dark' ? 'light' : 'dark';
-  applyTheme(next);
-  setTweak({theme: next});
-});
-
-// --- CRT ---
-const crtBtn = document.getElementById('crtBtn');
-function applyCrt(v) {
-  if (v === 'on') {
-    document.body.classList.add('crt-force');
-    // force scanlines even in light
-    document.body.style.setProperty('--_crt', '1');
-    document.body.classList.add('crt');
-    // re-use overlay by toggling a class that always shows it
-    let style = document.getElementById('crtForce');
-    if (!style) {
-      style = document.createElement('style');
-      style.id = 'crtForce';
-      style.textContent = '.crt-force::after { opacity: 0.4 !important; }';
-      document.head.appendChild(style);
-    }
-    crtBtn.classList.add('on');
-  } else {
-    document.body.classList.remove('crt-force');
-    crtBtn.classList.remove('on');
-  }
-  document.querySelectorAll('#tweaksPanel [data-crt]').forEach(b => b.classList.toggle('on', b.dataset.crt === v));
-}
-crtBtn.addEventListener('click', () => {
-  const cur = document.body.classList.contains('crt-force') ? 'on' : 'off';
-  const next = cur === 'on' ? 'off' : 'on';
-  applyCrt(next);
-  setTweak({crt: next});
-});
-
 // --- Tweaks ---
 const panel = document.getElementById('tweaksPanel');
 const tweakBtn = document.getElementById('tweakBtn');
