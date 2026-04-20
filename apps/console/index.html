@@ -2017,16 +2017,6 @@ document.getElementById('pluginToggle')?.addEventListener('click', () => {
     el.appendChild(c);
   });
 })();
-
-
-// Command bar focus on /
-document.addEventListener('keydown', (e) => {
-  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
-    e.preventDefault();
-    document.getElementById('cmdIn').focus();
-  }
-  if (e.key === 'Escape') document.getElementById('cmdIn').blur();
-});
 </script>
 
 <script type="module" src="/src/main.ts"></script>
