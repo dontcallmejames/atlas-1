@@ -168,6 +168,11 @@ body {
 .screen { display: none; flex: 1; min-height: 0; overflow: hidden; }
 .screen.on { display: flex; flex-direction: column; }
 
+/* Plugin screens are appended into this wrapper dynamically. Use display:contents
+   so those <section.screen> elements become direct flex children of <body> and
+   participate in the same layout as the static screens above. */
+#plugin-screens { display: contents; }
+
 /* status line under chrome */
 .statusline {
   display: flex;
