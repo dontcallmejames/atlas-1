@@ -21,5 +21,9 @@ export default defineConfig({
     target: ["es2022", "chrome110", "safari16"],
     minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
     sourcemap: !!process.env.TAURI_DEBUG,
+    rollupOptions: {
+      // Externalize Node.js built-in modules used in @atlas/core
+      external: ["node:path", "node:fs/promises", "node:url"],
+    },
   },
 });
