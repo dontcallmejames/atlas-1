@@ -27,3 +27,6 @@ Thumbs.db
 # playwright
 playwright-report/
 test-results/
+
+# local test vault (dev-time scratch, not a fixture)
+/test vault/
