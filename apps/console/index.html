@@ -1827,14 +1827,6 @@ branch: main  ·  last push: 14m ago  ·  12 commits ahead</div>
 
 <!-- ================ SCRIPTS ================ -->
 <script>
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "name": "Atlas 1",
-  "theme": "dark",
-  "accent": "#c88520",
-  "crt": "off",
-  "game": "on"
-}/*EDITMODE-END*/;
-
 // --- Screen nav (runtime-wired; TS module handles clicks) ---
 // Kept so lingering onboarding inline script can still call showScreen().
 function showScreen(id) {
@@ -1896,53 +1888,6 @@ document.querySelectorAll('#scr-settings .pt-btn').forEach(btn => {
   });
 });
 
-// --- Tweaks ---
-const panel = document.getElementById('tweaksPanel');
-const tweakBtn = document.getElementById('tweakBtn');
-tweakBtn.addEventListener('click', () => panel.classList.toggle('on'));
-
-function applyAccent(c) {
-  document.documentElement.style.setProperty('--accent', c);
-  document.querySelectorAll('#tweaksPanel [data-accent]').forEach(b => b.classList.toggle('on', b.dataset.accent === c));
-}
-function applyName(n) {
-  document.getElementById('brandMark').textContent = (n || 'ATLAS·1').toUpperCase().replace(/ /g, '·');
-}
-function applyGame(v) {
-  document.body.classList.toggle('nogame', v === 'off');
-  if (v === 'off') {
-    document.querySelectorAll('.xp, .quests, .badges, .now-box .title .hand, .stat-cell .v .unit').forEach(el => {
-      // don't actually hide - just a visual hint
-    });
-  }
-  document.querySelectorAll('#tweaksPanel [data-game]').forEach(b => b.classList.toggle('on', b.dataset.game === v));
-}
-
-panel.querySelectorAll('[data-theme]').forEach(b => b.addEventListener('click', () => { applyTheme(b.dataset.theme); setTweak({theme: b.dataset.theme}); }));
-panel.querySelectorAll('[data-accent]').forEach(b => b.addEventListener('click', () => { applyAccent(b.dataset.accent); setTweak({accent: b.dataset.accent}); }));
-panel.querySelectorAll('[data-crt]').forEach(b => b.addEventListener('click', () => { applyCrt(b.dataset.crt); setTweak({crt: b.dataset.crt}); }));
-panel.querySelectorAll('[data-game]').forEach(b => b.addEventListener('click', () => { applyGame(b.dataset.game); setTweak({game: b.dataset.game}); }));
-document.getElementById('tw-name').addEventListener('input', (e) => { applyName(e.target.value); setTweak({name: e.target.value}); });
-
-function setTweak(partial) {
-  window.parent && window.parent.postMessage({type: '__edit_mode_set_keys', edits: partial}, '*');
-}
-
-// Apply defaults
-applyTheme(TWEAK_DEFAULTS.theme);
-applyAccent(TWEAK_DEFAULTS.accent);
-applyCrt(TWEAK_DEFAULTS.crt);
-applyGame(TWEAK_DEFAULTS.game);
-applyName(TWEAK_DEFAULTS.name);
-document.getElementById('tw-name').value = TWEAK_DEFAULTS.name;
-
-window.addEventListener('message', (e) => {
-  if (!e.data) return;
-  if (e.data.type === '__activate_edit_mode') panel.classList.add('on');
-  if (e.data.type === '__deactivate_edit_mode') panel.classList.remove('on');
-});
-window.parent && window.parent.postMessage({type: '__edit_mode_available'}, '*');
-
 // Boot onboarding interactions
 document.querySelectorAll('.class-card').forEach(c => {
   c.addEventListener('click', () => {
@@ -1955,9 +1900,7 @@ document.querySelectorAll('.mod-chip').forEach(c => {
   c.addEventListener('click', () => c.classList.toggle('on'));
 });
 document.getElementById('bootName')?.addEventListener('input', (e) => {
-  applyName(e.target.value);
   document.getElementById('tw-name').value = e.target.value;
-  setTweak({name: e.target.value});
 });
 
 document.getElementById('pluginToggle')?.addEventListener('click', () => {

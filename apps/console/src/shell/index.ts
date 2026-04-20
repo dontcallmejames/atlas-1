@@ -4,6 +4,7 @@ import { initClock } from "./clock.js";
 import { initNav } from "./nav.js";
 import { initCmdbar } from "./cmdbar.js";
 import { initStatusline } from "./statusline.js";
+import { initTweaks } from "./tweaks.js";
 import { registerCoreCommands } from "./core-commands.js";
 
 export async function initShell(runtime: Runtime): Promise<void> {
@@ -13,4 +14,5 @@ export async function initShell(runtime: Runtime): Promise<void> {
   initNav(runtime);
   initCmdbar(runtime);
   initStatusline(runtime);
+  initTweaks(runtime);
 }
