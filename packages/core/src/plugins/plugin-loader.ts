@@ -22,6 +22,8 @@ export interface AddStaticPluginOptions {
   manifest?: unknown;
 }
 
+const PLUGIN_ID_RE = /^[a-z][a-z0-9_-]{0,31}$/;
+
 export class PluginLoader {
   private readonly loaded = new Map<string, LoadedPlugin>();
 
@@ -48,6 +50,11 @@ export class PluginLoader {
    */
   async addStaticPlugin(opts: AddStaticPluginOptions): Promise<() => Promise<void>> {
     const { id, pluginClass } = opts;
+    if (!PLUGIN_ID_RE.test(id)) {
+      throw new Error(
+        `[atlas] invalid plugin id "${id}"; must match /^[a-z][a-z0-9_-]{0,31}$/`,
+      );
+    }
     const state = await loadPluginState(this.options.core.vault);
     const entry = state.plugins.find((p) => p.id === id);
     if (entry && entry.enabled === false) {
@@ -95,6 +102,13 @@ export class PluginLoader {
   }
 
   private async loadOne(entry: PluginStateEntry): Promise<LoadedPlugin | null> {
+    if (!PLUGIN_ID_RE.test(entry.id)) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `[atlas] invalid plugin id "${entry.id}"; must match /^[a-z][a-z0-9_-]{0,31}$/`,
+      );
+      return null;
+    }
     // Lazy-import Node built-ins so the webview bundle (browser/Tauri) does
     // not pull them in at module-evaluation time. Plugin loading itself is
     // only meaningful in a Node/Tauri runtime, not in the browser preview.

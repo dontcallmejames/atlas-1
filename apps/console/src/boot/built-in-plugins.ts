@@ -43,8 +43,19 @@ export async function loadBuiltInPlugins(runtime: Runtime): Promise<() => Promis
   };
 }
 
+const PLUGIN_ID_RE = /^[a-z][a-z0-9_-]{0,31}$/;
+
 function extractPluginId(path: string): string | null {
   // Expected path ends with "/plugins/<id>/main.js"
   const m = path.match(/\/plugins\/([^/]+)\/main\.js$/);
-  return m ? m[1]! : null;
+  if (!m) return null;
+  const id = m[1]!;
+  if (!PLUGIN_ID_RE.test(id)) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[atlas] built-in plugin id "${id}" does not match /^[a-z][a-z0-9_-]{0,31}$/; skipping`,
+    );
+    return null;
+  }
+  return id;
 }
