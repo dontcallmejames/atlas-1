@@ -1,4 +1,4 @@
-// Atlas 1 — console bootstrap.
+// Atlas 1 - console bootstrap.
 
 const VERSION = "0.1.0";
 
@@ -11,49 +11,78 @@ function isTauri(): boolean {
 
 async function boot(): Promise<void> {
   // eslint-disable-next-line no-console
-  console.log(`Atlas 1 · v${VERSION} · booting`);
+  console.log(`Atlas 1 \u00b7 v${VERSION} \u00b7 booting`);
 
   if (!isTauri()) {
-    // Browser-only preview mode (e.g. Playwright, `pnpm dev`). No runtime; the
-    // prototype's inline scripts still drive the visuals.
+    // Browser-only preview (Playwright, pnpm dev). No runtime.
     // eslint-disable-next-line no-console
-    console.log(`Atlas 1 · v${VERSION} · booted`);
+    console.log(`Atlas 1 \u00b7 v${VERSION} \u00b7 booted`);
     return;
   }
 
-  // Imports for Tauri-only mode
   const { createRuntime, ConfigStore } = await import("@atlas/core");
   const { TauriVaultFs } = await import("./core/tauri-vault-fs.js");
   const { initShell } = await import("./shell/index.js");
+  const { showScreen } = await import("./shell/core-commands.js");
 
   const vault = new TauriVaultFs();
   let vaultRoot = await vault.getVaultRoot();
 
+  // Fast path: Rust may not have the root set this session, but we saved it
+  // in localStorage after onboarding. Restore if available.
   if (!vaultRoot) {
-    // First-run or not-yet-set. Task 12 wires this into a proper onboarding
-    // flow; for now, just open the dialog directly.
-    const { pickVaultFolder } = await import("./core/pick-vault-folder.js");
-    const picked = await pickVaultFolder();
-    if (!picked) {
-      // eslint-disable-next-line no-console
-      console.warn("no vault selected — boot aborted");
-      return;
+    const cached = (() => {
+      try { return localStorage.getItem("atlas1c-vault") ?? ""; } catch { return ""; }
+    })();
+    if (cached) {
+      await vault.setVaultRoot(cached);
+      vaultRoot = cached;
     }
-    await vault.setVaultRoot(picked);
-    vaultRoot = picked;
   }
 
-  // Now that the vault root is set we can load config.
-  const config = new ConfigStore(vault);
-  await config.load();
+  if (!vaultRoot) {
+    // First run: no Rust root, no cached path. Run the onboarding wizard.
+    const { runOnboardingAndBoot } = await import("./onboarding/boot.js");
+    const tempConfig = new ConfigStore(vault);
+    // Don't await tempConfig.load() - no vault root yet, would throw. Store
+    // starts with DEFAULT_CONFIG and is populated by the wizard.
 
+    await runOnboardingAndBoot(vault, tempConfig, async () => {
+      const rt = await createRuntime({ vault, vaultRoot: tempConfig.get().vaultPath });
+      await rt.load();
+      await initShell(rt);
+      try { localStorage.setItem("atlas1c-vault", tempConfig.get().vaultPath); } catch { /* ignore */ }
+      showScreen("home");
+      // eslint-disable-next-line no-console
+      console.log(`Atlas 1 \u00b7 v${VERSION} \u00b7 booted`);
+      return rt;
+    });
+    return;
+  }
+
+  // Normal boot - vault root exists.
   const runtime = await createRuntime({ vault, vaultRoot });
   await runtime.load();
-
   await initShell(runtime);
+  try { localStorage.setItem("atlas1c-vault", vaultRoot); } catch { /* ignore */ }
+
+  if (!runtime.config.get().onboarded) {
+    // Edge: vault set but config says not-onboarded. Run wizard.
+    const { initOnboarding } = await import("./onboarding/boot.js");
+    initOnboarding({
+      config: runtime.config,
+      vault,
+      onComplete: async () => {
+        await runtime.config.save();
+        showScreen("home");
+      },
+    });
+  } else {
+    showScreen("home");
+  }
 
   // eslint-disable-next-line no-console
-  console.log(`Atlas 1 · v${VERSION} · booted`);
+  console.log(`Atlas 1 \u00b7 v${VERSION} \u00b7 booted`);
 }
 
 window.addEventListener("DOMContentLoaded", () => {

@@ -1827,52 +1827,6 @@ branch: main  ·  last push: 14m ago  ·  12 commits ahead</div>
 
 <!-- ================ SCRIPTS ================ -->
 <script>
-// --- Screen nav (runtime-wired; TS module handles clicks) ---
-// Kept so lingering onboarding inline script can still call showScreen().
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + id));
-  document.querySelectorAll('#screenNav button').forEach(b => b.classList.toggle('on', b.dataset.scr === id));
-}
-// --- Onboarding step navigation ---
-(() => {
-  const TOTAL = 6;
-  let cur = 1; // start on step 2 (loadout) since name is pre-filled
-  const stepper = document.getElementById('onbStepper');
-  const panels = document.querySelectorAll('.onb-panel');
-  const prog = document.getElementById('onbProg');
-  const prevBtn = document.getElementById('onbPrev');
-  const nextBtn = document.getElementById('onbNext');
-  const goBtn = document.getElementById('onbGo');
-  const sumName = document.getElementById('sumName');
-  const bootNameInput = document.getElementById('bootName');
-
-  function render() {
-    panels.forEach(p => p.classList.toggle('active', +p.dataset.step === cur));
-    if (stepper) {
-      stepper.querySelectorAll('.onb-step').forEach(s => {
-        const n = +s.dataset.step;
-        s.classList.toggle('active', n === cur);
-        s.classList.toggle('done', n < cur);
-      });
-    }
-    if (prog) prog.textContent = String(cur + 1).padStart(2, '0') + ' / 0' + TOTAL;
-    if (prevBtn) prevBtn.style.visibility = cur === 0 ? 'hidden' : 'visible';
-    const last = cur === TOTAL - 1;
-    if (nextBtn) nextBtn.style.display = last ? 'none' : 'inline-block';
-    if (goBtn) goBtn.style.display = last ? 'inline-block' : 'none';
-    // update summary on last step
-    if (last && sumName && bootNameInput) sumName.textContent = bootNameInput.value || 'Atlas 1';
-  }
-  prevBtn?.addEventListener('click', () => { if (cur > 0) { cur--; render(); } });
-  nextBtn?.addEventListener('click', () => { if (cur < TOTAL - 1) { cur++; render(); } });
-  goBtn?.addEventListener('click', () => showScreen('home'));
-  // stepper click to jump
-  stepper?.querySelectorAll('.onb-step').forEach(s => {
-    s.addEventListener('click', () => { cur = +s.dataset.step; render(); });
-  });
-  render();
-})();
-
 // --- Settings section switcher ---
 document.querySelectorAll('#scr-settings .sn-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1886,26 +1840,6 @@ document.querySelectorAll('#scr-settings .pt-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('#scr-settings .pt-btn').forEach(b => b.classList.toggle('on', b === btn));
   });
-});
-
-// Boot onboarding interactions
-document.querySelectorAll('.class-card').forEach(c => {
-  c.addEventListener('click', () => {
-    document.querySelectorAll('.class-card').forEach(x => x.classList.remove('pick'));
-    c.classList.add('pick');
-  });
-});
-document.querySelectorAll('.mod-chip').forEach(c => {
-  if (c.textContent.includes('plugin') || c.textContent.includes('more')) return;
-  c.addEventListener('click', () => c.classList.toggle('on'));
-});
-document.getElementById('bootName')?.addEventListener('input', (e) => {
-  document.getElementById('tw-name').value = e.target.value;
-});
-
-document.getElementById('pluginToggle')?.addEventListener('click', () => {
-  const p = document.getElementById('pluginPreview');
-  p.style.display = p.style.display === 'none' ? 'block' : 'none';
 });
 
 // Piano heatmap — 30 days × 1 row (but we use the 30-col grid)
