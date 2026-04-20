@@ -1585,3 +1585,22 @@ html, body {
 [data-theme="dark"] .gh-grid .c.l1 { background: rgba(102,255,136,0.18); }
 [data-theme="dark"] .gh-grid .c.l2 { background: rgba(102,255,136,0.5); }
 [data-theme="dark"] .gh-grid .c.l3 { background: var(--accent-green); }
+
+/* ---------- Dark-mode contrast fixes ---------- */
+/* Command bar: dark background with phosphor accent + stronger border so it reads as a distinct element */
+[data-theme="dark"] .cmdbar {
+  background: #0a0f0b;
+  color: var(--ink);
+  border-top: var(--rule-bold) solid var(--accent-green);
+}
+[data-theme="dark"] .cmdbar .prompt { color: var(--accent-green); }
+[data-theme="dark"] .cmdbar .in { color: var(--ink); }
+[data-theme="dark"] .cmdbar .in::placeholder { color: var(--muted); }
+
+/* Home module list: phosphor green for active row, arrow, and lvl tag (not tomato orange) */
+[data-theme="dark"] #scr-home .modlist li.active {
+  background: rgba(102, 255, 136, 0.12);
+  color: var(--ink);
+}
+[data-theme="dark"] #scr-home .modlist li.active::before { color: var(--accent-green); }
+[data-theme="dark"] #scr-home .modlist li.active .lvl { color: var(--accent-green); }
