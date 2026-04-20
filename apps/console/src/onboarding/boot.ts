@@ -39,9 +39,40 @@ export function initOnboarding(deps: BootDeps): () => void {
   const prog = document.getElementById("onbProg");
 
   const total = panels.length || 6;
+  const LAST_STEP = total - 1;
   let current = 0; // zero-indexed
+  let chosenVault: string | null = null;
 
   const pad2 = (n: number): string => String(n).padStart(2, "0");
+
+  const renderSummary = (): void => {
+    const el = document.getElementById("onbSummary");
+    if (!el) return;
+    const name = (document.getElementById("bootName") as HTMLInputElement | null)?.value?.trim() || "(unnamed)";
+    const activeMods = Array.from(
+      document.querySelectorAll<HTMLElement>(".onb-panel[data-step=\"2\"] .mod-chip.on"),
+    )
+      .map((c) => (c.textContent ?? "").trim())
+      .filter((t) => t && !t.startsWith("+"));
+    const vaultLabel = chosenVault ?? "(not chosen)";
+    el.innerHTML = "";
+    const row = (k: string, v: string): void => {
+      const r = document.createElement("div");
+      r.className = "srow";
+      const kk = document.createElement("span");
+      kk.className = "sk";
+      kk.textContent = k;
+      const vv = document.createElement("span");
+      vv.className = "sv";
+      vv.textContent = v;
+      r.appendChild(kk);
+      r.appendChild(vv);
+      el.appendChild(r);
+    };
+    row("name", name);
+    row("modules", activeMods.join(" · ") || "(none)");
+    row("vault", vaultLabel);
+  };
 
   const setStep = (n: number): void => {
     current = Math.max(0, Math.min(total - 1, n));
@@ -53,9 +84,10 @@ export function initOnboarding(deps: BootDeps): () => void {
     });
     if (prog) prog.textContent = `${pad2(current + 1)} / ${pad2(total)}`;
     if (prevBtn) prevBtn.toggleAttribute("disabled", current === 0);
-    const isLast = current === total - 1;
+    const isLast = current === LAST_STEP;
     if (nextBtn) nextBtn.style.display = isLast ? "none" : "";
     if (goBtn) goBtn.style.display = isLast ? "" : "none";
+    if (isLast) renderSummary();
   };
 
   setStep(0);
@@ -81,8 +113,27 @@ export function initOnboarding(deps: BootDeps): () => void {
     config.update({ name: nameInput.value });
     nameInput.addEventListener("input", () => {
       config.update({ name: nameInput.value });
+      renderSummary();
     });
   }
+
+  // Vault picker on step 4.
+  const pickBtn = document.getElementById("onbPickVault") as HTMLButtonElement | null;
+  const pathEl = document.getElementById("onbVaultPath");
+  pickBtn?.addEventListener("click", () => {
+    void (async () => {
+      const { pickVaultFolder } = await import("../core/pick-vault-folder.js");
+      const picked = await pickVaultFolder();
+      if (!picked) return;
+      chosenVault = picked;
+      if (pathEl) {
+        pathEl.textContent = picked;
+        pathEl.style.color = "var(--ink)";
+      }
+      config.update({ vaultPath: picked });
+      renderSummary();
+    })();
+  });
 
   const classCards = document.querySelectorAll<HTMLElement>(".class-card[data-class]");
   const prePicked = document.querySelector<HTMLElement>(".class-card.pick[data-class]");
@@ -99,20 +150,22 @@ export function initOnboarding(deps: BootDeps): () => void {
   // Mod chips are visual-only for v1 (plugin install lands in M7). Let them
   // toggle so the UI feels responsive, but we do not persist their state.
   document.querySelectorAll<HTMLElement>(".mod-chip").forEach((chip) => {
-    chip.addEventListener("click", () => chip.classList.toggle("on"));
+    chip.addEventListener("click", () => {
+      chip.classList.toggle("on");
+      renderSummary();
+    });
   });
 
   const onGo = async (): Promise<void> => {
+    const path = chosenVault ?? config.get().vaultPath;
+    if (!path) {
+      setStep(4);
+      return;
+    }
     if (goBtn) goBtn.toggleAttribute("disabled", true);
     try {
-      let path = config.get().vaultPath;
-      if (!path) {
-        const { pickVaultFolder } = await import("../core/pick-vault-folder.js");
-        const picked = await pickVaultFolder();
-        if (!picked) return;
-        path = picked;
-        config.update({ vaultPath: path });
-      }
+      chosenVault = path;
+      config.update({ vaultPath: path });
       await vault.setVaultRoot(path);
       config.update({ onboarded: true });
       await config.save();
@@ -123,9 +176,27 @@ export function initOnboarding(deps: BootDeps): () => void {
   };
   goBtn?.addEventListener("click", () => void onGo());
 
+  // Keyboard navigation: Enter advances / fires BOOT; Escape goes back.
+  const wrap = document.querySelector<HTMLElement>(".boot-wrap");
+  const onKeydown = (e: KeyboardEvent): void => {
+    const target = e.target as HTMLElement | null;
+    if (target && target.tagName === "TEXTAREA") return;
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (current === LAST_STEP) void onGo();
+      else onNext();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      onPrev();
+    }
+  };
+  wrap?.addEventListener("keydown", onKeydown);
+  if (wrap && !wrap.hasAttribute("tabindex")) wrap.setAttribute("tabindex", "-1");
+
   return () => {
     prevBtn?.removeEventListener("click", onPrev);
     nextBtn?.removeEventListener("click", onNext);
+    wrap?.removeEventListener("keydown", onKeydown);
     goBtn?.replaceWith(goBtn.cloneNode(true));
   };
 }

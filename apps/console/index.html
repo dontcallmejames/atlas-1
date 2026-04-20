@@ -529,24 +529,19 @@
       </div>
     </div>
 
-    <!-- Q5: import -->
+    <!-- Q5: vault -->
     <div class="ask onb-panel" data-step="4">
-      <div class="q">› [05/06] import &amp; connect <span class="dim">(skip is fine)</span></div>
-      <div class="hint">// atlas is local-first. nothing leaves your machine unless you plug it in.</div>
-      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:6px;">
-        <div class="mod-chip"><span class="x"></span>google cal</div>
-        <div class="mod-chip"><span class="x"></span>apple health</div>
-        <div class="mod-chip"><span class="x"></span>github</div>
-        <div class="mod-chip"><span class="x"></span>notion</div>
-        <div class="mod-chip"><span class="x"></span>oura</div>
-        <div class="mod-chip"><span class="x"></span>strava</div>
-        <div class="mod-chip"><span class="x"></span>.ics file</div>
-        <div class="mod-chip" style="border-style:dashed; color:var(--muted);">+ more</div>
+      <div class="q">› [05/06] pick your vault folder</div>
+      <div class="hint">// atlas is local-first. everything is plain text — notes, tasks, habits, logs — in the folder you choose.</div>
+      <div style="margin-top:12px;">
+        <div style="font-size:10px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">vault path</div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <code id="onbVaultPath" style="font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--paper-2); border:1px solid var(--line); padding:4px 8px; color:var(--muted);">(not chosen)</code>
+          <button type="button" id="onbPickVault" class="onb-btn">[ pick folder… ]</button>
+        </div>
       </div>
       <div style="margin-top:12px; padding:10px 12px; border:1px dashed var(--line); font-size:11px; color:var(--muted);">
-        <strong style="color:var(--ink);">data path:</strong> ~/atlas-1/vault/&nbsp;
-        <span style="color:var(--accent);">change →</span><br>
-        everything stays as flat .md + .json. version it with git if you want.
+        tip: use an existing folder or make a new one. atlas won't delete files it doesn't recognize. everything stays as flat .md + .json — version it with git if you want.
       </div>
     </div>
 
@@ -554,14 +549,7 @@
     <div class="ask onb-panel" data-step="5">
       <div class="q">› [06/06] ready to boot</div>
       <div class="hint">// review your choices. you can change anything later in <span class="kbd">settings</span>.</div>
-      <div class="onb-summary">
-        <div class="srow"><span class="sk">name</span><span class="sv" id="sumName">Atlas 1</span></div>
-        <div class="srow"><span class="sk">loadout</span><span class="sv">the polymath</span></div>
-        <div class="srow"><span class="sk">modules</span><span class="sv">calendar · health · tasks · hobbies · projects · home <span style="color:var(--muted);">(6)</span></span></div>
-        <div class="srow"><span class="sk">theme</span><span class="sv">light · paper · <span style="color:var(--accent);">■</span> tomato · default density</span></div>
-        <div class="srow"><span class="sk">integrations</span><span class="sv" style="color:var(--muted);">none <span style="color:var(--ink);">· connect later</span></span></div>
-        <div class="srow"><span class="sk">data path</span><span class="sv" style="font-family:'JetBrains Mono',monospace; font-size:11px;">~/atlas-1/vault/</span></div>
-      </div>
+      <div class="onb-summary" id="onbSummary"></div>
       <div style="margin-top:14px; padding:10px 14px; background:var(--accent); color:var(--paper); font-size:12px; line-height:1.6;">
         <strong>first things to try:</strong><br>
         · press <span class="kbd" style="background:var(--paper); color:var(--ink);">⌃⇧Space</span> from any app to summon atlas<br>
