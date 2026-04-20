@@ -1,18 +1,7 @@
 import type { Plugin, PluginContext } from "@atlas/sdk";
 import type { CoreHandles } from "./context-factory.js";
 import { createContext } from "./context-factory.js";
-
-export interface PluginsJsonEntry {
-  id: string;
-  enabled: boolean;
-  /** absolute or vault-relative path to the plugin folder */
-  path: string;
-  version?: string;
-}
-
-export interface PluginsJson {
-  plugins: PluginsJsonEntry[];
-}
+import { loadPluginState, type PluginStateEntry } from "./plugin-state.js";
 
 export interface LoadedPlugin {
   id: string;
@@ -26,20 +15,67 @@ export interface PluginLoaderOptions {
   core: CoreHandles;
 }
 
+export interface AddStaticPluginOptions {
+  id: string;
+  pluginClass: new () => Plugin;
+  /** Reserved for future manifest validation. Not used yet. */
+  manifest?: unknown;
+}
+
 export class PluginLoader {
   private readonly loaded = new Map<string, LoadedPlugin>();
 
   constructor(private readonly options: PluginLoaderOptions) {}
 
   async loadAll(): Promise<LoadedPlugin[]> {
-    const manifest = await this.readManifest();
+    const state = await loadPluginState(this.options.core.vault);
     const out: LoadedPlugin[] = [];
-    for (const entry of manifest.plugins) {
+    for (const entry of state.plugins) {
       if (!entry.enabled) continue;
+      if (!entry.path) continue; // built-ins are registered via addStaticPlugin
       const loaded = await this.loadOne(entry);
       if (loaded) out.push(loaded);
     }
     return out;
+  }
+
+  /**
+   * Register a built-in (statically imported) plugin through the same
+   * lifecycle as third-party plugins. Honors the disabled-state gate from
+   * `.atlas/plugins.json`. Returns a disposer that calls `onunload` and
+   * removes the plugin from the loaded set. The disposer is a no-op if the
+   * plugin was skipped (disabled) or already unloaded.
+   */
+  async addStaticPlugin(opts: AddStaticPluginOptions): Promise<() => Promise<void>> {
+    const { id, pluginClass } = opts;
+    const state = await loadPluginState(this.options.core.vault);
+    const entry = state.plugins.find((p) => p.id === id);
+    if (entry && entry.enabled === false) {
+      // eslint-disable-next-line no-console
+      console.log(`[atlas] built-in plugin "${id}" disabled by .atlas/plugins.json`);
+      return async () => {};
+    }
+    const plugin = new pluginClass();
+    const context = createContext({ pluginId: id, core: this.options.core });
+    try {
+      await plugin.onload(context);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(`[atlas] plugin "${id}" onload threw:`, err);
+      return async () => {};
+    }
+    const loaded: LoadedPlugin = { id, plugin, context };
+    this.loaded.set(id, loaded);
+    return async () => {
+      if (this.loaded.get(id) !== loaded) return;
+      try {
+        await plugin.onunload?.(context);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(`[atlas] plugin "${id}" onunload threw:`, err);
+      }
+      this.loaded.delete(id);
+    };
   }
 
   async unloadAll(): Promise<void> {
@@ -58,21 +94,13 @@ export class PluginLoader {
     return this.loaded.get(id);
   }
 
-  private async readManifest(): Promise<PluginsJson> {
-    if (!(await this.options.core.vault.exists(".atlas/plugins.json"))) {
-      return { plugins: [] };
-    }
-    const raw = await this.options.core.vault.read(".atlas/plugins.json");
-    return JSON.parse(raw) as PluginsJson;
-  }
-
-  private async loadOne(entry: PluginsJsonEntry): Promise<LoadedPlugin | null> {
+  private async loadOne(entry: PluginStateEntry): Promise<LoadedPlugin | null> {
     // Lazy-import Node built-ins so the webview bundle (browser/Tauri) does
     // not pull them in at module-evaluation time. Plugin loading itself is
     // only meaningful in a Node/Tauri runtime, not in the browser preview.
     const { pathToFileURL } = await import("node:url");
     const { resolve } = await import("node:path");
-    const mainPath = resolve(this.options.vaultRoot, entry.path, "main.js");
+    const mainPath = resolve(this.options.vaultRoot, entry.path!, "main.js");
     const moduleUrl = pathToFileURL(mainPath).href;
     let mod: { default: new () => Plugin };
     try {

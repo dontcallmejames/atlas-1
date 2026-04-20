@@ -1,6 +1,5 @@
 import type { Runtime } from "@atlas/core";
-import type { Plugin, PluginContext } from "@atlas/sdk";
-import { createContext, loadPluginState } from "@atlas/core";
+import type { Plugin } from "@atlas/sdk";
 
 // Vite resolves this at build time to static imports of every main.js under
 // <repo>/plugins/*. Path is relative to this file (apps/console/src/boot/):
@@ -10,56 +9,35 @@ const pluginModules = import.meta.glob("../../../../plugins/*/main.js", {
 }) as Record<string, { default: new () => Plugin }>;
 
 /**
- * Instantiate every built-in plugin, build a context per plugin, and call
- * its onload. Returns a disposer that calls onunload on all plugins.
+ * Register every built-in plugin through the runtime's PluginLoader so they
+ * go through the same onload/onunload lifecycle as third-party plugins.
+ * Returns an aggregate disposer that unloads all built-ins.
  */
 export async function loadBuiltInPlugins(runtime: Runtime): Promise<() => Promise<void>> {
-  const instances: Array<{ id: string; plugin: Plugin; ctx: PluginContext }> = [];
-  const state = await loadPluginState(runtime.vault);
-  const disabled = new Set(
-    state.plugins.filter((p) => p.enabled === false).map((p) => p.id),
-  );
+  const disposers: Array<() => Promise<void>> = [];
 
   for (const [path, mod] of Object.entries(pluginModules)) {
     const id = extractPluginId(path);
     if (!id) continue;
-    if (disabled.has(id)) {
-      // eslint-disable-next-line no-console
-      console.log(`[atlas] built-in plugin "${id}" disabled by .atlas/plugins.json`);
-      continue;
-    }
     if (typeof mod.default !== "function") {
       // eslint-disable-next-line no-console
       console.warn(`[atlas] built-in plugin "${id}" has no default export`);
       continue;
     }
-    const plugin = new mod.default();
-    const ctx = createContext({
-      pluginId: id,
-      core: {
-        vault: runtime.vault,
-        commands: runtime.commands,
-        events: runtime.events,
-        xp: runtime.xp,
-        mounts: runtime.mounts,
-      },
+    const disposer = await runtime.plugins.addStaticPlugin({
+      id,
+      pluginClass: mod.default,
     });
-    try {
-      await plugin.onload(ctx);
-      instances.push({ id, plugin, ctx });
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(`[atlas] plugin "${id}" onload threw:`, err);
-    }
+    disposers.push(disposer);
   }
 
   return async () => {
-    for (const { id, plugin, ctx } of instances) {
+    for (const d of disposers) {
       try {
-        await plugin.onunload?.(ctx);
+        await d();
       } catch (err) {
         // eslint-disable-next-line no-console
-        console.error(`[atlas] plugin "${id}" onunload threw:`, err);
+        console.error(`[atlas] built-in plugin disposer threw:`, err);
       }
     }
   };

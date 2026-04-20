@@ -20,7 +20,10 @@ async function startRuntime(vault: VaultFs, vaultRoot: string): Promise<Runtime>
 
   const runtime = await createRuntime({ vault, vaultRoot });
   await runtime.load();
-  await loadBuiltInPlugins(runtime);
+  const disposeBuiltIns = await loadBuiltInPlugins(runtime);
+  window.addEventListener("beforeunload", () => {
+    void disposeBuiltIns();
+  });
   await initShell(runtime);
   // Start the ritual cron scheduler (1-minute tick).
   window.setInterval(() => {

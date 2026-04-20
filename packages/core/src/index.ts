@@ -26,6 +26,5 @@ export type { CoreHandles } from "./plugins/context-factory.js";
 export type {
   LoadedPlugin,
   PluginLoaderOptions,
-  PluginsJson,
-  PluginsJsonEntry,
+  AddStaticPluginOptions,
 } from "./plugins/plugin-loader.js";
