@@ -33,7 +33,7 @@
 </header>
 
 <!-- ================ STATUS LINE ================ -->
-<div class="statusline" id="statusline">
+<div class="statusline" id="statusline" role="status" aria-live="polite" aria-atomic="false">
   <div class="seg"><span class="k">LVL</span><strong>17</strong><span class="k">XP</span><span class="mbar"><span class="f accent" style="right:22%;"></span></span><span>2340/3000</span></div>
   <div class="seg"><span class="k">HP</span><span class="mbar"><span class="f green" style="right:22%;"></span></span><span>78</span></div>
   <div class="seg"><span class="k">NRG</span><span class="mbar"><span class="f" style="right:36%;"></span></span><span>64</span></div>
@@ -149,25 +149,25 @@
         <!-- REPL transcript -->
         <div class="repl">
           <div class="pr">atlas: brief me</div>
-          <div class="out">
+          <div class="out" aria-live="polite" aria-atomic="false">
             <span class="hi">3 events today · 2 focus blocks left · 4 quests active.</span><br/>
             sleep was solid (<span class="hi">7h12</span>). you've been skipping the evening walk — 3 days.<br/>
             agent-eval-v3 is <span class="hi">43%</span> done. scraper failed overnight (mem).
           </div>
           <div class="pr">tasks --today</div>
-          <div class="out">
+          <div class="out" aria-live="polite" aria-atomic="false">
             ☐ ship onboarding PR &nbsp;&nbsp;<span class="xp">+120</span><br/>
             ☐ write eval notes &nbsp;&nbsp;<span class="xp">+40</span><br/>
             ☐ piano 20m &nbsp;&nbsp;<span class="xp">+10</span> (streak ×2)<br/>
             ☑ email landlord <span style="text-decoration:line-through;">+20</span> <span class="hi">· claimed</span>
           </div>
           <div class="pr">health.sleep last 7d</div>
-          <div class="out">
+          <div class="out" aria-live="polite" aria-atomic="false">
             avg <span class="hi">7h12</span> · worst wed (5h48) · score <span class="hi">78/100</span><br/>
             correl: you sleep +40m on days you walk after dinner.
           </div>
           <div class="pr">ai-lab.runs --status=running</div>
-          <div class="out">
+          <div class="out" aria-live="polite" aria-atomic="false">
             2 jobs · agent-eval-v3 (12m) · dataset-rebuild (~4h)
           </div>
           <div class="pr"><span class="blink">█</span></div>
@@ -273,8 +273,8 @@
           <div class="badge got">★</div>
           <div class="badge got">♡</div>
           <div class="badge got">⚑</div>
-          <div class="badge locked">?</div>
-          <div class="badge locked">?</div>
+          <div class="badge locked" aria-label="locked badge">?</div>
+          <div class="badge locked" aria-label="locked badge">?</div>
         </div>
         <div style="font-size:10px; color:var(--muted); margin-top:6px;">
           ★ 12d piano · ♡ 5 workouts · ⚑ shipped 3 prs<br/>
@@ -347,11 +347,11 @@
       </div>
       <div style="margin-top:10px; font-size:11px; color:var(--muted);">
         suggestions:
-        <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">Atlas 1</span>
-        <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">my.life</span>
-        <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">hq</span>
-        <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">bridge</span>
-        <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">northstar</span>
+        <button type="button" class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">Atlas 1</button>
+        <button type="button" class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">my.life</button>
+        <button type="button" class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">hq</button>
+        <button type="button" class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">bridge</button>
+        <button type="button" class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">northstar</button>
       </div>
       <div class="q" style="margin-top:18px;">› and what should i call you?</div>
       <div class="hint">// used for greetings. leave blank for a generic "operator".</div>
@@ -368,7 +368,7 @@
       <div class="q">› [02/06] pick a starting loadout</div>
       <div class="hint">// seeds your modules, stat weights, and quest cadence. all editable later.</div>
       <div class="class-grid">
-        <div class="class-card" data-class="maker">
+        <button type="button" class="class-card" data-class="maker">
           <div class="dim">CLASS · 01</div>
           <div class="nm">the maker</div>
           <div class="dim">ships things. solo-builds. codes.</div>
@@ -378,8 +378,8 @@
             <span class="t">++ cal</span>
             <span class="t">+ health</span>
           </div>
-        </div>
-        <div class="class-card pick" data-class="polymath">
+        </button>
+        <button type="button" class="class-card pick" data-class="polymath">
           <div class="dim" style="color:var(--accent-3);">CLASS · 02 ✦ picked</div>
           <div class="nm">the polymath</div>
           <div>code, body, music, people. all on.</div>
@@ -388,8 +388,8 @@
             <span class="t">3 focus/day</span>
             <span class="t">daily check-in</span>
           </div>
-        </div>
-        <div class="class-card" data-class="operator">
+        </button>
+        <button type="button" class="class-card" data-class="operator">
           <div class="dim">CLASS · 03</div>
           <div class="nm">the operator</div>
           <div class="dim">ops, inbox, household CEO.</div>
@@ -399,8 +399,8 @@
             <span class="t">++ tasks</span>
             <span class="t">+ health</span>
           </div>
-        </div>
-        <div class="class-card" data-class="athlete">
+        </button>
+        <button type="button" class="class-card" data-class="athlete">
           <div class="dim">CLASS · 04</div>
           <div class="nm">the athlete</div>
           <div class="dim">body-first. train, recover, compete.</div>
@@ -410,8 +410,8 @@
             <span class="t">++ cal</span>
             <span class="t">+ tasks</span>
           </div>
-        </div>
-        <div class="class-card" data-class="scholar">
+        </button>
+        <button type="button" class="class-card" data-class="scholar">
           <div class="dim">CLASS · 05</div>
           <div class="nm">the scholar</div>
           <div class="dim">reads, writes, thinks deeply.</div>
@@ -421,8 +421,8 @@
             <span class="t">++ projects</span>
             <span class="t">+ cal</span>
           </div>
-        </div>
-        <div class="class-card" data-class="wanderer">
+        </button>
+        <button type="button" class="class-card" data-class="wanderer">
           <div class="dim">CLASS · 06</div>
           <div class="nm">the wanderer</div>
           <div class="dim">no presets. blank slate. build your own.</div>
@@ -431,7 +431,7 @@
             <span class="t">pick every module</span>
             <span class="t">no quests</span>
           </div>
-        </div>
+        </button>
       </div>
     </div>
 
@@ -440,16 +440,16 @@
       <div class="q">› [03/06] confirm modules <span class="dim">(click to toggle)</span></div>
       <div class="hint">// polymath defaults selected. add more from the registry any time.</div>
       <div class="mod-chips" id="bootMods">
-        <div class="mod-chip on"><span class="x"></span>calendar</div>
-        <div class="mod-chip on"><span class="x"></span>health</div>
-        <div class="mod-chip on"><span class="x"></span>tasks</div>
-        <div class="mod-chip on"><span class="x"></span>hobbies</div>
-        <div class="mod-chip on"><span class="x"></span>projects</div>
-        <div class="mod-chip on"><span class="x"></span>home</div>
-        <div class="mod-chip"><span class="x"></span>reading</div>
-        <div class="mod-chip"><span class="x"></span>people</div>
-        <div class="mod-chip"><span class="x"></span>finance</div>
-        <div class="mod-chip"><span class="x"></span>journal</div>
+        <button type="button" class="mod-chip on"><span class="x"></span>calendar</button>
+        <button type="button" class="mod-chip on"><span class="x"></span>health</button>
+        <button type="button" class="mod-chip on"><span class="x"></span>tasks</button>
+        <button type="button" class="mod-chip on"><span class="x"></span>hobbies</button>
+        <button type="button" class="mod-chip on"><span class="x"></span>projects</button>
+        <button type="button" class="mod-chip on"><span class="x"></span>home</button>
+        <button type="button" class="mod-chip"><span class="x"></span>reading</button>
+        <button type="button" class="mod-chip"><span class="x"></span>people</button>
+        <button type="button" class="mod-chip"><span class="x"></span>finance</button>
+        <button type="button" class="mod-chip"><span class="x"></span>journal</button>
         <div class="mod-chip" id="pluginToggle" style="border-style:dashed; color:var(--muted); cursor:pointer;">+ browse plugin registry →</div>
       </div>
       <div id="pluginPreview" style="display:none; margin-top:10px; border:1.5px dashed var(--line); background:var(--paper-2); padding:12px;">
@@ -496,36 +496,36 @@
       <div style="margin-top:10px;">
         <div style="font-size:10px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">mode</div>
         <div style="display:flex; gap:8px;">
-          <div class="mod-chip on">light · paper</div>
-          <div class="mod-chip">dark · phosphor</div>
-          <div class="mod-chip">auto · follows system</div>
+          <button type="button" class="mod-chip on">light · paper</button>
+          <button type="button" class="mod-chip">dark · phosphor</button>
+          <button type="button" class="mod-chip">auto · follows system</button>
         </div>
       </div>
       <div style="margin-top:12px;">
         <div style="font-size:10px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">accent color</div>
         <div style="display:flex; gap:6px;">
-          <div class="mod-chip on" style="background:#c84a1e; color:var(--paper); border-color:#c84a1e;">tomato</div>
-          <div class="mod-chip" style="background:#1e5ec8; color:var(--paper); border-color:#1e5ec8;">blue</div>
-          <div class="mod-chip" style="background:#1e9960; color:var(--paper); border-color:#1e9960;">green</div>
-          <div class="mod-chip" style="background:#c88520; color:var(--paper); border-color:#c88520;">amber</div>
-          <div class="mod-chip" style="background:#7a1ec8; color:var(--paper); border-color:#7a1ec8;">violet</div>
-          <div class="mod-chip">hex #</div>
+          <button type="button" class="mod-chip on" style="background:#c84a1e; color:var(--paper); border-color:#c84a1e;">tomato</button>
+          <button type="button" class="mod-chip" style="background:#1e5ec8; color:var(--paper); border-color:#1e5ec8;">blue</button>
+          <button type="button" class="mod-chip" style="background:#1e9960; color:var(--paper); border-color:#1e9960;">green</button>
+          <button type="button" class="mod-chip" style="background:#c88520; color:var(--paper); border-color:#c88520;">amber</button>
+          <button type="button" class="mod-chip" style="background:#7a1ec8; color:var(--paper); border-color:#7a1ec8;">violet</button>
+          <button type="button" class="mod-chip">hex #</button>
         </div>
       </div>
       <div style="margin-top:12px;">
         <div style="font-size:10px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">density</div>
         <div style="display:flex; gap:8px;">
-          <div class="mod-chip">cozy</div>
-          <div class="mod-chip on">default</div>
-          <div class="mod-chip">dense · terminal</div>
+          <button type="button" class="mod-chip">cozy</button>
+          <button type="button" class="mod-chip on">default</button>
+          <button type="button" class="mod-chip">dense · terminal</button>
         </div>
       </div>
       <div style="margin-top:12px;">
         <div style="font-size:10px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">crt overlay <span style="color:var(--muted);">(dark only · scanlines + phosphor bloom)</span></div>
         <div style="display:flex; gap:8px;">
-          <div class="mod-chip on">off</div>
-          <div class="mod-chip">light</div>
-          <div class="mod-chip">full crt</div>
+          <button type="button" class="mod-chip on">off</button>
+          <button type="button" class="mod-chip">light</button>
+          <button type="button" class="mod-chip">full crt</button>
         </div>
       </div>
     </div>
@@ -742,48 +742,48 @@
           <div class="set-k">class / loadout</div>
           <div class="set-v">
             <div class="loadout-grid">
-              <div class="loadout-card">
+              <button type="button" class="loadout-card">
                 <div class="lc-hdr"><span class="lc-n">01</span><span class="lc-name">the maker</span></div>
                 <div class="lc-desc">ships things. solo-builds. codes.</div>
                 <div class="lc-tags">
                   <span class="t">+++ tasks</span><span class="t">+++ projects</span><span class="t">++ cal</span><span class="t">+ health</span>
                 </div>
-              </div>
-              <div class="loadout-card on">
+              </button>
+              <button type="button" class="loadout-card on">
                 <div class="lc-hdr"><span class="lc-n">02 ✦</span><span class="lc-name">the polymath</span><span class="lc-pick">· current</span></div>
                 <div class="lc-desc">code, body, music, people. all on.</div>
                 <div class="lc-tags">
                   <span class="t">balanced</span><span class="t">3 focus/day</span><span class="t">daily check-in</span>
                 </div>
-              </div>
-              <div class="loadout-card">
+              </button>
+              <button type="button" class="loadout-card">
                 <div class="lc-hdr"><span class="lc-n">03</span><span class="lc-name">the operator</span></div>
                 <div class="lc-desc">ops, inbox, household CEO.</div>
                 <div class="lc-tags">
                   <span class="t">+++ cal</span><span class="t">+++ home</span><span class="t">++ tasks</span><span class="t">+ health</span>
                 </div>
-              </div>
-              <div class="loadout-card">
+              </button>
+              <button type="button" class="loadout-card">
                 <div class="lc-hdr"><span class="lc-n">04</span><span class="lc-name">the athlete</span></div>
                 <div class="lc-desc">body-first. train, recover, compete.</div>
                 <div class="lc-tags">
                   <span class="t">+++ health</span><span class="t">+++ hobbies</span><span class="t">++ cal</span><span class="t">+ tasks</span>
                 </div>
-              </div>
-              <div class="loadout-card">
+              </button>
+              <button type="button" class="loadout-card">
                 <div class="lc-hdr"><span class="lc-n">05</span><span class="lc-name">the scholar</span></div>
                 <div class="lc-desc">reads, writes, thinks deeply.</div>
                 <div class="lc-tags">
                   <span class="t">+++ reading</span><span class="t">+++ journal</span><span class="t">++ projects</span><span class="t">+ cal</span>
                 </div>
-              </div>
-              <div class="loadout-card">
+              </button>
+              <button type="button" class="loadout-card">
                 <div class="lc-hdr"><span class="lc-n">06</span><span class="lc-name">the wanderer</span></div>
                 <div class="lc-desc">no presets. blank slate. build your own.</div>
                 <div class="lc-tags">
                   <span class="t">empty start</span><span class="t">pick every module</span><span class="t">no quests</span>
                 </div>
-              </div>
+              </button>
             </div>
             <div class="set-help">changes stat weights and default quest cadence. does not remove existing data.</div>
           </div>
@@ -801,9 +801,9 @@
           <div class="set-k">mode</div>
           <div class="set-v">
             <div style="display:flex; gap:8px;">
-              <div class="mod-chip on">light · paper</div>
-              <div class="mod-chip">dark · phosphor</div>
-              <div class="mod-chip">auto · system</div>
+              <button type="button" class="mod-chip on">light · paper</button>
+              <button type="button" class="mod-chip">dark · phosphor</button>
+              <button type="button" class="mod-chip">auto · system</button>
             </div>
           </div>
         </div>
@@ -811,14 +811,14 @@
           <div class="set-k">accent color</div>
           <div class="set-v">
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <div class="swatch on" style="--c:#c84a1e;">tomato</div>
-              <div class="swatch" style="--c:#1e5ec8;">blue</div>
-              <div class="swatch" style="--c:#1e9960;">green</div>
-              <div class="swatch" style="--c:#c88520;">amber</div>
-              <div class="swatch" style="--c:#7a1ec8;">violet</div>
-              <div class="swatch" style="--c:#c8205e;">rose</div>
-              <div class="swatch" style="--c:#205a5a;">teal</div>
-              <div class="swatch custom">#&nbsp;hex</div>
+              <button type="button" class="swatch on" style="--c:#c84a1e;">tomato</button>
+              <button type="button" class="swatch" style="--c:#1e5ec8;">blue</button>
+              <button type="button" class="swatch" style="--c:#1e9960;">green</button>
+              <button type="button" class="swatch" style="--c:#c88520;">amber</button>
+              <button type="button" class="swatch" style="--c:#7a1ec8;">violet</button>
+              <button type="button" class="swatch" style="--c:#c8205e;">rose</button>
+              <button type="button" class="swatch" style="--c:#205a5a;">teal</button>
+              <button type="button" class="swatch custom">#&nbsp;hex</button>
             </div>
           </div>
         </div>
@@ -826,9 +826,9 @@
           <div class="set-k">density</div>
           <div class="set-v">
             <div style="display:flex; gap:8px;">
-              <div class="mod-chip">cozy · +2px</div>
-              <div class="mod-chip on">default</div>
-              <div class="mod-chip">dense · terminal</div>
+              <button type="button" class="mod-chip">cozy · +2px</button>
+              <button type="button" class="mod-chip on">default</button>
+              <button type="button" class="mod-chip">dense · terminal</button>
             </div>
           </div>
         </div>
@@ -851,9 +851,9 @@
           <div class="set-k">crt overlay</div>
           <div class="set-v">
             <div style="display:flex; gap:8px;">
-              <div class="mod-chip on">off</div>
-              <div class="mod-chip">light scanlines</div>
-              <div class="mod-chip">full crt</div>
+              <button type="button" class="mod-chip on">off</button>
+              <button type="button" class="mod-chip">light scanlines</button>
+              <button type="button" class="mod-chip">full crt</button>
             </div>
             <div class="set-help">only visible in dark mode. adds scanlines, phosphor bloom, and subtle flicker.</div>
           </div>
@@ -1034,11 +1034,11 @@
           <div class="set-k">sync</div>
           <div class="set-v">
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <div class="mod-chip on">git · ssh</div>
-              <div class="mod-chip">icloud drive</div>
-              <div class="mod-chip">dropbox</div>
-              <div class="mod-chip">syncthing</div>
-              <div class="mod-chip">none · local only</div>
+              <button type="button" class="mod-chip on">git · ssh</button>
+              <button type="button" class="mod-chip">icloud drive</button>
+              <button type="button" class="mod-chip">dropbox</button>
+              <button type="button" class="mod-chip">syncthing</button>
+              <button type="button" class="mod-chip">none · local only</button>
             </div>
             <div class="mono-block" style="margin-top:8px;">remote: git@github.com:mira/atlas-vault.git
 branch: main  ·  last push: 14m ago  ·  12 commits ahead</div>
@@ -1048,10 +1048,10 @@ branch: main  ·  last push: 14m ago  ·  12 commits ahead</div>
           <div class="set-k">ai &amp; agents</div>
           <div class="set-v">
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <div class="mod-chip on">local · ollama</div>
-              <div class="mod-chip on">anthropic · claude</div>
-              <div class="mod-chip">openai</div>
-              <div class="mod-chip">none · rules only</div>
+              <button type="button" class="mod-chip on">local · ollama</button>
+              <button type="button" class="mod-chip on">anthropic · claude</button>
+              <button type="button" class="mod-chip">openai</button>
+              <button type="button" class="mod-chip">none · rules only</button>
             </div>
             <div class="set-help">agents only see what you grant per-module. defaults: read-only. runtime: bring-your-own-key.</div>
           </div>
@@ -1108,10 +1108,10 @@ branch: main  ·  last push: 14m ago  ·  12 commits ahead</div>
           <div class="set-k">modal style</div>
           <div class="set-v">
             <div style="display:flex; gap:8px;">
-              <div class="mod-chip on">default</div>
-              <div class="mod-chip">vim</div>
-              <div class="mod-chip">emacs</div>
-              <div class="mod-chip">none · mouse</div>
+              <button type="button" class="mod-chip on">default</button>
+              <button type="button" class="mod-chip">vim</button>
+              <button type="button" class="mod-chip">emacs</button>
+              <button type="button" class="mod-chip">none · mouse</button>
             </div>
           </div>
         </div>

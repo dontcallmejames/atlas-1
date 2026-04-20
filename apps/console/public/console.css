@@ -38,6 +38,40 @@
 
 * { box-sizing: border-box; }
 
+/* Keyboard focus ring — apply only when focus is visible (keyboard, not mouse). */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* Chips and cards that already have a border should inset the ring slightly. */
+.chip:focus-visible,
+.onb-btn:focus-visible,
+.mod-chip:focus-visible,
+.class-card:focus-visible,
+.loadout-card:focus-visible,
+.swatch:focus-visible {
+  outline-offset: 1px;
+}
+
+/* Neutralize default button styling on class-based buttons converted from divs/spans. */
+button.mod-chip,
+button.class-card,
+button.loadout-card,
+button.swatch,
+button.onb-btn {
+  font: inherit;
+  background: transparent;
+  border: inherit;
+  padding: inherit;
+  cursor: pointer;
+  color: inherit;
+  text-align: inherit;
+}
+
 html, body {
   margin: 0; padding: 0;
   background: var(--paper);
@@ -1732,3 +1766,17 @@ body {
 }
 [data-theme="dark"] #scr-home .modlist li.active::before { color: var(--accent-green); }
 [data-theme="dark"] #scr-home .modlist li.active .lvl { color: var(--accent-green); }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+  .blink { animation: none; }
+  .crt::after { display: none; }
+  .onb-panel { transform: none !important; }
+  .toast { animation: none; }
+}
+
