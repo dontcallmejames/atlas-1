@@ -1,6 +1,6 @@
 import type { Runtime } from "@atlas/core";
 import type { Plugin, PluginContext } from "@atlas/sdk";
-import { createContext } from "@atlas/core";
+import { createContext, loadPluginState } from "@atlas/core";
 
 // Vite resolves this at build time to static imports of every main.js under
 // <repo>/plugins/*. Path is relative to this file (apps/console/src/boot/):
@@ -15,10 +15,19 @@ const pluginModules = import.meta.glob("../../../../plugins/*/main.js", {
  */
 export async function loadBuiltInPlugins(runtime: Runtime): Promise<() => Promise<void>> {
   const instances: Array<{ id: string; plugin: Plugin; ctx: PluginContext }> = [];
+  const state = await loadPluginState(runtime.vault);
+  const disabled = new Set(
+    state.plugins.filter((p) => p.enabled === false).map((p) => p.id),
+  );
 
   for (const [path, mod] of Object.entries(pluginModules)) {
     const id = extractPluginId(path);
     if (!id) continue;
+    if (disabled.has(id)) {
+      // eslint-disable-next-line no-console
+      console.log(`[atlas] built-in plugin "${id}" disabled by .atlas/plugins.json`);
+      continue;
+    }
     if (typeof mod.default !== "function") {
       // eslint-disable-next-line no-console
       console.warn(`[atlas] built-in plugin "${id}" has no default export`);
