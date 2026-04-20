@@ -11,6 +11,23 @@ Atlas 1 is a single desktop app that pulls the parts of your life worth tracking
 
 Why a fork, not an account: your data stays local, your instance is yours, and the author's opinions (XP bars, HP/NRG/FOCUS, terminal aesthetic) are one fork away from whatever you prefer.
 
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="./docs/screenshots/01-home-light.png" alt="Home screen — light mode greeting + statusline + REPL"></td>
+    <td><img src="./docs/screenshots/02-health.png" alt="Health screen — vitals, 7-day trends, sleep and energy charts (dark)"></td>
+  </tr>
+  <tr>
+    <td><img src="./docs/screenshots/03-projects.png" alt="Projects screen — commits heatmap and repo detail (dark)"></td>
+    <td><img src="./docs/screenshots/04-hobbies.png" alt="Hobbies screen — piano practice dashboard and streaks (dark)"></td>
+  </tr>
+</table>
+
+> Note: the health, projects, and hobbies screens above are **design previews** showing the full HUD treatment. v1 ships with `tasks`, `journal`, and `habits` plugins wired up — bring those modules to life by writing or installing plugins that register views for those screens (see [`docs/PLUGIN_API.md`](./docs/PLUGIN_API.md)).
+
+<video src="./docs/screenshots/05-demo.mp4" controls width="720"></video>
+
 ## Install (released installer)
 
 Grab the latest installer for your OS from the [Releases page](https://github.com/dontcallmejames/atlas-1/releases).
@@ -39,7 +56,7 @@ Press `Ctrl+Shift+Space` (configurable) from anywhere to bring Atlas forward wit
 
 - `/tasks.add buy milk` — add a task. `/tasks.done 1`, `/tasks.list`.
 - `/journal.today` — open today's daily note.
-- `/habits.log meditate` — log a habit completion.
+- `/habits.checkin meditate` — log a habit completion. `/habits.list`, `/habits.status`.
 - `/ritual morning` — run a ritual (chain of commands from a `.ritual` file).
 - `/go settings` — open the settings panel. `/go home`, `/go tasks`.
 
