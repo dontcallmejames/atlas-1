@@ -580,6 +580,52 @@ html, body {
   padding: 1px 4px;
   margin-right: 3px;
 }
+.cmd-sugg {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  background: var(--paper-2);
+  color: var(--ink);
+  border-top: 1.5px solid var(--line);
+  border-bottom: 1.5px solid var(--line);
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 31;
+  font-size: 12px;
+}
+.cmd-sugg[hidden] { display: none; }
+.cmd-sugg-row {
+  padding: 4px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  border-bottom: 1px dashed var(--line);
+}
+.cmd-sugg-row:last-child { border-bottom: none; }
+.cmd-sugg-row:hover,
+.cmd-sugg-row.active {
+  background: var(--accent);
+  color: var(--paper);
+}
+.cmd-sugg-id { font-weight: 600; }
+.cmd-sugg-title { color: var(--muted); }
+.cmd-sugg-row.active .cmd-sugg-title,
+.cmd-sugg-row:hover .cmd-sugg-title { color: var(--paper); }
+.cmd-err {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 16px;
+  color: var(--paper);
+  background: var(--accent);
+  border: 1.5px solid var(--line);
+  padding: 3px 8px;
+  font-size: 11px;
+  z-index: 32;
+  box-shadow: 2px 2px 0 var(--line);
+}
+.cmd-err[hidden] { display: none; }
 
 /* ---------- XP / toast ---------- */
 .toast {
