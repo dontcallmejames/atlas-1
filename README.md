@@ -26,7 +26,7 @@ Why a fork, not an account: your data stays local, your instance is yours, and t
 
 > Note: the health, projects, and hobbies screens above are **design previews** showing the full HUD treatment. v1 ships with `tasks`, `journal`, and `habits` plugins wired up — bring those modules to life by writing or installing plugins that register views for those screens (see [`docs/PLUGIN_API.md`](./docs/PLUGIN_API.md)).
 
-<video src="./docs/screenshots/05-demo.mp4" controls width="720"></video>
+![Atlas 1 demo](./docs/screenshots/05-demo.gif)
 
 ## Install (released installer)
 
