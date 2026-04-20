@@ -2028,17 +2028,6 @@ document.getElementById('pluginToggle')?.addEventListener('click', () => {
   });
 })();
 
-// Clock tick
-function tick() {
-  const d = new Date();
-  const hh = String(d.getHours()).padStart(2,'0');
-  const mm = String(d.getMinutes()).padStart(2,'0');
-  const ss = String(d.getSeconds()).padStart(2,'0');
-  const mc = document.getElementById('miniClock');
-  if (mc) mc.textContent = `${hh}:${mm}:${ss}`;
-}
-setInterval(tick, 1000);
-tick();
 
 // Command bar focus on /
 document.addEventListener('keydown', (e) => {
