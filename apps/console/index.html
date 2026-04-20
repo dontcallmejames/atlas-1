@@ -1830,21 +1830,6 @@ branch: main  ·  last push: 14m ago  ·  12 commits ahead</div>
 
 <!-- ================ SCRIPTS ================ -->
 <script>
-// --- Settings section switcher ---
-document.querySelectorAll('#scr-settings .sn-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const sec = btn.dataset.sec;
-    document.querySelectorAll('#scr-settings .sn-btn').forEach(b => b.classList.toggle('on', b === btn));
-    document.querySelectorAll('#scr-settings .set-sec').forEach(s => s.classList.toggle('active', s.dataset.sec === sec));
-  });
-});
-// Settings plugin tabs (visual only)
-document.querySelectorAll('#scr-settings .pt-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#scr-settings .pt-btn').forEach(b => b.classList.toggle('on', b === btn));
-  });
-});
-
 // Piano heatmap — 30 days × 1 row (but we use the 30-col grid)
 (() => {
   const el = document.getElementById('pianoHeatmap');
