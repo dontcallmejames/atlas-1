@@ -1,9 +1,9 @@
 {
   "id": "habits",
   "name": "Habits",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "atlas",
   "atlas": ">=0.1.0",
   "main": "main.js",
-  "permissions": ["vault:read", "vault:write", "commands", "nav"]
+  "permissions": ["vault:read", "vault:write", "commands", "nav", "ui"]
 }
