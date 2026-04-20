@@ -147,9 +147,9 @@
             <div class="f" style="right:40%;"></div>
           </div>
           <div class="actions">
-            <span class="k"><span class="kbd">⌘.</span> extend 15m</span>
-            <span class="k"><span class="kbd">⌘⇧.</span> end</span>
-            <span class="k"><span class="kbd">⌘/</span> note</span>
+            <span class="k">extend 15m</span>
+            <span class="k">end</span>
+            <span class="k">note</span>
           </div>
         </div>
 
@@ -300,13 +300,9 @@
 
         <div class="section-title">KEYS</div>
         <div style="font-size:10px; line-height:1.75;">
-          <span class="kbd">⌘K</span> palette &nbsp;
-          <span class="kbd">⌘/</span> ask atlas<br/>
-          <span class="kbd">⌘.</span> capture &nbsp;
-          <span class="kbd">F</span> focus<br/>
-          <span class="kbd">g t</span> today &nbsp;
-          <span class="kbd">g h</span> health<br/>
-          <span class="kbd">⌘⇧L</span> level up preview
+          <span class="kbd">/</span> focus the command bar<br/>
+          <span class="kbd">⌃⇧Space</span> bring atlas forward (global)<br/>
+          <span class="kbd">↑</span> cmdbar history
         </div>
 
       </div>
@@ -495,7 +491,7 @@
     <!-- Q4: theme -->
     <div class="ask onb-panel" data-step="3">
       <div class="q">› [04/06] theme &amp; feel</div>
-      <div class="hint">// dark adds scanlines and phosphor. toggle with <span class="kbd">⌘T</span> any time.</div>
+      <div class="hint">// dark adds scanlines and phosphor. change any time in settings.</div>
       <div style="margin-top:10px;">
         <div style="font-size:10px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">mode</div>
         <div style="display:flex; gap:8px;">
@@ -568,9 +564,9 @@
       </div>
       <div style="margin-top:14px; padding:10px 14px; background:var(--accent); color:var(--paper); font-size:12px; line-height:1.6;">
         <strong>first things to try:</strong><br>
-        · press <span class="kbd" style="background:var(--paper); color:var(--ink);">/</span> anywhere to open the command bar<br>
-        · <span class="kbd" style="background:var(--paper); color:var(--ink);">⌘,</span> for settings &nbsp; <span class="kbd" style="background:var(--paper); color:var(--ink);">⌘K</span> for quick switcher &nbsp; <span class="kbd" style="background:var(--paper); color:var(--ink);">⌘T</span> to toggle theme<br>
-        · type <span class="kbd" style="background:var(--paper); color:var(--ink);">:rename</span> in the command bar any time to change the name
+        · press <span class="kbd" style="background:var(--paper); color:var(--ink);">⌃⇧Space</span> from any app to summon atlas<br>
+        · press <span class="kbd" style="background:var(--paper); color:var(--ink);">/</span> to focus the command bar<br>
+        · type <span class="kbd" style="background:var(--paper); color:var(--ink);">/help</span> for the command list
       </div>
     </div>
 
@@ -1673,12 +1669,9 @@ branch: main  ·  last push: 14m ago  ·  12 commits ahead</div>
         <div class="kb-layout">
           <div class="kb-col">
             <div class="kb-hdr">global</div>
-            <div class="kb-row"><span class="kb-act">open command bar</span><span class="kb-keys"><span class="kbd">/</span></span></div>
-            <div class="kb-row"><span class="kb-act">quick switcher</span><span class="kb-keys"><span class="kbd">⌘</span><span class="kbd">K</span></span></div>
-            <div class="kb-row"><span class="kb-act">settings</span><span class="kb-keys"><span class="kbd">⌘</span><span class="kbd">,</span></span></div>
-            <div class="kb-row"><span class="kb-act">toggle theme</span><span class="kb-keys"><span class="kbd">⌘</span><span class="kbd">T</span></span></div>
-            <div class="kb-row"><span class="kb-act">toggle tweaks</span><span class="kb-keys"><span class="kbd">⌘</span><span class="kbd">.</span></span></div>
-            <div class="kb-row"><span class="kb-act">home</span><span class="kb-keys"><span class="kbd">g</span><span class="kbd">h</span></span></div>
+            <div class="kb-row"><span class="kb-act">focus command bar</span><span class="kb-keys"><span class="kbd">/</span></span></div>
+            <div class="kb-row"><span class="kb-act">summon atlas (global)</span><span class="kb-keys"><span class="kbd">⌃⇧Space</span></span></div>
+            <div class="kb-row"><span class="kb-act">cmdbar history</span><span class="kb-keys"><span class="kbd">↑</span></span></div>
 
             <div class="kb-hdr">quests &amp; focus</div>
             <div class="kb-row"><span class="kb-act">new quest</span><span class="kb-keys"><span class="kbd">n</span></span></div>
@@ -1776,13 +1769,11 @@ branch: main  ·  last push: 14m ago  ·  12 commits ahead</div>
 <!-- ================ COMMAND BAR ================ -->
 <div class="cmdbar">
   <span class="prompt">atlas$</span>
-  <input class="in" id="cmdIn" placeholder="type a command, or /? to ask atlas — press ⌘K for palette" />
+  <input class="in" id="cmdIn" placeholder="type a command — / focus, ↑ history" />
   <div class="hints">
-    <span><span class="k kbd">⌘K</span>palette</span>
-    <span><span class="k kbd">⌘/</span>ask</span>
-    <span><span class="k kbd">g t</span>today</span>
-    <span><span class="k kbd">g h</span>health</span>
-    <span><span class="k kbd">F</span>focus</span>
+    <span><span class="k kbd">/</span>focus</span>
+    <span><span class="k kbd">⌃⇧Space</span>summon from any app</span>
+    <span><span class="k kbd">↑</span>history</span>
   </div>
 </div>
 
