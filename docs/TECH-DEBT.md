@@ -34,13 +34,13 @@ Status legend: 🔴 not started · 🟡 in progress · 🟢 done · ⚪ deferred
 
 | # | Item | Source | Status |
 |---|------|--------|--------|
-| 13 | Strip demo markup from `index.html` → mount points only (~90 kB drop) | perf MEDIUM | 🔴 |
-| 14 | Replace `js-yaml` in habits with hand parser or switch to JSON (~40 kB drop) | perf MEDIUM | 🔴 |
-| 15 | Move `xp.load()` off critical boot path; add snapshot/compaction | perf MEDIUM | 🔴 |
+| 13 | Strip demo markup from `index.html` → mount points only (~90 kB drop) | perf MEDIUM | 🟢 *(~34 kB drop; home/plugin screens kept)* |
+| 14 | Replace `js-yaml` in habits with hand parser or switch to JSON (~40 kB drop) | perf MEDIUM | 🟢 |
+| 15 | Move `xp.load()` off critical boot path; add snapshot/compaction | perf MEDIUM | 🟢 |
 | 16 | A11y pass — clickable `div`s → `<button>`, `:focus-visible`, ARIA on statusline + REPL, `prefers-reduced-motion` | uiux HIGH (a11y) | 🔴 |
 | 17 | Responsive layout — drop `width=1280` meta, add <1100 px breakpoints | uiux MEDIUM | 🔴 |
-| 18 | Add `docs/ARCHITECTURE.md` + `docs/PLUGIN_API.md` | forker-readiness HIGH (docs) | 🔴 |
-| 19 | Delete unused `lit` dep; validate plugin ids with strict regex | perf LOW + security LOW | 🔴 |
+| 18 | Add `docs/ARCHITECTURE.md` + `docs/PLUGIN_API.md` | forker-readiness HIGH (docs) | 🟢 |
+| 19 | Delete unused `lit` dep; validate plugin ids with strict regex | perf LOW + security LOW | 🟢 |
 
 ---
 
