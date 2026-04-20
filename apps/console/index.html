@@ -580,679 +580,99 @@
 
 <!-- ================ HEALTH MODULE ================ -->
 <section class="screen" id="scr-health" data-screen-label="Health">
-  <div class="term-grid">
-    <aside class="pane">
-      <div class="pane-hdr"><span>~/health</span><span class="nn">[1]</span></div>
-      <div class="pane-body">
-        <div class="section-title">SECTIONS</div>
-        <ul class="modlist">
-          <li class="active">overview</li>
-          <li>sleep <span class="lvl">lvl 9</span></li>
-          <li>workouts <span class="lvl">lvl 7</span></li>
-          <li>nutrition <span class="lvl">lvl 4</span></li>
-          <li>body <span class="lvl">lvl 3</span></li>
-          <li><span style="color:var(--muted);">+ add metric</span></li>
-        </ul>
-        <div class="section-title">SOURCES</div>
-        <div style="font-size:11px; line-height:1.8;">
-          <span class="dot" style="display:inline-block; width:6px; height:6px; background:var(--accent-green); border-radius:50%;"></span> apple health<br/>
-          <span class="dot" style="display:inline-block; width:6px; height:6px; background:var(--accent-green); border-radius:50%;"></span> oura<br/>
-          <span class="dot" style="display:inline-block; width:6px; height:6px; background:var(--muted); border-radius:50%;"></span> whoop <span class="dim">off</span><br/>
-          <span style="color:var(--muted);">+ connect</span>
-        </div>
-        <div class="section-title">COMMANDS</div>
-        <div style="font-size:10px; color:var(--muted); line-height:1.7;">
-          <span style="color:var(--ink);">/sleep 7d</span><br/>
-          <span style="color:var(--ink);">/workout log</span><br/>
-          <span style="color:var(--ink);">/food add</span><br/>
-          <span style="color:var(--ink);">/weigh</span>
-        </div>
-      </div>
-    </aside>
-
-    <main class="pane">
-      <div class="pane-hdr"><span>~/health/overview</span><span class="nn">[2]</span></div>
-      <div class="center-scroll">
-        <div class="module-hdr">
-          <div>
-            <div class="bc">~/<span class="a">health</span>/overview</div>
-            <h2>Health</h2>
-          </div>
-          <span class="lvl">lvl 9 · 2100/3000 xp</span>
-          <span class="xp">· score this wk <strong style="color:var(--ink);">78</strong>/100 (↑ +6)</span>
-          <span style="margin-left:auto; display:flex; gap:4px;">
-            <span class="kbd">D</span><span class="kbd">W</span><span class="kbd">M</span><span class="kbd">Y</span>
-          </span>
-        </div>
-
-        <div class="stat-block">
-          <div class="h"><span>▸ this week</span><span>apr 12 – apr 18</span></div>
-          <div class="body">
-            <div class="stats-row">
-              <div class="stat-cell">
-                <div class="k">SLEEP avg</div>
-                <div class="v">7h12</div>
-                <div class="delta up">↑ +18m</div>
-              </div>
-              <div class="stat-cell">
-                <div class="k">HRV avg</div>
-                <div class="v">48<span class="unit">ms</span></div>
-                <div class="delta">— steady</div>
-              </div>
-              <div class="stat-cell">
-                <div class="k">WORKOUTS</div>
-                <div class="v">5</div>
-                <div class="delta up">2 run · 2 climb · 1 yoga</div>
-              </div>
-              <div class="stat-cell">
-                <div class="k">STEPS avg</div>
-                <div class="v">8,340</div>
-                <div class="delta down">↓ -1,200</div>
-              </div>
-              <div class="stat-cell">
-                <div class="k">NRG today</div>
-                <div class="v">64<span class="unit">%</span></div>
-                <div class="bar"><div class="f" style="right:36%;"></div></div>
-              </div>
-            </div>
+  <div class="screen-empty">
+    <div class="term-grid">
+      <aside class="pane">
+        <div class="pane-hdr"><span>~/health</span><span class="nn">[1]</span></div>
+        <div class="pane-body">
+          <div class="section-title">STATUS</div>
+          <div style="font-size:11px; color:var(--muted); line-height:1.6;">
+            no health plugin loaded.<br><br>
+            the health module is a placeholder. wire an integration by writing
+            a plugin that registers a <code>health</code> screen view.<br><br>
+            see <code>plugins/template/</code> for the starter.
           </div>
         </div>
-
-        <div class="two-col">
-          <div class="chart-box">
-            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">
-              <span>▸ sleep · 7d</span>
-              <span>target 7h30</span>
-            </div>
-            <svg viewBox="0 0 700 200" style="width:100%; height:auto; display:block; max-height:220px;">
-              <line x1="0" y1="60" x2="700" y2="60" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
-              <text x="4" y="57" font-size="10" fill="var(--accent)" font-family="JetBrains Mono">7h30 target</text>
-              <g>
-                <rect x="10"  y="80"  width="80" height="100" fill="none" stroke="var(--line)" stroke-width="1.5"/>
-                <rect x="110" y="45"  width="80" height="135" fill="none" stroke="var(--line)" stroke-width="1.5"/>
-                <rect x="210" y="105" width="80" height="75"  fill="var(--accent)" stroke="var(--line)" stroke-width="1.5"/>
-                <rect x="310" y="65"  width="80" height="115" fill="none" stroke="var(--line)" stroke-width="1.5"/>
-                <rect x="410" y="55"  width="80" height="125" fill="none" stroke="var(--line)" stroke-width="1.5"/>
-                <rect x="510" y="90"  width="80" height="90"  fill="none" stroke="var(--line)" stroke-width="1.5"/>
-                <rect x="610" y="40"  width="80" height="140" fill="var(--accent-green)" stroke="var(--line)" stroke-width="1.5"/>
-                <g font-family="JetBrains Mono" font-size="11" fill="var(--muted)">
-                  <text x="10" y="197">MON 7h10</text>
-                  <text x="110" y="197">TUE 7h50</text>
-                  <text x="210" y="197" fill="var(--accent)">WED 5h48</text>
-                  <text x="310" y="197">THU 7h20</text>
-                  <text x="410" y="197">FRI 7h30</text>
-                  <text x="510" y="197">SAT 6h55</text>
-                  <text x="610" y="197" fill="var(--accent-green)">SUN 8h05</text>
-                </g>
-              </g>
-            </svg>
-          </div>
-          <div>
-            <div class="section-title" style="border:none; margin-top:0;">▸ WORKOUTS · APR</div>
-            <div class="barline"><span class="lbl">run</span><div class="bwrap"><div class="bf" style="width:68%;"></div></div><span class="val">34 km</span></div>
-            <div class="barline"><span class="lbl">climb</span><div class="bwrap"><div class="bf accent" style="width:52%;"></div></div><span class="val">8 sess</span></div>
-            <div class="barline"><span class="lbl">yoga</span><div class="bwrap"><div class="bf green" style="width:28%;"></div></div><span class="val">4 sess</span></div>
-            <div class="barline"><span class="lbl">walk</span><div class="bwrap"><div class="bf" style="width:82%;"></div></div><span class="val">61 km</span></div>
-            <div class="barline"><span class="lbl">cycle</span><div class="bwrap"><div class="bf" style="width:12%;"></div></div><span class="val">14 km</span></div>
+      </aside>
+      <main class="pane" style="border-right: var(--rule) solid var(--line);">
+        <div class="pane-hdr"><span>~/health/detail</span><span class="nn">[2]</span></div>
+        <div class="center-scroll">
+          <div style="padding: 40px 20px; font-size: 13px; color: var(--muted); line-height: 1.8;">
+            <div style="font-size: 18px; color: var(--ink); margin-bottom: 12px;">&#9484; no data &#9488;</div>
+            install a plugin to populate this screen.
           </div>
         </div>
-
-        <div class="two-col" style="margin-top:18px;">
-          <div>
-            <div class="section-title" style="border:none;">▸ BODY · 30D TRENDS</div>
-            <div class="metric-row">
-              <div class="metric">
-                <div class="mk">weight</div>
-                <div class="mv">72.1 <span class="mu">kg</span></div>
-                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none">
-                  <polyline points="0,8 10,10 20,9 30,11 40,10 50,13 60,12 70,14 80,13 90,15 100,14" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
-                </svg>
-                <div class="md"><span style="color:var(--accent-green);">↓ 0.8</span> vs last mo</div>
-              </div>
-              <div class="metric">
-                <div class="mk">resting hr</div>
-                <div class="mv">54 <span class="mu">bpm</span></div>
-                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none">
-                  <polyline points="0,12 10,11 20,13 30,10 40,9 50,11 60,8 70,10 80,9 90,7 100,8" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
-                </svg>
-                <div class="md"><span style="color:var(--accent-green);">↓ 3</span> vs last mo</div>
-              </div>
-              <div class="metric">
-                <div class="mk">hrv</div>
-                <div class="mv">62 <span class="mu">ms</span></div>
-                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none">
-                  <polyline points="0,16 10,14 20,15 30,13 40,12 50,14 60,10 70,11 80,9 90,8 100,7" fill="none" stroke="var(--accent-green)" stroke-width="1.5"/>
-                </svg>
-                <div class="md"><span style="color:var(--accent-green);">↑ 8</span> vs last mo</div>
-              </div>
-              <div class="metric">
-                <div class="mk">steps/d</div>
-                <div class="mv">8,430</div>
-                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none">
-                  <polyline points="0,18 10,14 20,16 30,10 40,12 50,8 60,14 70,6 80,10 90,4 100,7" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
-                </svg>
-                <div class="md"><span style="color:var(--accent-green);">↑ 640</span> vs last mo</div>
-              </div>
-            </div>
-
-            <div class="section-title" style="border:none; margin-top:14px;">▸ NUTRITION · 7D AVG</div>
-            <div class="tline" style="grid-template-columns: 90px 1fr 70px;"><span>protein</span><div class="bwrap"><div class="bf green" style="width:86%;"></div></div><span class="val" style="font-size:10px;">126 g / 140</span></div>
-            <div class="tline" style="grid-template-columns: 90px 1fr 70px;"><span>water</span><div class="bwrap"><div class="bf" style="width:72%;"></div></div><span class="val" style="font-size:10px;">2.1 L / 3.0</span></div>
-            <div class="tline" style="grid-template-columns: 90px 1fr 70px;"><span>caffeine</span><div class="bwrap"><div class="bf accent" style="width:48%;"></div></div><span class="val" style="font-size:10px;">180 mg / 400</span></div>
-            <div class="tline" style="grid-template-columns: 90px 1fr 70px;"><span>alcohol</span><div class="bwrap"><div class="bf" style="width:10%;"></div></div><span class="val" style="font-size:10px;">1 unit / wk</span></div>
-          </div>
-          <div>
-            <div class="section-title" style="border:none;">▸ XP · HEALTH</div>
-            <div class="xp-bar"><div class="f" style="width:70%;"></div><div class="t"></div></div>
-            <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">lvl 9 · 2100 / 3000 xp · next unlock: <strong style="color:var(--ink);">recovery insights v2</strong></div>
-            <div class="sticky-note">
-              atlas spotted: you sleep <strong>+40min</strong> on days you walk after dinner. schedule walk at 19:30?
-            </div>
-            <div style="margin-top:10px;">
-              <div class="section-title" style="border:none; margin-top:0;">▸ ACHIEVEMENTS</div>
-              <div class="badges" style="grid-template-columns:repeat(6, 1fr);">
-                <div class="badge got">★</div>
-                <div class="badge got">♡</div>
-                <div class="badge got">▲</div>
-                <div class="badge got">5k</div>
-                <div class="badge locked">?</div>
-                <div class="badge locked">?</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <aside class="pane">
-      <div class="pane-hdr"><span>~/log</span><span class="nn">[3]</span></div>
-      <div class="pane-body">
-        <div class="section-title">RECENT</div>
-        <div class="vitals">
-          <div class="row"><span class="k">apr 18 · 07:12</span><span class="v">woke · 7h12</span></div>
-          <div class="row"><span class="k">apr 17 · 22:40</span><span class="v">walk · 3.2 km</span></div>
-          <div class="row"><span class="k">apr 17 · 18:00</span><span class="v">climb · 5.9×4</span></div>
-          <div class="row"><span class="k">apr 17 · 08:15</span><span class="v">coffee · 1</span></div>
-          <div class="row"><span class="k">apr 16 · 07:00</span><span class="v">run · 5k · 26:40</span></div>
-          <div class="row"><span class="k">apr 15 · 21:00</span><span class="v">yoga · 30m</span></div>
-          <div class="row"><span class="k">apr 15 · 13:00</span><span class="v">weigh · 72.1 kg</span></div>
-        </div>
-        <div class="section-title">QUESTS</div>
-        <div class="quest daily" style="grid-template-columns: 1fr auto; gap:6px; padding:6px 8px;">
-          <div>
-            <div style="font-size:12px;"><span class="chk"></span>walk · 30m</div>
-            <div class="meta">streak 4d</div>
-          </div>
-          <div class="xp">+10</div>
-        </div>
-        <div class="quest side" style="grid-template-columns: 1fr auto; gap:6px; padding:6px 8px; margin-top:6px;">
-          <div>
-            <div style="font-size:12px;"><span class="chk"></span>run · 5k under 26</div>
-            <div class="meta">side quest · 3 tries left</div>
-          </div>
-          <div class="xp">+80</div>
-        </div>
-      </div>
-    </aside>
+      </main>
+      <aside class="pane">
+        <div class="pane-hdr"><span>~/health/side</span><span class="nn">[3]</span></div>
+        <div class="pane-body"></div>
+      </aside>
+    </div>
   </div>
 </section>
 
 <!-- ================ AI LAB MODULE ================ -->
 <section class="screen" id="scr-ailab" data-screen-label="Projects">
-  <div class="term-grid">
-    <aside class="pane">
-      <div class="pane-hdr"><span>~/projects</span><span class="nn">[1]</span></div>
-      <div class="pane-body">
-        <div class="section-title">REPOS · 7</div>
-        <ul class="modlist repos">
-          <li class="active">
-            <div class="repo-row">
-              <span class="dot on"></span>
-              <span class="rname">agent-eval-v3</span>
-              <span class="rlang py">py</span>
-            </div>
-            <div class="repo-meta">alex/agent-eval-v3 · ★ 24 · main</div>
-          </li>
-          <li>
-            <div class="repo-row">
-              <span class="dot"></span>
-              <span class="rname">atlas-1</span>
-              <span class="rlang ts">ts</span>
-            </div>
-            <div class="repo-meta">alex/atlas-1 · ★ 142 · feat/widgets</div>
-          </li>
-          <li>
-            <div class="repo-row">
-              <span class="dot err"></span>
-              <span class="rname">scraper-agent</span>
-              <span class="rlang py">py</span>
-            </div>
-            <div class="repo-meta">CI failing · 2h ago</div>
-          </li>
-          <li>
-            <div class="repo-row">
-              <span class="dot"></span>
-              <span class="rname">ember-rag</span>
-              <span class="rlang py">py</span>
-            </div>
-            <div class="repo-meta">alex/ember-rag · ★ 8 · archived</div>
-          </li>
-          <li>
-            <div class="repo-row">
-              <span class="dot"></span>
-              <span class="rname">prompt-lib-v2</span>
-              <span class="rlang ts">ts</span>
-            </div>
-            <div class="repo-meta">alex/prompt-lib · ★ 31</div>
-          </li>
-          <li>
-            <div class="repo-row">
-              <span class="dot"></span>
-              <span class="rname">weekend-synth</span>
-              <span class="rlang rs">rs</span>
-            </div>
-            <div class="repo-meta">private · non-ai · music</div>
-          </li>
-          <li>
-            <div class="repo-row">
-              <span class="dot"></span>
-              <span class="rname">dotfiles</span>
-              <span class="rlang sh">sh</span>
-            </div>
-            <div class="repo-meta">alex/dotfiles · ★ 3</div>
-          </li>
-          <li><span style="color:var(--muted); font-size:11px;">+ clone repo</span></li>
-        </ul>
-
-        <div class="section-title">FILTER</div>
-        <div style="display:flex; flex-wrap:wrap; gap:4px;">
-          <span class="tag accent">ai · 5</span>
-          <span class="tag">tool · 2</span>
-          <span class="tag">active · 4</span>
-          <span class="tag ghost">archived · 1</span>
-        </div>
-
-        <div class="section-title">COMPUTE</div>
-        <div style="font-size:11px; line-height:1.7;">
-          local · M3 max<br/>
-          <span class="k" style="color:var(--muted); font-size:10px;">RAM</span>
-          <span class="mbar" style="width:120px;"><span class="f" style="right:30%;"></span></span> 70%<br/>
-          <span class="k" style="color:var(--muted); font-size:10px;">GPU</span>
-          <span class="mbar" style="width:120px;"><span class="f accent" style="right:12%;"></span></span> 88%
-        </div>
-      </div>
-    </aside>
-
-    <main class="pane">
-      <div class="pane-hdr"><span>~/projects/agent-eval-v3</span><span class="nn">[2]</span></div>
-      <div class="center-scroll">
-        <div class="module-hdr">
-          <div>
-            <div class="bc">github.com/alex/<span class="a">agent-eval-v3</span></div>
-            <h2>agent-eval-v3</h2>
-          </div>
-          <span class="lvl">★ 24</span>
-          <span class="xp">· main</span>
-          <span class="xp">· last push 4m ago</span>
-          <span style="margin-left:auto; display:flex; gap:4px;">
-            <span class="kbd">C</span>clone
-            <span class="kbd">P</span>pr
-            <span class="kbd">I</span>issue
-          </span>
-        </div>
-
-        <div style="font-size:12px; color:var(--muted); margin-bottom:12px; line-height:1.5;">
-          eval harness for tool-using agents. python · mit license · 1.2k loc<br/>
-          topics: <span class="tag">llm</span> <span class="tag">eval</span> <span class="tag">agents</span> <span class="tag">python</span>
-        </div>
-
-        <div class="stat-block">
-          <div class="h"><span>▸ repo snapshot</span><span>ci · <span style="color:var(--accent);">1 failing</span></span></div>
-          <div class="body">
-            <div class="stats-row">
-              <div class="stat-cell">
-                <div class="k">COMMITS · 30D</div>
-                <div class="v">38</div>
-                <div class="delta up">+12 vs prev</div>
-              </div>
-              <div class="stat-cell">
-                <div class="k">OPEN PRS</div>
-                <div class="v">3</div>
-                <div class="delta">1 draft</div>
-              </div>
-              <div class="stat-cell">
-                <div class="k">ISSUES</div>
-                <div class="v" style="color:var(--accent);">7</div>
-                <div class="delta">2 bugs · 1 p0</div>
-              </div>
-              <div class="stat-cell">
-                <div class="k">COVERAGE</div>
-                <div class="v" style="color:var(--accent-green);">82<span class="unit">%</span></div>
-                <div class="delta up">+4%</div>
-              </div>
-              <div class="stat-cell">
-                <div class="k">BUNDLE</div>
-                <div class="v">1.4<span class="unit">mb</span></div>
-                <div class="delta">pkg v0.4.2</div>
-              </div>
-            </div>
+  <div class="screen-empty">
+    <div class="term-grid">
+      <aside class="pane">
+        <div class="pane-hdr"><span>~/projects</span><span class="nn">[1]</span></div>
+        <div class="pane-body">
+          <div class="section-title">STATUS</div>
+          <div style="font-size:11px; color:var(--muted); line-height:1.6;">
+            no projects plugin loaded.<br><br>
+            install a projects plugin (e.g., a GitHub activity viewer) to populate
+            this screen.<br><br>
+            see <code>plugins/template/</code> for the starter.
           </div>
         </div>
-
-        <div class="section-title" style="border:none; margin-top:14px;">▸ RECENT COMMITS</div>
-        <div class="commits">
-          <div class="commit">
-            <span class="sha">a4c2f9d</span>
-            <span class="msg">fix: drop tools when Q is short · add length heuristic</span>
-            <span class="when">4m</span>
-          </div>
-          <div class="commit">
-            <span class="sha">7b1e3aa</span>
-            <span class="msg">chore: bump anthropic-sdk to 0.54</span>
-            <span class="when">2h</span>
-          </div>
-          <div class="commit">
-            <span class="sha">9f02c11</span>
-            <span class="msg">feat(eval): add hallucination detector · 22 new cases</span>
-            <span class="when">yday</span>
-          </div>
-          <div class="commit">
-            <span class="sha">3d8a71c</span>
-            <span class="msg">docs: readme update + quickstart</span>
-            <span class="when">2d</span>
-          </div>
-          <div class="commit">
-            <span class="sha">b0e4f52</span>
-            <span class="msg">refactor: split runner into pool + reporter</span>
-            <span class="when">3d</span>
+      </aside>
+      <main class="pane" style="border-right: var(--rule) solid var(--line);">
+        <div class="pane-hdr"><span>~/projects/detail</span><span class="nn">[2]</span></div>
+        <div class="center-scroll">
+          <div style="padding: 40px 20px; font-size: 13px; color: var(--muted); line-height: 1.8;">
+            <div style="font-size: 18px; color: var(--ink); margin-bottom: 12px;">&#9484; no data &#9488;</div>
+            install a plugin to populate this screen.
           </div>
         </div>
-
-        <div class="two-col" style="margin-top:14px;">
-          <div>
-            <div class="section-title" style="border:none;">▸ OPEN PRS</div>
-            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t" style="color:var(--accent-green);">#82</span><span>fix prompt-v12 for tool_skip pattern</span><span class="tag">+142 -11</span></div>
-            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t" style="color:var(--accent-green);">#79</span><span>add retry backoff for 529s</span><span class="tag">draft</span></div>
-            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t" style="color:var(--accent-green);">#77</span><span>ci: cache hf datasets</span><span class="tag">+38 -4</span></div>
-
-            <div class="section-title" style="border:none; margin-top:14px;">▸ TOP ISSUES</div>
-            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t" style="color:var(--accent);">#91</span><span>hallucinates on short queries</span><span class="tag accent">p0</span></div>
-            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t">#88</span><span>windows paths not escaped</span><span class="tag">bug</span></div>
-            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t">#84</span><span>support ollama backend</span><span class="tag yellow">feat</span></div>
-          </div>
-          <div>
-            <div class="section-title" style="border:none;">▸ COMMITS · 90D</div>
-            <div class="chart-box" style="padding:10px 8px;">
-              <svg viewBox="0 0 300 100" style="width:100%; max-width:320px; height:auto; display:block; margin:0 auto;">
-                <g stroke="var(--line)" stroke-width="1.5" fill="none">
-                  <rect x="6"   y="75" width="3" height="15"/>
-                  <rect x="12"  y="70" width="3" height="20"/>
-                  <rect x="18"  y="82" width="3" height="8"/>
-                  <rect x="24"  y="60" width="3" height="30"/>
-                  <rect x="30"  y="75" width="3" height="15"/>
-                  <rect x="36"  y="90" width="3" height="0"/>
-                  <rect x="42"  y="65" width="3" height="25"/>
-                  <rect x="48"  y="55" width="3" height="35" fill="var(--accent-3)"/>
-                  <rect x="54"  y="70" width="3" height="20"/>
-                  <rect x="60"  y="80" width="3" height="10"/>
-                  <rect x="66"  y="72" width="3" height="18"/>
-                  <rect x="72"  y="90" width="3" height="0"/>
-                  <rect x="78"  y="50" width="3" height="40" fill="var(--accent-3)"/>
-                  <rect x="84"  y="62" width="3" height="28"/>
-                  <rect x="90"  y="70" width="3" height="20"/>
-                  <rect x="96"  y="45" width="3" height="45" fill="var(--accent)"/>
-                  <rect x="102" y="60" width="3" height="30"/>
-                  <rect x="108" y="55" width="3" height="35" fill="var(--accent-3)"/>
-                  <rect x="114" y="70" width="3" height="20"/>
-                  <rect x="120" y="80" width="3" height="10"/>
-                  <rect x="126" y="40" width="3" height="50" fill="var(--accent)"/>
-                  <rect x="132" y="55" width="3" height="35" fill="var(--accent-3)"/>
-                  <rect x="138" y="65" width="3" height="25"/>
-                  <rect x="144" y="58" width="3" height="32"/>
-                  <rect x="150" y="48" width="3" height="42" fill="var(--accent-3)"/>
-                  <rect x="156" y="62" width="3" height="28"/>
-                  <rect x="162" y="35" width="3" height="55" fill="var(--accent)"/>
-                  <rect x="168" y="50" width="3" height="40" fill="var(--accent-3)"/>
-                  <rect x="174" y="68" width="3" height="22"/>
-                  <rect x="180" y="42" width="3" height="48" fill="var(--accent-3)"/>
-                  <rect x="186" y="52" width="3" height="38"/>
-                  <rect x="192" y="60" width="3" height="30"/>
-                  <rect x="198" y="32" width="3" height="58" fill="var(--accent)"/>
-                  <rect x="204" y="48" width="3" height="42" fill="var(--accent-3)"/>
-                  <rect x="210" y="40" width="3" height="50" fill="var(--accent-3)"/>
-                  <rect x="216" y="58" width="3" height="32"/>
-                  <rect x="222" y="45" width="3" height="45" fill="var(--accent-3)"/>
-                  <rect x="228" y="30" width="3" height="60" fill="var(--accent)"/>
-                  <rect x="234" y="50" width="3" height="40" fill="var(--accent-3)"/>
-                  <rect x="240" y="38" width="3" height="52" fill="var(--accent-3)"/>
-                  <rect x="246" y="28" width="3" height="62" fill="var(--accent)"/>
-                  <rect x="252" y="42" width="3" height="48" fill="var(--accent-3)"/>
-                  <rect x="258" y="35" width="3" height="55" fill="var(--accent)"/>
-                  <rect x="264" y="25" width="3" height="65" fill="var(--accent)"/>
-                  <rect x="270" y="38" width="3" height="52" fill="var(--accent-3)"/>
-                  <rect x="276" y="22" width="3" height="68" fill="var(--accent)"/>
-                  <rect x="282" y="30" width="3" height="60" fill="var(--accent)"/>
-                </g>
-                <text x="6" y="98" font-size="8" fill="var(--muted)" font-family="JetBrains Mono">jan 20</text>
-                <text x="258" y="98" font-size="8" fill="var(--accent)" font-family="JetBrains Mono">today</text>
-              </svg>
-            </div>
-            <div class="sticky-note">atlas: commit cadence is up 3× this month — but issue close rate dropped to 40%. want a triage session?</div>
-          </div>
-        </div>
-
-        <div class="section-title" style="border:none; margin-top:14px;">▸ LATEST EVAL RUN · #47</div>
-        <div class="tline" style="grid-template-columns: 60px 1fr 70px 60px;">
-          <span class="t">RUN 47</span>
-          <span>prompt-v12 · 312 cases · <span style="color:var(--accent-green);">97.0% pass</span></span>
-          <span style="color:var(--muted); font-size:11px;">$4.18</span>
-          <span class="tag accent">live</span>
-        </div>
-      </div>
-    </main>
-
-    <aside class="pane">
-      <div class="pane-hdr"><span>~/github</span><span class="nn">[3]</span></div>
-      <div class="pane-body">
-        <div class="section-title">CONTRIBUTIONS · 12W</div>
-        <div class="gh-grid" id="ghGrid"></div>
-        <div style="font-size:10px; color:var(--muted); margin-top:4px;">
-          237 commits · 12-week streak · best day: <strong style="color:var(--ink);">14 commits</strong>
-        </div>
-
-        <div class="section-title">OPEN PRS · ALL REPOS</div>
-        <div class="tline" style="grid-template-columns: 1fr auto; padding:4px 0;"><span style="font-size:11px;">agent-eval-v3 #82</span><span class="tag">review</span></div>
-        <div class="tline" style="grid-template-columns: 1fr auto; padding:4px 0;"><span style="font-size:11px;">atlas-1 #14</span><span class="tag yellow">wip</span></div>
-        <div class="tline" style="grid-template-columns: 1fr auto; padding:4px 0;"><span style="font-size:11px;">prompt-lib #9</span><span class="tag">mergeable</span></div>
-
-        <div class="section-title">CI · LAST 24H</div>
-        <div class="agent-card">
-          <div class="name"><span class="d err"></span>scraper-agent / main</div>
-          <div class="detail">OOM · 03:12 · pytest</div>
-          <div style="margin-top:4px; font-size:10px;">
-            <span class="kbd">r</span> retry &nbsp;
-            <span class="kbd">b</span> bisect &nbsp;
-            <span class="kbd">l</span> logs
-          </div>
-        </div>
-        <div class="agent-card">
-          <div class="name"><span class="d on"></span>agent-eval-v3 / main</div>
-          <div class="detail">passed · 11m ago · 1:42</div>
-        </div>
-        <div class="agent-card">
-          <div class="name"><span class="d on"></span>atlas-1 / feat/widgets</div>
-          <div class="detail">passed · 1h ago · 0:38</div>
-        </div>
-
-        <div class="section-title">AI CREDITS</div>
-        <div style="font-size:12px; line-height:1.6;">
-          anthropic · <strong>$18.40</strong> / $50<br/>
-          <span style="color:var(--muted); font-size:10px;">resets may 1</span>
-        </div>
-
-        <div class="section-title">NOTES</div>
-        <div class="sticky-note" style="font-size:15px;">
-          triage #91 first — that pattern might show up in ember-rag too. write a shared check?
-        </div>
-      </div>
-    </aside>
+      </main>
+      <aside class="pane">
+        <div class="pane-hdr"><span>~/projects/side</span><span class="nn">[3]</span></div>
+        <div class="pane-body"></div>
+      </aside>
+    </div>
   </div>
 </section>
 
 <!-- ================ HOBBIES MODULE ================ -->
 <section class="screen" id="scr-hobbies" data-screen-label="Hobbies">
-  <div class="term-grid">
-    <aside class="pane">
-      <div class="pane-hdr"><span>~/hobbies</span><span class="nn">[1]</span></div>
-      <div class="pane-body">
-        <div class="section-title">SKILLS</div>
-        <ul class="modlist">
-          <li class="active"><span class="dot on"></span>piano <span class="lvl">lvl 7</span></li>
-          <li><span class="dot on"></span>climbing <span class="lvl">lvl 4</span></li>
-          <li><span class="dot"></span>garden <span class="lvl">lvl 2</span></li>
-          <li><span class="dot"></span>chess <span class="lvl">lvl 3</span></li>
-          <li><span style="color:var(--muted);">+ start a new skill</span></li>
-        </ul>
-        <div class="section-title">STREAKS</div>
-        <div style="font-size:12px; line-height:1.8;">
-          piano · <strong>12d</strong> 🔥<br/>
-          climbing · 1d<br/>
-          chess · <span style="color:var(--muted);">0</span>
-        </div>
-        <div class="section-title">TOTAL XP</div>
-        <div style="font-size:20px; line-height:1;">4,820<span style="font-size:12px; color:var(--muted);"> hobby xp</span></div>
-      </div>
-    </aside>
-
-    <main class="pane">
-      <div class="pane-hdr"><span>~/hobbies/piano</span><span class="nn">[2]</span></div>
-      <div class="center-scroll">
-        <div class="module-hdr">
-          <div>
-            <div class="bc">~/hobbies/<span class="a">piano</span></div>
-            <h2>Piano</h2>
-          </div>
-          <span class="lvl">lvl 7</span>
-          <span class="xp">· 2100/3000 xp to lvl 8</span>
-          <span class="xp">· streak <strong style="color:var(--accent);">12d</strong> 🔥</span>
-        </div>
-
-        <div class="xp-bar" style="height:14px;"><div class="f" style="width:70%;"></div><div class="t"></div></div>
-        <div style="font-size:11px; color:var(--muted); margin-bottom:16px;">
-          next unlock at lvl 8: <strong style="color:var(--ink);">sight-read dashboard</strong> &nbsp; · &nbsp; longest streak: 41d (jan–feb)
-        </div>
-
-        <div class="section-title" style="border:none;">▸ PRACTICE · LAST 30 DAYS</div>
-        <div class="heatmap strip" id="pianoHeatmap"></div>
-        <div style="font-size:10px; color:var(--muted); display:flex; gap:10px; margin-top:4px;">
-          <span>■ skipped</span>
-          <span style="color:var(--ink);">■ 1-20m</span>
-          <span style="color:var(--accent-3);">■ 20-40m</span>
-          <span style="color:var(--accent);">■ 40m+</span>
-        </div>
-
-        <div class="two-col" style="margin-top:18px;">
-          <div>
-            <div class="section-title" style="border:none;">▸ REPERTOIRE</div>
-            <div class="tline" style="grid-template-columns: 1fr 60px 60px;"><span>Gymnopédie No. 1</span><span style="font-size:10px; color:var(--accent-green);">learned</span><span class="tag">memd</span></div>
-            <div class="tline" style="grid-template-columns: 1fr 60px 60px;"><span>Clair de Lune · opening</span><span style="font-size:10px; color:var(--accent);">wip 45%</span><span class="tag yellow">focus</span></div>
-            <div class="tline" style="grid-template-columns: 1fr 60px 60px;"><span>Arabesque No. 1</span><span style="font-size:10px; color:var(--muted);">queued</span><span class="tag ghost">next</span></div>
-            <div class="tline" style="grid-template-columns: 1fr 60px 60px;"><span>Prelude in C</span><span style="font-size:10px; color:var(--accent-green);">learned</span><span class="tag">memd</span></div>
-            <div style="font-size:10px; color:var(--muted); margin-top:6px;">+ add piece</div>
-          </div>
-          <div>
-            <div class="section-title" style="border:none;">▸ SESSIONS · 30D</div>
-            <div class="chart-box" style="padding:10px 8px;">
-              <svg viewBox="0 0 300 100" style="width:100%; max-width:320px; height:auto; display:block; margin:0 auto;">
-                <g stroke="var(--line)" stroke-width="1.5" fill="none">
-                  <rect x="6" y="70" width="6" height="20"/>
-                  <rect x="16" y="60" width="6" height="30"/>
-                  <rect x="26" y="50" width="6" height="40"/>
-                  <rect x="36" y="90" width="6" height="0"/>
-                  <rect x="46" y="65" width="6" height="25"/>
-                  <rect x="56" y="55" width="6" height="35"/>
-                  <rect x="66" y="45" width="6" height="45"/>
-                  <rect x="76" y="40" width="6" height="50" fill="var(--accent-3)"/>
-                  <rect x="86" y="45" width="6" height="45"/>
-                  <rect x="96" y="30" width="6" height="60" fill="var(--accent)"/>
-                  <rect x="106" y="55" width="6" height="35"/>
-                  <rect x="116" y="50" width="6" height="40"/>
-                  <rect x="126" y="40" width="6" height="50" fill="var(--accent-3)"/>
-                  <rect x="136" y="35" width="6" height="55" fill="var(--accent-3)"/>
-                  <rect x="146" y="25" width="6" height="65" fill="var(--accent)"/>
-                  <rect x="156" y="30" width="6" height="60" fill="var(--accent)"/>
-                  <rect x="166" y="45" width="6" height="45"/>
-                  <rect x="176" y="20" width="6" height="70" fill="var(--accent)"/>
-                  <rect x="186" y="35" width="6" height="55" fill="var(--accent-3)"/>
-                  <rect x="196" y="25" width="6" height="65" fill="var(--accent)"/>
-                  <rect x="206" y="35" width="6" height="55" fill="var(--accent-3)"/>
-                  <rect x="216" y="30" width="6" height="60" fill="var(--accent)"/>
-                  <rect x="226" y="40" width="6" height="50" fill="var(--accent-3)"/>
-                  <rect x="236" y="25" width="6" height="65" fill="var(--accent)"/>
-                  <rect x="246" y="30" width="6" height="60" fill="var(--accent)"/>
-                  <rect x="256" y="20" width="6" height="70" fill="var(--accent)"/>
-                  <rect x="266" y="35" width="6" height="55" fill="var(--accent-3)"/>
-                  <rect x="276" y="25" width="6" height="65" fill="var(--accent)"/>
-                </g>
-                <text x="6" y="98" font-size="8" fill="var(--muted)" font-family="JetBrains Mono">mar 19</text>
-                <text x="260" y="98" font-size="8" fill="var(--accent)" font-family="JetBrains Mono">apr 18</text>
-              </svg>
-            </div>
-            <div style="font-size:11px; color:var(--muted); margin-top:4px;">avg session: <strong style="color:var(--ink);">24 min</strong> · total month: <strong style="color:var(--ink);">9h 20m</strong></div>
+  <div class="screen-empty">
+    <div class="term-grid">
+      <aside class="pane">
+        <div class="pane-hdr"><span>~/hobbies</span><span class="nn">[1]</span></div>
+        <div class="pane-body">
+          <div class="section-title">STATUS</div>
+          <div style="font-size:11px; color:var(--muted); line-height:1.6;">
+            no hobbies plugin loaded.<br><br>
+            install a hobbies plugin to track piano, reading, workouts, etc.<br><br>
+            see <code>plugins/template/</code> for the starter.
           </div>
         </div>
-
-        <div class="section-title" style="border:none; margin-top:14px;">▸ UPCOMING</div>
-        <div class="tline"><span class="t">TODAY</span><span class="circle"></span><span>scales + Clair de Lune · 20m</span><span class="xp">+10</span></div>
-        <div class="tline"><span class="t">TUE</span><span class="circle"></span><span>lesson w/ J.</span><span class="tag">60m</span></div>
-        <div class="tline"><span class="t">MAY 12</span><span class="circle"></span><span>recital — <span style="color:var(--accent);">quest ✦</span></span><span class="xp">+500</span></div>
-
-        <div class="section-title" style="border:none; margin-top:14px;">▸ ACHIEVEMENTS</div>
-        <div class="badges" style="grid-template-columns:repeat(8, 1fr);">
-          <div class="badge got">★</div>
-          <div class="badge got">7d</div>
-          <div class="badge got">♩</div>
-          <div class="badge got">mem</div>
-          <div class="badge locked">30d</div>
-          <div class="badge locked">100h</div>
-          <div class="badge locked">live</div>
-          <div class="badge locked">duet</div>
-        </div>
-      </div>
-    </main>
-
-    <aside class="pane">
-      <div class="pane-hdr"><span>~/log</span><span class="nn">[3]</span></div>
-      <div class="pane-body">
-        <div class="section-title">RECENT SESSIONS</div>
-        <div class="vitals">
-          <div class="row"><span class="k">apr 17 · 20:12</span><span class="v">28m</span></div>
-          <div class="row"><span class="k">apr 16 · 20:04</span><span class="v">22m</span></div>
-          <div class="row"><span class="k">apr 15 · 19:48</span><span class="v">35m</span></div>
-          <div class="row"><span class="k">apr 14 · 21:10</span><span class="v">18m</span></div>
-          <div class="row"><span class="k">apr 13 · 20:00</span><span class="v">24m</span></div>
-          <div class="row"><span class="k">apr 12 · 20:40</span><span class="v">30m</span></div>
-          <div class="row"><span class="k">apr 11 · 19:55</span><span class="v">26m</span></div>
-        </div>
-
-        <div class="section-title">ATLAS NOTES</div>
-        <div class="sticky-note">
-          your best sessions happen right after dinner (19:30-20:30). protect that window?
-        </div>
-        <div class="sticky-note" style="background:var(--paper-2); color:var(--ink); transform:rotate(1deg);">
-          Clair de Lune: you've slowed at bar 17 every time for 4 sessions. slow-practice it?
-        </div>
-
-        <div class="section-title">QUEST</div>
-        <div class="quest main" style="grid-template-columns: 1fr auto; gap:6px; padding:6px 8px;">
-          <div>
-            <div style="font-size:12px;"><span class="chk"></span>play at may 12 recital</div>
-            <div class="meta">24 days · main quest</div>
+      </aside>
+      <main class="pane" style="border-right: var(--rule) solid var(--line);">
+        <div class="pane-hdr"><span>~/hobbies/detail</span><span class="nn">[2]</span></div>
+        <div class="center-scroll">
+          <div style="padding: 40px 20px; font-size: 13px; color: var(--muted); line-height: 1.8;">
+            <div style="font-size: 18px; color: var(--ink); margin-bottom: 12px;">&#9484; no data &#9488;</div>
+            install a plugin to populate this screen.
           </div>
-          <div class="xp">+500</div>
         </div>
-      </div>
-    </aside>
+      </main>
+      <aside class="pane">
+        <div class="pane-hdr"><span>~/hobbies/side</span><span class="nn">[3]</span></div>
+        <div class="pane-body"></div>
+      </aside>
+    </div>
   </div>
 </section>
 
