@@ -29,28 +29,13 @@ First Tauri build takes 2–5 minutes (compiling Rust). Subsequent starts are fa
 
 A plugin is a directory under `plugins/<id>/` with a `main.js` exporting a default class that implements `Plugin` from `@atlas/sdk`.
 
-Minimum viable plugin:
+Start from `plugins/template/`. The fastest way:
 
-```js
-/** @typedef {import("@atlas/sdk").Plugin} Plugin */
-/** @typedef {import("@atlas/sdk").PluginContext} PluginContext */
-
-export default class HelloPlugin {
-  /** @param {PluginContext} ctx */
-  async onload(ctx) {
-    ctx.commands.register({
-      id: "greet",
-      title: "Say hello",
-      run: async () => {
-        ctx.events.emit("ui:toast", { message: "hello" });
-      },
-    });
-  }
-
-  /** @param {PluginContext} _ctx */
-  async onunload(_ctx) {}
-}
+```bash
+pnpm new:plugin my-plugin
 ```
+
+That copies the template, rewrites the id everywhere, and leaves you a working plugin to iterate on. Open `plugins/my-plugin/main.js` and add your own commands, views, and event handlers.
 
 Reference: the three built-in plugins (`plugins/tasks`, `plugins/journal`, `plugins/habits`) cover the common patterns — command registration, vault IO, XP awards, UI views, and event subscriptions. Read those before reading `packages/core`; the SDK surface is the contract.
 

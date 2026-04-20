@@ -16,7 +16,8 @@
     "tauri:build": "tauri build",
     "test": "pnpm -r test",
     "test:e2e": "playwright test",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "new:plugin": "node scripts/new-plugin.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",

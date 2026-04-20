@@ -1,0 +1,8 @@
+{
+  "id": "template",
+  "name": "Template Plugin",
+  "version": "0.0.1",
+  "atlas": "^0.10.0",
+  "main": "main.js",
+  "permissions": ["vault:plugins/template"]
+}

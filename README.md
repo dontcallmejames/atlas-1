@@ -66,6 +66,19 @@ pnpm tauri:build
 # installers land in src-tauri/target/release/bundle/
 ```
 
+## Write a plugin
+
+The shortest path from zero to a working plugin:
+
+```bash
+pnpm new:plugin my-plugin
+# edit plugins/my-plugin/main.js
+pnpm tauri:dev
+# in the command bar: /my-plugin.hello
+```
+
+Everything lives as plain files under `plugins/my-plugin/`. See `plugins/template/` and the three built-in plugins for the patterns.
+
 ## License
 
 MIT — see [LICENSE](./LICENSE).

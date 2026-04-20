@@ -1,0 +1,6 @@
+{
+  "name": "@atlas-plugin/template",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module"
+}
