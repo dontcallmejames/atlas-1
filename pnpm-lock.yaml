@@ -63,6 +63,12 @@ importers:
 
   packages/ui: {}
 
+  plugins/tasks:
+    devDependencies:
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@25.6.0)
+
 packages:
 
   '@esbuild/aix-ppc64@0.21.5':
