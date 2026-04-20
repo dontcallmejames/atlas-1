@@ -16,7 +16,7 @@ Status legend: 🔴 not started · 🟡 in progress · 🟢 done · ⚪ deferred
 | 2 | Fix onboarding — explicit vault-picker step, wire summary to real choices, keyboard nav (Enter/Esc) | uiux HIGH | 🔴 |
 | 3 | Command-bar MVP feedback — autocomplete-on-type, visible error on unknown command, up-arrow history | uiux HIGH | 🔴 |
 | 4 | Remove advertised-but-unwired shortcuts from Home/cmdbar chrome | uiux HIGH | 🔴 |
-| 5 | Dedupe boot sequence in `apps/console/src/main.ts` into a single `startRuntime()` | code-quality HIGH | 🔴 |
+| 5 | Dedupe boot sequence in `apps/console/src/main.ts` into a single `startRuntime()` | code-quality HIGH | 🟢 |
 
 ## Tier 2 — Before promoting the repo / v1.0
 

@@ -1,5 +1,8 @@
 // Atlas 1 - console bootstrap.
 
+import type { Runtime } from "@atlas/core";
+import type { VaultFs } from "@atlas/sdk";
+
 const VERSION = "0.1.0";
 
 // eslint-disable-next-line no-console
@@ -7,6 +10,27 @@ console.log("main.ts loaded");
 
 function isTauri(): boolean {
   return typeof (window as unknown as { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__ !== "undefined";
+}
+
+async function startRuntime(vault: VaultFs, vaultRoot: string): Promise<Runtime> {
+  const { createRuntime } = await import("@atlas/core");
+  const { initShell } = await import("./shell/index.js");
+  const { loadBuiltInPlugins } = await import("./boot/built-in-plugins.js");
+  const { initGlobalShortcut } = await import("./boot/global-shortcut.js");
+
+  const runtime = await createRuntime({ vault, vaultRoot });
+  await runtime.load();
+  await loadBuiltInPlugins(runtime);
+  await initShell(runtime);
+  // Start the ritual cron scheduler (1-minute tick).
+  window.setInterval(() => {
+    void runtime.rituals.tick();
+  }, 60_000);
+  // App is fully wired; fire the ready event so @on app:ready rituals can run.
+  runtime.events.emit("app:ready", undefined);
+  await initGlobalShortcut(runtime.config.get().globalShortcut);
+  try { localStorage.setItem("atlas1c-vault", vaultRoot); } catch { /* ignore */ }
+  return runtime;
 }
 
 async function boot(): Promise<void> {
@@ -20,9 +44,8 @@ async function boot(): Promise<void> {
     return;
   }
 
-  const { createRuntime, ConfigStore } = await import("@atlas/core");
+  const { ConfigStore } = await import("@atlas/core");
   const { TauriVaultFs } = await import("./core/tauri-vault-fs.js");
-  const { initShell } = await import("./shell/index.js");
   const { showScreen } = await import("./shell/core-commands.js");
 
   const vault = new TauriVaultFs();
@@ -48,20 +71,8 @@ async function boot(): Promise<void> {
     // starts with DEFAULT_CONFIG and is populated by the wizard.
 
     await runOnboardingAndBoot(vault, tempConfig, async () => {
-      const rt = await createRuntime({ vault, vaultRoot: tempConfig.get().vaultPath });
-      await rt.load();
-      const { loadBuiltInPlugins } = await import("./boot/built-in-plugins.js");
-      await loadBuiltInPlugins(rt);
-      await initShell(rt);
-      // Start the ritual cron scheduler (1-minute tick).
-      window.setInterval(() => {
-        void rt.rituals.tick();
-      }, 60_000);
-      // App is fully wired; fire the ready event so @on app:ready rituals can run.
-      rt.events.emit("app:ready", undefined);
-      const { initGlobalShortcut } = await import("./boot/global-shortcut.js");
-      await initGlobalShortcut(rt.config.get().globalShortcut);
-      try { localStorage.setItem("atlas1c-vault", tempConfig.get().vaultPath); } catch { /* ignore */ }
+      const chosenRoot = tempConfig.get().vaultPath;
+      const rt = await startRuntime(vault, chosenRoot);
       showScreen("home");
       // eslint-disable-next-line no-console
       console.log(`Atlas 1 \u00b7 v${VERSION} \u00b7 booted`);
@@ -71,20 +82,7 @@ async function boot(): Promise<void> {
   }
 
   // Normal boot - vault root exists.
-  const runtime = await createRuntime({ vault, vaultRoot });
-  await runtime.load();
-  const { loadBuiltInPlugins } = await import("./boot/built-in-plugins.js");
-  await loadBuiltInPlugins(runtime);
-  await initShell(runtime);
-  // Start the ritual cron scheduler (1-minute tick).
-  window.setInterval(() => {
-    void runtime.rituals.tick();
-  }, 60_000);
-  // App is fully wired; fire the ready event so @on app:ready rituals can run.
-  runtime.events.emit("app:ready", undefined);
-  const { initGlobalShortcut } = await import("./boot/global-shortcut.js");
-  await initGlobalShortcut(runtime.config.get().globalShortcut);
-  try { localStorage.setItem("atlas1c-vault", vaultRoot); } catch { /* ignore */ }
+  const runtime = await startRuntime(vault, vaultRoot);
 
   if (!runtime.config.get().onboarded) {
     // Edge: vault set but config says not-onboarded. Run wizard.
