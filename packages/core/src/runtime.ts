@@ -35,7 +35,7 @@ export async function createRuntime(options: RuntimeOptions): Promise<Runtime> {
   const commands = new CommandRegistry();
   const events = new EventBus();
   const xp = new XpStore(vault, { base: c.xpPerLevelBase, gameMode: c.gameMode });
-  await xp.load();
+  void xp.load();
   const mounts = new MountRegistry();
 
   const plugins = new PluginLoader({

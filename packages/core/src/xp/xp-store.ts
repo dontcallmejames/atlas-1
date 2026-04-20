@@ -2,6 +2,7 @@ import type { VaultFs, XpEvent, XpState } from "@atlas/sdk";
 import { xpToLevel } from "./level-curve.js";
 
 const LOG_PATH = ".atlas/xp.log";
+const SNAPSHOT_PATH = ".atlas/xp-state.json";
 
 interface XpStoreOptions {
   base: number;
@@ -17,11 +18,19 @@ type AwardInput = {
 
 type Listener = (state: XpState) => void;
 
+interface Snapshot {
+  state: XpState;
+  lastSeenTs: number;
+  lastXpDate: string | null;
+}
+
 export class XpStore {
   private state: XpState = emptyState();
   private lastXpDate: string | null = null;
+  private lastSeenTs = 0;
   private readonly listeners = new Set<Listener>();
   private writeChain: Promise<void> = Promise.resolve();
+  public ready: Promise<void> = Promise.resolve();
 
   constructor(
     private readonly vault: VaultFs,
@@ -31,17 +40,53 @@ export class XpStore {
   async load(): Promise<void> {
     this.state = emptyState();
     this.lastXpDate = null;
+    this.lastSeenTs = 0;
+
+    // Fast path: snapshot exists.
+    if (await this.vault.exists(SNAPSHOT_PATH)) {
+      try {
+        const raw = await this.vault.read(SNAPSHOT_PATH);
+        const snap = JSON.parse(raw) as Snapshot;
+        this.state = snap.state;
+        this.lastSeenTs = snap.lastSeenTs;
+        this.lastXpDate = snap.lastXpDate;
+        for (const l of [...this.listeners]) l(this.state);
+        // Kick off async tail replay but do not await.
+        this.ready = this.replayTail();
+        return;
+      } catch {
+        // Fall through to full replay on corrupt snapshot.
+        this.state = emptyState();
+        this.lastXpDate = null;
+        this.lastSeenTs = 0;
+      }
+    }
+
+    // Cold path: full log replay (first boot, or corrupt snapshot).
+    await this.replayFromLog(0);
+  }
+
+  private async replayTail(): Promise<void> {
+    await this.replayFromLog(this.lastSeenTs);
+  }
+
+  private async replayFromLog(since: number): Promise<void> {
     if (!(await this.vault.exists(LOG_PATH))) return;
     const raw = await this.vault.read(LOG_PATH);
-    const lines = raw.split("\n").filter((l) => l.trim().length > 0);
-    for (const line of lines) {
+    let changed = false;
+    for (const line of raw.split("\n")) {
+      if (!line.trim()) continue;
       try {
         const event = JSON.parse(line) as XpEvent;
+        if (event.ts <= since) continue;
         this.apply(event);
+        this.lastSeenTs = Math.max(this.lastSeenTs, event.ts);
+        changed = true;
       } catch {
         // skip malformed line
       }
     }
+    if (changed) for (const l of [...this.listeners]) l(this.state);
   }
 
   getState(): XpState {
@@ -58,6 +103,7 @@ export class XpStore {
       kind: input.kind ?? "xp",
     };
     this.apply(event);
+    this.lastSeenTs = Math.max(this.lastSeenTs, event.ts);
     const line = JSON.stringify(event) + "\n";
     this.writeChain = this.writeChain.then(() => this.vault.append(LOG_PATH, line));
     for (const l of [...this.listeners]) l(this.state);
@@ -68,9 +114,15 @@ export class XpStore {
     return () => this.listeners.delete(listener);
   }
 
-  /** Wait for all queued writes to complete. */
+  /** Wait for all queued writes to complete, then snapshot state. */
   async flush(): Promise<void> {
     await this.writeChain;
+    const snap: Snapshot = {
+      state: this.state,
+      lastSeenTs: this.lastSeenTs,
+      lastXpDate: this.lastXpDate,
+    };
+    await this.vault.write(SNAPSHOT_PATH, JSON.stringify(snap));
   }
 
   private apply(event: XpEvent): void {

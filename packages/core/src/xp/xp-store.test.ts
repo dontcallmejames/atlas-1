@@ -97,6 +97,53 @@ describe("XpStore", () => {
   });
 });
 
+describe("XpStore snapshot + async replay", () => {
+  let dir: string;
+  let vault: NodeVaultFs;
+
+  beforeEach(async () => {
+    dir = await mkdtemp(join(tmpdir(), "atlas-xp-snap-"));
+    vault = new NodeVaultFs(dir);
+  });
+  afterEach(async () => {
+    await rm(dir, { recursive: true, force: true });
+  });
+
+  it("writes xp-state.json on flush", async () => {
+    const store = new XpStore(vault, { base: 500, gameMode: true });
+    await store.load();
+    store.award({ amount: 25, reason: "t", source: "test", kind: "xp" });
+    await store.flush();
+    expect(await vault.exists(".atlas/xp-state.json")).toBe(true);
+    const raw = await vault.read(".atlas/xp-state.json");
+    const snap = JSON.parse(raw);
+    expect(snap.state.xp).toBe(25);
+    expect(typeof snap.lastSeenTs).toBe("number");
+  });
+
+  it("load() fast-paths from snapshot without reading the full log", async () => {
+    const lines = Array.from({ length: 500 }, (_, i) =>
+      JSON.stringify({ ts: 1_000_000 + i, source: "seed", delta: 1, reason: "", kind: "xp" })
+    ).join("\n") + "\n";
+    await vault.write(".atlas/xp.log", lines);
+
+    const seed = new XpStore(vault, { base: 500, gameMode: true });
+    await seed.load();
+    await seed.flush();
+
+    const more = Array.from({ length: 3 }, (_, i) =>
+      JSON.stringify({ ts: 2_000_000 + i, source: "new", delta: 10, reason: "", kind: "xp" })
+    ).join("\n") + "\n";
+    await vault.append(".atlas/xp.log", more);
+
+    const fresh = new XpStore(vault, { base: 500, gameMode: true });
+    await fresh.load();
+    expect(fresh.getState().xp).toBe(500);
+    await fresh.ready;
+    expect(fresh.getState().xp).toBe(530);
+  });
+});
+
 describe("XpStore streak", () => {
   let dir: string;
   let vault: NodeVaultFs;
