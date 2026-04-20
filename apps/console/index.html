@@ -1835,20 +1835,12 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "game": "on"
 }/*EDITMODE-END*/;
 
-// --- Screen nav ---
-const navBtns = document.querySelectorAll('#screenNav button');
-const screens = document.querySelectorAll('.screen');
+// --- Screen nav (runtime-wired; TS module handles clicks) ---
+// Kept so lingering onboarding inline script can still call showScreen().
 function showScreen(id) {
-  navBtns.forEach(b => b.classList.toggle('on', b.dataset.scr === id));
-  screens.forEach(s => s.classList.toggle('on', s.id === 'scr-' + id));
-  localStorage.setItem('atlas1c-screen', id);
-  // hide statusline on boot
-  document.getElementById('statusline').style.display = (id === 'boot') ? 'none' : 'flex';
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + id));
+  document.querySelectorAll('#screenNav button').forEach(b => b.classList.toggle('on', b.dataset.scr === id));
 }
-navBtns.forEach(b => b.addEventListener('click', () => showScreen(b.dataset.scr)));
-document.querySelectorAll('[data-goto]').forEach(el => {
-  el.addEventListener('click', () => showScreen(el.dataset.goto));
-});
 // --- Onboarding step navigation ---
 (() => {
   const TOTAL = 6;
@@ -1888,8 +1880,6 @@ document.querySelectorAll('[data-goto]').forEach(el => {
   });
   render();
 })();
-const savedScreen = localStorage.getItem('atlas1c-screen');
-if (savedScreen) showScreen(savedScreen);
 
 // --- Settings section switcher ---
 document.querySelectorAll('#scr-settings .sn-btn').forEach(btn => {
