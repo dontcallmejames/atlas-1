@@ -22,9 +22,9 @@ Status legend: 🔴 not started · 🟡 in progress · 🟢 done · ⚪ deferred
 
 | # | Item | Source | Status |
 |---|------|--------|--------|
-| 6 | Canonicalize vault paths in Rust (`src-tauri/src/vault.rs:resolve_inside`) — `fs::canonicalize` + symlink check | security HIGH | 🔴 |
-| 7 | Set a strict CSP in `tauri.conf.json` | security HIGH | 🔴 |
-| 8 | Document plugin trust model in `CONTRIBUTING.md` — built-ins are trusted, `scopeVaultFs` is defence-in-depth | security HIGH + forker-readiness | 🔴 |
+| 6 | Canonicalize vault paths in Rust (`src-tauri/src/vault.rs:resolve_inside`) — `fs::canonicalize` + symlink check | security HIGH | 🟢 |
+| 7 | Set a strict CSP in `tauri.conf.json` | security HIGH | 🟢 |
+| 8 | Document plugin trust model in `CONTRIBUTING.md` — built-ins are trusted, `scopeVaultFs` is defence-in-depth | security HIGH + forker-readiness | 🟢 |
 | 9 | Add `plugins/template/` + `pnpm new:plugin <id>` script | forker-readiness HIGH | 🔴 |
 | 10 | TSDoc on every SDK member (`packages/sdk/src/*.ts`) + top-of-`index.ts` overview | forker-readiness HIGH | 🔴 |
 | 11 | Flip GitHub repo to "Template repository" + add topics + social preview | forker-readiness MEDIUM (highest-ROI toggle) | 🔴 |
