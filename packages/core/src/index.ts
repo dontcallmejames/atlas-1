@@ -16,6 +16,10 @@ export { MountRegistry } from "./plugins/mount-registry.js";
 export type { NavItem, ScreenView } from "./plugins/mount-registry.js";
 export { createRuntime } from "./runtime.js";
 export type { Runtime, RuntimeOptions } from "./runtime.js";
+export { RitualRegistry } from "./rituals/registry.js";
+export { parseRitual } from "./rituals/parser.js";
+export { runRitual } from "./rituals/runner.js";
+export type { Ritual, RitualDirectives } from "./rituals/parser.js";
 export type { CoreHandles } from "./plugins/context-factory.js";
 export type {
   LoadedPlugin,

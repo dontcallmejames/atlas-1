@@ -5,6 +5,7 @@ import { XpStore } from "./xp/xp-store.js";
 import { ConfigStore } from "./config/config-store.js";
 import { PluginLoader } from "./plugins/plugin-loader.js";
 import { MountRegistry } from "./plugins/mount-registry.js";
+import { RitualRegistry } from "./rituals/registry.js";
 
 export interface RuntimeOptions {
   vault: VaultFs;
@@ -20,6 +21,7 @@ export interface Runtime {
   config: ConfigStore;
   plugins: PluginLoader;
   mounts: MountRegistry;
+  rituals: RitualRegistry;
   load(): Promise<void>;
   unload(): Promise<void>;
 }
@@ -40,6 +42,7 @@ export async function createRuntime(options: RuntimeOptions): Promise<Runtime> {
     vaultRoot,
     core: { vault, commands, events, xp, mounts },
   });
+  const rituals = new RitualRegistry(vault, commands, events);
 
   return {
     vault,
@@ -49,9 +52,11 @@ export async function createRuntime(options: RuntimeOptions): Promise<Runtime> {
     config,
     plugins,
     mounts,
+    rituals,
     async load() {
       await plugins.loadAll();
-      events.emit("app:ready", undefined);
+      await rituals.load();
+      // app:ready is emitted by main.ts after built-ins have loaded.
     },
     async unload() {
       await plugins.unloadAll();

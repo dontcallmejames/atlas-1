@@ -29,6 +29,24 @@ export function registerCoreCommands(runtime: Runtime): void {
     console.log("commands:\n" + list.map((c) => `  ${c.hint ?? c.id}`).join("\n"));
   }});
   runtime.commands.register({ id: "?", hint: "/?", run: () => runtime.commands.invoke("help") });
+  runtime.commands.register({
+    id: "ritual.run",
+    hint: "/ritual.run <name>",
+    run: async (args) => {
+      const name = args[0];
+      if (!name) return;
+      await runtime.rituals.runRitual(name);
+    },
+  });
+  runtime.commands.register({
+    id: "ritual.list",
+    hint: "/ritual.list",
+    run: () => {
+      const names = runtime.rituals.listRituals();
+      // eslint-disable-next-line no-console
+      console.log(`rituals (${names.length}):\n${names.map((n) => "  " + n).join("\n")}`);
+    },
+  });
 }
 
 export function showScreen(id: string): void {

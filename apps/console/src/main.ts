@@ -53,6 +53,12 @@ async function boot(): Promise<void> {
       const { loadBuiltInPlugins } = await import("./boot/built-in-plugins.js");
       await loadBuiltInPlugins(rt);
       await initShell(rt);
+      // Start the ritual cron scheduler (1-minute tick).
+      window.setInterval(() => {
+        void rt.rituals.tick();
+      }, 60_000);
+      // App is fully wired; fire the ready event so @on app:ready rituals can run.
+      rt.events.emit("app:ready", undefined);
       try { localStorage.setItem("atlas1c-vault", tempConfig.get().vaultPath); } catch { /* ignore */ }
       showScreen("home");
       // eslint-disable-next-line no-console
@@ -68,6 +74,12 @@ async function boot(): Promise<void> {
   const { loadBuiltInPlugins } = await import("./boot/built-in-plugins.js");
   await loadBuiltInPlugins(runtime);
   await initShell(runtime);
+  // Start the ritual cron scheduler (1-minute tick).
+  window.setInterval(() => {
+    void runtime.rituals.tick();
+  }, 60_000);
+  // App is fully wired; fire the ready event so @on app:ready rituals can run.
+  runtime.events.emit("app:ready", undefined);
   try { localStorage.setItem("atlas1c-vault", vaultRoot); } catch { /* ignore */ }
 
   if (!runtime.config.get().onboarded) {
