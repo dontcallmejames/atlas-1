@@ -1,0 +1,2184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280" />
+<title>Atlas 1 — Life Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="console.css" />
+<style>
+/* ========= Print export ========= */
+@page { size: 1280px 1800px; margin: 0; }
+
+@media print {
+  html, body {
+    background: #f2ead9 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body.crt { background: #f2ead9 !important; }
+  body.crt::before, body.crt::after { display: none !important; }
+  [data-theme="dark"] { /* force light for print */ }
+
+  /* Hide interactive chrome */
+  .chrome nav.screens,
+  .right-group,
+  .cmdbar,
+  #tweaksPanel,
+  #tweakBtn,
+  .statusline { display: none !important; }
+
+  .chrome {
+    break-inside: avoid;
+    border-bottom: 2px solid #1a1a1a;
+  }
+
+  /* Show every screen, each on its own page */
+  .screen {
+    display: block !important;
+    break-before: page;
+    break-inside: avoid;
+    padding: 24px 28px;
+    min-height: auto;
+  }
+  .screen:first-of-type { break-before: auto; }
+
+  /* Prevent awkward splits */
+  .panel, .widget, .card, .set-row, .plug-row, .quest, .evt,
+  .loadout-card, .class-card, .ab-card, .kb-row,
+  .module-hdr, .onb-panel, .set-sec { break-inside: avoid; }
+
+  /* Ensure onboarding shows all steps */
+  .onb-panel { display: block !important; }
+  .onb-footer, .onb-stepper { break-inside: avoid; }
+
+  /* Ensure all settings sections show */
+  .set-sec { display: block !important; padding-bottom: 18px; border-bottom: 1px dashed #c8bfa8; margin-bottom: 18px; }
+  .set-sec:last-child { border-bottom: none; }
+
+  /* Make settings nav static, not sticky */
+  .settings-nav { position: static !important; }
+
+  /* Screen label header */
+  .screen::before {
+    content: "— " attr(data-screen-label) " —";
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9b8c6c;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed #c8bfa8;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  button { cursor: default; }
+}
+</style>
+</head>
+<body class="crt">
+
+<!-- ================ TOP CHROME ================ -->
+<header class="chrome">
+  <div class="title-group">
+    <div class="brand" id="brandMark">ATLAS·1</div>
+    <div class="sub">life console <span style="color:var(--accent);">v0.1.0</span> · <span id="clockStr">sat · apr 18 · 09:14</span></div>
+  </div>
+  <nav class="screens" id="screenNav">
+    <button data-scr="boot">boot</button>
+    <button data-scr="home" class="on">home</button>
+    <button data-scr="health">health</button>
+    <button data-scr="ailab">projects</button>
+    <button data-scr="hobbies">hobbies</button>
+    <button data-scr="settings">settings</button>
+  </nav>
+  <div class="right-group">
+    <button class="chip" id="crtBtn">crt</button>
+    <button class="chip" id="themeBtn">theme: light</button>
+    <button class="chip" id="tweakBtn">tweaks</button>
+  </div>
+</header>
+
+<!-- ================ STATUS LINE ================ -->
+<div class="statusline" id="statusline">
+  <div class="seg inv"><span>ATLAS·1</span></div>
+  <div class="seg"><span class="k">LVL</span><strong>17</strong><span class="k">XP</span><span class="mbar"><span class="f accent" style="right:22%;"></span></span><span>2340/3000</span></div>
+  <div class="seg"><span class="k">HP</span><span class="mbar"><span class="f green" style="right:22%;"></span></span><span>78</span></div>
+  <div class="seg"><span class="k">NRG</span><span class="mbar"><span class="f" style="right:36%;"></span></span><span>64</span></div>
+  <div class="seg"><span class="k">FOCUS</span><span>2/3</span></div>
+  <div class="seg"><span class="k">STREAK</span><span>12d 🔥</span></div>
+  <div class="seg grow"></div>
+  <div class="seg"><span class="k">AGENTS</span><span style="color:var(--accent-green);">●</span>2 <span style="color:var(--muted);">○</span>1</div>
+  <div class="seg"><span class="k">INBOX</span><span>12</span></div>
+  <div class="seg"><span id="miniClock">09:14:22</span></div>
+</div>
+
+<!-- ================ HOME SCREEN ================ -->
+<section class="screen on" id="scr-home" data-screen-label="Home">
+  <div class="term-grid">
+
+    <!-- LEFT: module nav -->
+    <aside class="pane">
+      <div class="pane-hdr"><span>~/modules</span><span class="nn">[1]</span></div>
+      <div class="pane-body">
+        <div class="section-title">CORE</div>
+        <ul class="modlist">
+          <li class="active" data-goto="home"><span class="dot on"></span>today <span class="lvl">/today</span></li>
+          <li data-goto="home"><span class="dot on"></span>calendar <span class="lvl">lvl 6</span></li>
+          <li data-goto="health"><span class="dot on"></span>health <span class="lvl">lvl 9</span></li>
+          <li data-goto="home"><span class="dot on"></span>tasks <span class="lvl">lvl 12</span></li>
+        </ul>
+        <div class="section-title">PLAY</div>
+        <ul class="modlist">
+          <li data-goto="hobbies"><span class="dot on"></span>hobbies <span class="lvl">lvl 7</span></li>
+          <li data-goto="ailab"><span class="dot on"></span>ai-lab <span class="lvl">lvl 4</span></li>
+          <li data-goto="home"><span class="dot"></span>reading <span class="lvl">lvl 3</span></li>
+        </ul>
+        <div class="section-title">OPS</div>
+        <ul class="modlist">
+          <li data-goto="home"><span class="dot on"></span>home <span class="lvl">lvl 5</span></li>
+          <li><span class="dot"></span><span style="color:var(--muted);">+ install plugin</span></li>
+        </ul>
+        <div class="section-title">AGENTS</div>
+        <ul class="modlist">
+          <li><span class="dot on"></span>inbox-triage <span class="lvl">live</span></li>
+          <li><span class="dot on"></span>sleep-coach <span class="lvl">live</span></li>
+          <li><span class="dot err"></span>scraper <span class="lvl" style="color:var(--accent);">err</span></li>
+          <li><span class="dot"></span>news-digest <span class="lvl">off</span></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- CENTER: REPL + stats + quests -->
+    <main class="pane" style="border-right: var(--rule) solid var(--line);">
+      <div class="pane-hdr"><span>~/today</span><span class="nn">[2] · 80×48</span></div>
+      <div class="center-scroll">
+
+        <pre class="ascii-banner">  ┌──────────────────────────────────────────────────────┐
+  │   ╔═╗ ╔╦╗ ╦   ╔═╗ ╔═╗    ·   LIFE  CONSOLE           │
+  │   ╠═╣  ║  ║   ╠═╣ ╚═╗    ·   v0.1.0 · sat apr 18     │
+  │   ╩ ╩  ╩  ╩═╝ ╩ ╩ ╚═╝  · 1  ·   lvl 17 · 2340 xp     │
+  └──────────────────────────────────────────────────────┘</pre>
+
+        <div class="greet-line">
+          <span class="hand" style="font-size:22px; color:var(--ink);">good morning, alex.</span>
+          &nbsp;·&nbsp; you're <span class="lvl">lvl 17</span> · <span style="color:var(--accent-green);">+240 xp</span> since wed ·
+          streak <strong>12d</strong>
+        </div>
+
+        <!-- Stat block -->
+        <div class="stat-block">
+          <div class="h"><span>▸ vitals · 7d</span><span>/stats --week</span></div>
+          <div class="body">
+            <div class="stats-row">
+              <div class="stat-cell">
+                <div class="k">HP · well</div>
+                <div class="v">78<span class="unit">/100</span></div>
+                <div class="bar"><div class="f green" style="right:22%;"></div></div>
+                <div class="delta up">↑ +6 vs last wk</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">NRG</div>
+                <div class="v">64<span class="unit">%</span></div>
+                <div class="bar"><div class="f" style="right:36%;"></div></div>
+                <div class="delta down">↓ -8</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">FOCUS</div>
+                <div class="v">2<span class="unit">/3</span></div>
+                <div class="bar"><div class="f accent" style="right:33%;"></div></div>
+                <div class="delta">one more to unlock ★</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">SLEEP</div>
+                <div class="v">7h12</div>
+                <div class="bar"><div class="f" style="right:18%;"></div></div>
+                <div class="delta up">↑ +18m</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">LVL 17</div>
+                <div class="v">2340<span class="unit"> xp</span></div>
+                <div class="bar"><div class="f accent" style="right:22%;"></div></div>
+                <div class="delta">660 to 18</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOW box -->
+        <div class="now-box">
+          <div class="meta">11:04 · 56 min remaining · onboarding-PR</div>
+          <div class="title">Deep Work &nbsp; <span class="hand" style="color:var(--accent);">⚡ +80 xp on complete</span></div>
+          <div class="bar">
+            <div class="ticks"></div>
+            <div class="f" style="right:40%;"></div>
+          </div>
+          <div class="actions">
+            <span class="k"><span class="kbd">⌘.</span> extend 15m</span>
+            <span class="k"><span class="kbd">⌘⇧.</span> end</span>
+            <span class="k"><span class="kbd">⌘/</span> note</span>
+          </div>
+        </div>
+
+        <!-- REPL transcript -->
+        <div class="repl">
+          <div class="pr">atlas: brief me</div>
+          <div class="out">
+            <span class="hi">3 events today · 2 focus blocks left · 4 quests active.</span><br/>
+            sleep was solid (<span class="hi">7h12</span>). you've been skipping the evening walk — 3 days.<br/>
+            agent-eval-v3 is <span class="hi">43%</span> done. scraper failed overnight (mem).
+          </div>
+          <div class="pr">tasks --today</div>
+          <div class="out">
+            ☐ ship onboarding PR &nbsp;&nbsp;<span class="xp">+120</span><br/>
+            ☐ write eval notes &nbsp;&nbsp;<span class="xp">+40</span><br/>
+            ☐ piano 20m &nbsp;&nbsp;<span class="xp">+10</span> (streak ×2)<br/>
+            ☑ email landlord <span style="text-decoration:line-through;">+20</span> <span class="hi">· claimed</span>
+          </div>
+          <div class="pr">health.sleep last 7d</div>
+          <div class="out">
+            avg <span class="hi">7h12</span> · worst wed (5h48) · score <span class="hi">78/100</span><br/>
+            correl: you sleep +40m on days you walk after dinner.
+          </div>
+          <div class="pr">ai-lab.runs --status=running</div>
+          <div class="out">
+            2 jobs · agent-eval-v3 (12m) · dataset-rebuild (~4h)
+          </div>
+          <div class="pr"><span class="blink">█</span></div>
+        </div>
+
+        <!-- Quests -->
+        <h3 style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin: 18px 0 8px;">// ACTIVE QUESTS</h3>
+        <div class="quests">
+          <div class="quest main">
+            <div class="kind">MAIN</div>
+            <div>
+              <div class="title"><span class="chk"></span>ship onboarding PR</div>
+              <div class="meta">work · due today · unblocks 3 others</div>
+            </div>
+            <div class="xp">+120 xp</div>
+          </div>
+          <div class="quest side">
+            <div class="kind">SIDE</div>
+            <div>
+              <div class="title"><span class="chk"></span>climb 5.10 at the gym</div>
+              <div class="meta">hobby · tonight · streak +1</div>
+            </div>
+            <div class="xp">+60 xp</div>
+          </div>
+          <div class="quest daily">
+            <div class="kind">DAILY</div>
+            <div>
+              <div class="title"><span class="chk"></span>piano 20 min</div>
+              <div class="meta">hobbies · streak ×2 = <span style="color:var(--accent);">+20 xp</span></div>
+            </div>
+            <div class="xp">+10 xp</div>
+          </div>
+          <div class="quest daily done">
+            <div class="kind">DAILY</div>
+            <div>
+              <div class="title"><span class="chk"></span>drink water · 6/6</div>
+              <div class="meta">claimed 08:40</div>
+            </div>
+            <div class="xp" style="background:var(--accent-green);">+10</div>
+          </div>
+          <div class="quest side">
+            <div class="kind">SIDE</div>
+            <div>
+              <div class="title"><span class="chk"></span>call mom</div>
+              <div class="meta">people · overdue 2d — atlas flagged</div>
+            </div>
+            <div class="xp">+40 xp</div>
+          </div>
+        </div>
+
+        <!-- Upcoming mini timeline -->
+        <h3 style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin: 18px 0 6px;">// AGENDA</h3>
+        <div>
+          <div class="tline"><span class="t">09:30</span><span class="circle done"></span><span>standup · atlas team</span><span class="tag">30m</span></div>
+          <div class="tline"><span class="t">11:00</span><span class="circle"></span><span>deep work · onboarding PR <span style="color:var(--muted); font-size:10px;">(in progress)</span></span><span class="tag accent">focus</span></div>
+          <div class="tline"><span class="t">13:00</span><span class="circle"></span><span>lunch w/ M.</span><span class="tag yellow">out</span></div>
+          <div class="tline"><span class="t">16:30</span><span class="circle"></span><span>run · 5k easy</span><span class="tag green">health</span></div>
+          <div class="tline"><span class="t">20:00</span><span class="circle"></span><span>piano · scales + 1 piece</span><span class="tag">hobby</span></div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- RIGHT: vitals, agents, nudges, badges -->
+    <aside class="pane">
+      <div class="pane-hdr"><span>~/status</span><span class="nn">[3]</span></div>
+      <div class="pane-body">
+
+        <div class="section-title">VITALS</div>
+        <div class="vitals">
+          <div class="row"><span class="k">uptime</span><span class="v">14d 02h</span></div>
+          <div class="row"><span class="k">sleep</span><span class="v">7h12</span></div>
+          <div class="row"><span class="k">hrv</span><span class="v">48 ms</span></div>
+          <div class="row"><span class="k">rhr</span><span class="v">54 bpm</span></div>
+          <div class="row"><span class="k">steps</span><span class="v">3,124</span></div>
+          <div class="row"><span class="k">caffeine</span><span class="v">1 cup</span></div>
+          <div class="row"><span class="k">water</span><span class="v">6 / 8</span></div>
+          <div class="row"><span class="k">screen</span><span class="v">2h 14m</span></div>
+        </div>
+
+        <div class="section-title">AGENTS · LIVE</div>
+        <div class="agent-card">
+          <div class="name"><span class="d"></span>agent-eval-v3</div>
+          <div class="detail">12m · case 135/312 · 1 fail</div>
+          <div class="bar"><div class="f" style="right:57%;"></div></div>
+        </div>
+        <div class="agent-card">
+          <div class="name"><span class="d"></span>inbox-triage</div>
+          <div class="detail">watching · filtered 8 today</div>
+        </div>
+        <div class="agent-card">
+          <div class="name"><span class="d err"></span>scraper <span style="color:var(--accent); font-weight:400;">· err</span></div>
+          <div class="detail">OOM at 03:12 · retry? <span class="kbd">y</span></div>
+        </div>
+
+        <div class="sticky-note">
+          nudge from atlas:<br/>
+          you skipped the evening walk 3× this wk. slot it at 18:30?
+        </div>
+
+        <div class="section-title">BADGES · APR</div>
+        <div class="badges">
+          <div class="badge got">★</div>
+          <div class="badge got">♡</div>
+          <div class="badge got">⚑</div>
+          <div class="badge locked">?</div>
+          <div class="badge locked">?</div>
+        </div>
+        <div style="font-size:10px; color:var(--muted); margin-top:6px;">
+          ★ 12d piano · ♡ 5 workouts · ⚑ shipped 3 prs<br/>
+          ? 20d streak · ? walk after dinner ×7
+        </div>
+
+        <div class="section-title">QUICK CAPTURE</div>
+        <div style="border:1.5px dashed var(--line); padding: 8px; font-size:11px; color:var(--muted);">
+          type anywhere · prefix:<br/>
+          <span style="color:var(--ink);">/t</span> task &nbsp;
+          <span style="color:var(--ink);">/n</span> note &nbsp;
+          <span style="color:var(--ink);">/e</span> event<br/>
+          <span style="color:var(--ink);">/q</span> quest &nbsp;
+          <span style="color:var(--ink);">/?</span> ask atlas
+        </div>
+
+        <div class="section-title">KEYS</div>
+        <div style="font-size:10px; line-height:1.75;">
+          <span class="kbd">⌘K</span> palette &nbsp;
+          <span class="kbd">⌘/</span> ask atlas<br/>
+          <span class="kbd">⌘.</span> capture &nbsp;
+          <span class="kbd">F</span> focus<br/>
+          <span class="kbd">g t</span> today &nbsp;
+          <span class="kbd">g h</span> health<br/>
+          <span class="kbd">⌘⇧L</span> level up preview
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ================ BOOT / ONBOARDING SCREEN ================ -->
+<section class="screen" id="scr-boot" data-screen-label="Boot">
+  <div class="boot-wrap">
+    <pre class="ascii-banner" style="font-size:11px; color:var(--ink); margin-bottom:14px;">
+  ╔══════════════════════════════════════════════════╗
+  ║   atlas life-console · first-run setup · v0.1.0  ║
+  ║   6 questions · ~90s · hit [TAB] to accept all   ║
+  ╚══════════════════════════════════════════════════╝</pre>
+
+    <!-- Stepper -->
+    <div class="onb-stepper" id="onbStepper">
+      <div class="onb-step done" data-step="0"><span class="n">01</span><span class="l">name</span></div>
+      <div class="onb-sep"></div>
+      <div class="onb-step active" data-step="1"><span class="n">02</span><span class="l">loadout</span></div>
+      <div class="onb-sep"></div>
+      <div class="onb-step" data-step="2"><span class="n">03</span><span class="l">modules</span></div>
+      <div class="onb-sep"></div>
+      <div class="onb-step" data-step="3"><span class="n">04</span><span class="l">theme</span></div>
+      <div class="onb-sep"></div>
+      <div class="onb-step" data-step="4"><span class="n">05</span><span class="l">import</span></div>
+      <div class="onb-sep"></div>
+      <div class="onb-step" data-step="5"><span class="n">06</span><span class="l">ready</span></div>
+    </div>
+
+    <div class="boot-log">
+      <div class="boot-line"><span class="ok">[ok]</span> kernel loaded</div>
+      <div class="boot-line"><span class="ok">[ok]</span> modules discovered <span class="dim">(12 available)</span></div>
+      <div class="boot-line"><span class="ok">[ok]</span> local storage mounted · <span class="dim">0 bytes used</span></div>
+      <div class="boot-line"><span class="warn">[..]</span> awaiting operator input</div>
+    </div>
+
+    <!-- Q1: name -->
+    <div class="ask onb-panel" data-step="0">
+      <div class="q">› [01/06] what should i call this console?</div>
+      <div class="hint">// this becomes your product name — appears everywhere. renameable later via <span class="kbd">:rename</span>.</div>
+      <div style="margin-top:6px;">
+        <span class="lbl">name ❯</span>
+        <input type="text" id="bootName" value="Atlas 1"
+          style="background:transparent; border:none; border-bottom:1.5px solid var(--accent); font:inherit; font-size:16px; color:var(--ink); padding:2px 4px; width:220px; outline:none;" />
+        <span class="blink" style="color:var(--accent);">█</span>
+      </div>
+      <div style="margin-top:10px; font-size:11px; color:var(--muted);">
+        suggestions:
+        <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">Atlas 1</span>
+        <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">my.life</span>
+        <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">hq</span>
+        <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">bridge</span>
+        <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">northstar</span>
+      </div>
+    </div>
+
+    <!-- Q2: class -->
+    <div class="ask onb-panel" data-step="1">
+      <div class="q">› [02/06] pick a starting loadout</div>
+      <div class="hint">// seeds your modules, stat weights, and quest cadence. all editable later.</div>
+      <div class="class-grid">
+        <div class="class-card" data-class="maker">
+          <div class="dim">CLASS · 01</div>
+          <div class="nm">the maker</div>
+          <div class="dim">ships things. solo-builds. codes.</div>
+          <div class="tag-row">
+            <span class="t">+++ tasks</span>
+            <span class="t">+++ projects</span>
+            <span class="t">++ cal</span>
+            <span class="t">+ health</span>
+          </div>
+        </div>
+        <div class="class-card pick" data-class="polymath">
+          <div class="dim" style="color:var(--accent-3);">CLASS · 02 ✦ picked</div>
+          <div class="nm">the polymath</div>
+          <div>code, body, music, people. all on.</div>
+          <div class="tag-row">
+            <span class="t">balanced</span>
+            <span class="t">3 focus/day</span>
+            <span class="t">daily check-in</span>
+          </div>
+        </div>
+        <div class="class-card" data-class="operator">
+          <div class="dim">CLASS · 03</div>
+          <div class="nm">the operator</div>
+          <div class="dim">ops, inbox, household CEO.</div>
+          <div class="tag-row">
+            <span class="t">+++ cal</span>
+            <span class="t">+++ home</span>
+            <span class="t">++ tasks</span>
+            <span class="t">+ health</span>
+          </div>
+        </div>
+        <div class="class-card" data-class="athlete">
+          <div class="dim">CLASS · 04</div>
+          <div class="nm">the athlete</div>
+          <div class="dim">body-first. train, recover, compete.</div>
+          <div class="tag-row">
+            <span class="t">+++ health</span>
+            <span class="t">+++ hobbies</span>
+            <span class="t">++ cal</span>
+            <span class="t">+ tasks</span>
+          </div>
+        </div>
+        <div class="class-card" data-class="scholar">
+          <div class="dim">CLASS · 05</div>
+          <div class="nm">the scholar</div>
+          <div class="dim">reads, writes, thinks deeply.</div>
+          <div class="tag-row">
+            <span class="t">+++ reading</span>
+            <span class="t">+++ journal</span>
+            <span class="t">++ projects</span>
+            <span class="t">+ cal</span>
+          </div>
+        </div>
+        <div class="class-card" data-class="wanderer">
+          <div class="dim">CLASS · 06</div>
+          <div class="nm">the wanderer</div>
+          <div class="dim">no presets. blank slate. build your own.</div>
+          <div class="tag-row">
+            <span class="t">empty start</span>
+            <span class="t">pick every module</span>
+            <span class="t">no quests</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3: modules -->
+    <div class="ask onb-panel" data-step="2">
+      <div class="q">› [03/06] confirm modules <span class="dim">(click to toggle)</span></div>
+      <div class="hint">// polymath defaults selected. add more from the registry any time.</div>
+      <div class="mod-chips" id="bootMods">
+        <div class="mod-chip on"><span class="x"></span>calendar</div>
+        <div class="mod-chip on"><span class="x"></span>health</div>
+        <div class="mod-chip on"><span class="x"></span>tasks</div>
+        <div class="mod-chip on"><span class="x"></span>hobbies</div>
+        <div class="mod-chip on"><span class="x"></span>projects</div>
+        <div class="mod-chip on"><span class="x"></span>home</div>
+        <div class="mod-chip"><span class="x"></span>reading</div>
+        <div class="mod-chip"><span class="x"></span>people</div>
+        <div class="mod-chip"><span class="x"></span>finance</div>
+        <div class="mod-chip"><span class="x"></span>journal</div>
+        <div class="mod-chip" id="pluginToggle" style="border-style:dashed; color:var(--muted); cursor:pointer;">+ browse plugin registry →</div>
+      </div>
+      <div id="pluginPreview" style="display:none; margin-top:10px; border:1.5px dashed var(--line); background:var(--paper-2); padding:12px;">
+        <div style="font-size:10px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:8px; display:flex; justify-content:space-between;">
+          <span>▸ plugin registry · 142 available</span>
+          <span style="color:var(--accent);">search, install, fork, publish</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; font-size:11px;">
+          <div style="border:1px solid var(--line); padding:6px 8px; background:var(--paper);">
+            <div><strong>finance</strong> <span style="color:var(--muted); font-size:10px;">· official</span></div>
+            <div style="color:var(--muted); font-size:10px;">budgets, net worth, accounts</div>
+          </div>
+          <div style="border:1px solid var(--line); padding:6px 8px; background:var(--paper);">
+            <div><strong>journal</strong> <span style="color:var(--muted); font-size:10px;">· official</span></div>
+            <div style="color:var(--muted); font-size:10px;">daily prompts, mood, weather</div>
+          </div>
+          <div style="border:1px solid var(--line); padding:6px 8px; background:var(--paper);">
+            <div><strong>people</strong> <span style="color:var(--muted); font-size:10px;">· official</span></div>
+            <div style="color:var(--muted); font-size:10px;">crm for your friends</div>
+          </div>
+          <div style="border:1px solid var(--line); padding:6px 8px; background:var(--paper);">
+            <div><strong>travel</strong> <span style="color:var(--muted); font-size:10px;">· @mira</span></div>
+            <div style="color:var(--muted); font-size:10px;">trips, flights, bucket list</div>
+          </div>
+          <div style="border:1px solid var(--line); padding:6px 8px; background:var(--paper);">
+            <div><strong>cooking</strong> <span style="color:var(--muted); font-size:10px;">· @kenji</span></div>
+            <div style="color:var(--muted); font-size:10px;">recipes, meal plan, pantry</div>
+          </div>
+          <div style="border:1px solid var(--line); padding:6px 8px; background:var(--paper);">
+            <div><strong>dnd-tracker</strong> <span style="color:var(--muted); font-size:10px;">· community</span></div>
+            <div style="color:var(--muted); font-size:10px;">character sheets, sessions</div>
+          </div>
+        </div>
+        <div style="margin-top:8px; font-size:10px; color:var(--muted);">
+          any plugin = a folder with schema + ui + commands. <span style="color:var(--ink);">fork someone's, or publish your own.</span> skip for now — you can install plugins any time from <span class="kbd">settings › plugins</span>.
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4: theme -->
+    <div class="ask onb-panel" data-step="3">
+      <div class="q">› [04/06] theme &amp; feel</div>
+      <div class="hint">// dark adds scanlines and phosphor. toggle with <span class="kbd">⌘T</span> any time.</div>
+      <div style="margin-top:10px;">
+        <div style="font-size:10px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">mode</div>
+        <div style="display:flex; gap:8px;">
+          <div class="mod-chip on">light · paper</div>
+          <div class="mod-chip">dark · phosphor</div>
+          <div class="mod-chip">auto · follows system</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        <div style="font-size:10px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">accent color</div>
+        <div style="display:flex; gap:6px;">
+          <div class="mod-chip on" style="background:#c84a1e; color:var(--paper); border-color:#c84a1e;">tomato</div>
+          <div class="mod-chip" style="background:#1e5ec8; color:var(--paper); border-color:#1e5ec8;">blue</div>
+          <div class="mod-chip" style="background:#1e9960; color:var(--paper); border-color:#1e9960;">green</div>
+          <div class="mod-chip" style="background:#c88520; color:var(--paper); border-color:#c88520;">amber</div>
+          <div class="mod-chip" style="background:#7a1ec8; color:var(--paper); border-color:#7a1ec8;">violet</div>
+          <div class="mod-chip">hex #</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        <div style="font-size:10px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">density</div>
+        <div style="display:flex; gap:8px;">
+          <div class="mod-chip">cozy</div>
+          <div class="mod-chip on">default</div>
+          <div class="mod-chip">dense · terminal</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        <div style="font-size:10px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">crt overlay <span style="color:var(--muted);">(dark only · scanlines + phosphor bloom)</span></div>
+        <div style="display:flex; gap:8px;">
+          <div class="mod-chip on">off</div>
+          <div class="mod-chip">light</div>
+          <div class="mod-chip">full crt</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q5: import -->
+    <div class="ask onb-panel" data-step="4">
+      <div class="q">› [05/06] import &amp; connect <span class="dim">(skip is fine)</span></div>
+      <div class="hint">// atlas is local-first. nothing leaves your machine unless you plug it in.</div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:6px;">
+        <div class="mod-chip"><span class="x"></span>google cal</div>
+        <div class="mod-chip"><span class="x"></span>apple health</div>
+        <div class="mod-chip"><span class="x"></span>github</div>
+        <div class="mod-chip"><span class="x"></span>notion</div>
+        <div class="mod-chip"><span class="x"></span>oura</div>
+        <div class="mod-chip"><span class="x"></span>strava</div>
+        <div class="mod-chip"><span class="x"></span>.ics file</div>
+        <div class="mod-chip" style="border-style:dashed; color:var(--muted);">+ more</div>
+      </div>
+      <div style="margin-top:12px; padding:10px 12px; border:1px dashed var(--line); font-size:11px; color:var(--muted);">
+        <strong style="color:var(--ink);">data path:</strong> ~/atlas-1/vault/&nbsp;
+        <span style="color:var(--accent);">change →</span><br>
+        everything stays as flat .md + .json. version it with git if you want.
+      </div>
+    </div>
+
+    <!-- Q6: ready -->
+    <div class="ask onb-panel" data-step="5">
+      <div class="q">› [06/06] ready to boot</div>
+      <div class="hint">// review your choices. you can change anything later in <span class="kbd">settings</span>.</div>
+      <div class="onb-summary">
+        <div class="srow"><span class="sk">name</span><span class="sv" id="sumName">Atlas 1</span></div>
+        <div class="srow"><span class="sk">loadout</span><span class="sv">the polymath</span></div>
+        <div class="srow"><span class="sk">modules</span><span class="sv">calendar · health · tasks · hobbies · projects · home <span style="color:var(--muted);">(6)</span></span></div>
+        <div class="srow"><span class="sk">theme</span><span class="sv">light · paper · <span style="color:var(--accent);">■</span> tomato · default density</span></div>
+        <div class="srow"><span class="sk">integrations</span><span class="sv" style="color:var(--muted);">none <span style="color:var(--ink);">· connect later</span></span></div>
+        <div class="srow"><span class="sk">data path</span><span class="sv" style="font-family:'JetBrains Mono',monospace; font-size:11px;">~/atlas-1/vault/</span></div>
+      </div>
+      <div style="margin-top:14px; padding:10px 14px; background:var(--accent); color:var(--paper); font-size:12px; line-height:1.6;">
+        <strong>first things to try:</strong><br>
+        · press <span class="kbd" style="background:var(--paper); color:var(--ink);">/</span> anywhere to open the command bar<br>
+        · <span class="kbd" style="background:var(--paper); color:var(--ink);">⌘,</span> for settings &nbsp; <span class="kbd" style="background:var(--paper); color:var(--ink);">⌘K</span> for quick switcher &nbsp; <span class="kbd" style="background:var(--paper); color:var(--ink);">⌘T</span> to toggle theme<br>
+        · type <span class="kbd" style="background:var(--paper); color:var(--ink);">:rename</span> in the command bar any time to change the name
+      </div>
+    </div>
+
+    <!-- Nav footer -->
+    <div class="onb-footer">
+      <div style="color:var(--muted); font-size:11px;">
+        <span class="kbd">ESC</span> back &nbsp; <span class="kbd">⏎</span> next &nbsp; <span class="kbd">TAB</span> accept defaults
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button id="onbPrev" class="onb-btn ghost">← prev</button>
+        <span id="onbProg" style="font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace;">02 / 06</span>
+        <button id="onbNext" class="onb-btn">next →</button>
+        <button id="onbGo" class="onb-btn primary" style="display:none;">BOOT ATLAS·1 →</button>
+      </div>
+    </div>
+
+    <div style="margin-top:20px; padding-top:12px; border-top:1px dashed var(--line); font-size:11px; color:var(--muted);">
+      open source · fork-friendly · your data is a flat folder of .md and .json files · <span style="color:var(--ink); font-weight:600;">rename it yours</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================ HEALTH MODULE ================ -->
+<section class="screen" id="scr-health" data-screen-label="Health">
+  <div class="term-grid">
+    <aside class="pane">
+      <div class="pane-hdr"><span>~/health</span><span class="nn">[1]</span></div>
+      <div class="pane-body">
+        <div class="section-title">SECTIONS</div>
+        <ul class="modlist">
+          <li class="active">overview</li>
+          <li>sleep <span class="lvl">lvl 9</span></li>
+          <li>workouts <span class="lvl">lvl 7</span></li>
+          <li>nutrition <span class="lvl">lvl 4</span></li>
+          <li>body <span class="lvl">lvl 3</span></li>
+          <li><span style="color:var(--muted);">+ add metric</span></li>
+        </ul>
+        <div class="section-title">SOURCES</div>
+        <div style="font-size:11px; line-height:1.8;">
+          <span class="dot" style="display:inline-block; width:6px; height:6px; background:var(--accent-green); border-radius:50%;"></span> apple health<br/>
+          <span class="dot" style="display:inline-block; width:6px; height:6px; background:var(--accent-green); border-radius:50%;"></span> oura<br/>
+          <span class="dot" style="display:inline-block; width:6px; height:6px; background:var(--muted); border-radius:50%;"></span> whoop <span class="dim">off</span><br/>
+          <span style="color:var(--muted);">+ connect</span>
+        </div>
+        <div class="section-title">COMMANDS</div>
+        <div style="font-size:10px; color:var(--muted); line-height:1.7;">
+          <span style="color:var(--ink);">/sleep 7d</span><br/>
+          <span style="color:var(--ink);">/workout log</span><br/>
+          <span style="color:var(--ink);">/food add</span><br/>
+          <span style="color:var(--ink);">/weigh</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="pane">
+      <div class="pane-hdr"><span>~/health/overview</span><span class="nn">[2]</span></div>
+      <div class="center-scroll">
+        <div class="module-hdr">
+          <div>
+            <div class="bc">~/<span class="a">health</span>/overview</div>
+            <h2>Health</h2>
+          </div>
+          <span class="lvl">lvl 9 · 2100/3000 xp</span>
+          <span class="xp">· score this wk <strong style="color:var(--ink);">78</strong>/100 (↑ +6)</span>
+          <span style="margin-left:auto; display:flex; gap:4px;">
+            <span class="kbd">D</span><span class="kbd">W</span><span class="kbd">M</span><span class="kbd">Y</span>
+          </span>
+        </div>
+
+        <div class="stat-block">
+          <div class="h"><span>▸ this week</span><span>apr 12 – apr 18</span></div>
+          <div class="body">
+            <div class="stats-row">
+              <div class="stat-cell">
+                <div class="k">SLEEP avg</div>
+                <div class="v">7h12</div>
+                <div class="delta up">↑ +18m</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">HRV avg</div>
+                <div class="v">48<span class="unit">ms</span></div>
+                <div class="delta">— steady</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">WORKOUTS</div>
+                <div class="v">5</div>
+                <div class="delta up">2 run · 2 climb · 1 yoga</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">STEPS avg</div>
+                <div class="v">8,340</div>
+                <div class="delta down">↓ -1,200</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">NRG today</div>
+                <div class="v">64<span class="unit">%</span></div>
+                <div class="bar"><div class="f" style="right:36%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="chart-box">
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px;">
+              <span>▸ sleep · 7d</span>
+              <span>target 7h30</span>
+            </div>
+            <svg viewBox="0 0 700 200" style="width:100%; height:auto; display:block; max-height:220px;">
+              <line x1="0" y1="60" x2="700" y2="60" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+              <text x="4" y="57" font-size="10" fill="var(--accent)" font-family="JetBrains Mono">7h30 target</text>
+              <g>
+                <rect x="10"  y="80"  width="80" height="100" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                <rect x="110" y="45"  width="80" height="135" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                <rect x="210" y="105" width="80" height="75"  fill="var(--accent)" stroke="var(--line)" stroke-width="1.5"/>
+                <rect x="310" y="65"  width="80" height="115" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                <rect x="410" y="55"  width="80" height="125" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                <rect x="510" y="90"  width="80" height="90"  fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                <rect x="610" y="40"  width="80" height="140" fill="var(--accent-green)" stroke="var(--line)" stroke-width="1.5"/>
+                <g font-family="JetBrains Mono" font-size="11" fill="var(--muted)">
+                  <text x="10" y="197">MON 7h10</text>
+                  <text x="110" y="197">TUE 7h50</text>
+                  <text x="210" y="197" fill="var(--accent)">WED 5h48</text>
+                  <text x="310" y="197">THU 7h20</text>
+                  <text x="410" y="197">FRI 7h30</text>
+                  <text x="510" y="197">SAT 6h55</text>
+                  <text x="610" y="197" fill="var(--accent-green)">SUN 8h05</text>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <div>
+            <div class="section-title" style="border:none; margin-top:0;">▸ WORKOUTS · APR</div>
+            <div class="barline"><span class="lbl">run</span><div class="bwrap"><div class="bf" style="width:68%;"></div></div><span class="val">34 km</span></div>
+            <div class="barline"><span class="lbl">climb</span><div class="bwrap"><div class="bf accent" style="width:52%;"></div></div><span class="val">8 sess</span></div>
+            <div class="barline"><span class="lbl">yoga</span><div class="bwrap"><div class="bf green" style="width:28%;"></div></div><span class="val">4 sess</span></div>
+            <div class="barline"><span class="lbl">walk</span><div class="bwrap"><div class="bf" style="width:82%;"></div></div><span class="val">61 km</span></div>
+            <div class="barline"><span class="lbl">cycle</span><div class="bwrap"><div class="bf" style="width:12%;"></div></div><span class="val">14 km</span></div>
+          </div>
+        </div>
+
+        <div class="two-col" style="margin-top:18px;">
+          <div>
+            <div class="section-title" style="border:none;">▸ BODY · 30D TRENDS</div>
+            <div class="metric-row">
+              <div class="metric">
+                <div class="mk">weight</div>
+                <div class="mv">72.1 <span class="mu">kg</span></div>
+                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none">
+                  <polyline points="0,8 10,10 20,9 30,11 40,10 50,13 60,12 70,14 80,13 90,15 100,14" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+                </svg>
+                <div class="md"><span style="color:var(--accent-green);">↓ 0.8</span> vs last mo</div>
+              </div>
+              <div class="metric">
+                <div class="mk">resting hr</div>
+                <div class="mv">54 <span class="mu">bpm</span></div>
+                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none">
+                  <polyline points="0,12 10,11 20,13 30,10 40,9 50,11 60,8 70,10 80,9 90,7 100,8" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+                </svg>
+                <div class="md"><span style="color:var(--accent-green);">↓ 3</span> vs last mo</div>
+              </div>
+              <div class="metric">
+                <div class="mk">hrv</div>
+                <div class="mv">62 <span class="mu">ms</span></div>
+                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none">
+                  <polyline points="0,16 10,14 20,15 30,13 40,12 50,14 60,10 70,11 80,9 90,8 100,7" fill="none" stroke="var(--accent-green)" stroke-width="1.5"/>
+                </svg>
+                <div class="md"><span style="color:var(--accent-green);">↑ 8</span> vs last mo</div>
+              </div>
+              <div class="metric">
+                <div class="mk">steps/d</div>
+                <div class="mv">8,430</div>
+                <svg class="spark" viewBox="0 0 100 24" preserveAspectRatio="none">
+                  <polyline points="0,18 10,14 20,16 30,10 40,12 50,8 60,14 70,6 80,10 90,4 100,7" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+                </svg>
+                <div class="md"><span style="color:var(--accent-green);">↑ 640</span> vs last mo</div>
+              </div>
+            </div>
+
+            <div class="section-title" style="border:none; margin-top:14px;">▸ NUTRITION · 7D AVG</div>
+            <div class="tline" style="grid-template-columns: 90px 1fr 70px;"><span>protein</span><div class="bwrap"><div class="bf green" style="width:86%;"></div></div><span class="val" style="font-size:10px;">126 g / 140</span></div>
+            <div class="tline" style="grid-template-columns: 90px 1fr 70px;"><span>water</span><div class="bwrap"><div class="bf" style="width:72%;"></div></div><span class="val" style="font-size:10px;">2.1 L / 3.0</span></div>
+            <div class="tline" style="grid-template-columns: 90px 1fr 70px;"><span>caffeine</span><div class="bwrap"><div class="bf accent" style="width:48%;"></div></div><span class="val" style="font-size:10px;">180 mg / 400</span></div>
+            <div class="tline" style="grid-template-columns: 90px 1fr 70px;"><span>alcohol</span><div class="bwrap"><div class="bf" style="width:10%;"></div></div><span class="val" style="font-size:10px;">1 unit / wk</span></div>
+          </div>
+          <div>
+            <div class="section-title" style="border:none;">▸ XP · HEALTH</div>
+            <div class="xp-bar"><div class="f" style="width:70%;"></div><div class="t"></div></div>
+            <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">lvl 9 · 2100 / 3000 xp · next unlock: <strong style="color:var(--ink);">recovery insights v2</strong></div>
+            <div class="sticky-note">
+              atlas spotted: you sleep <strong>+40min</strong> on days you walk after dinner. schedule walk at 19:30?
+            </div>
+            <div style="margin-top:10px;">
+              <div class="section-title" style="border:none; margin-top:0;">▸ ACHIEVEMENTS</div>
+              <div class="badges" style="grid-template-columns:repeat(6, 1fr);">
+                <div class="badge got">★</div>
+                <div class="badge got">♡</div>
+                <div class="badge got">▲</div>
+                <div class="badge got">5k</div>
+                <div class="badge locked">?</div>
+                <div class="badge locked">?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="pane">
+      <div class="pane-hdr"><span>~/log</span><span class="nn">[3]</span></div>
+      <div class="pane-body">
+        <div class="section-title">RECENT</div>
+        <div class="vitals">
+          <div class="row"><span class="k">apr 18 · 07:12</span><span class="v">woke · 7h12</span></div>
+          <div class="row"><span class="k">apr 17 · 22:40</span><span class="v">walk · 3.2 km</span></div>
+          <div class="row"><span class="k">apr 17 · 18:00</span><span class="v">climb · 5.9×4</span></div>
+          <div class="row"><span class="k">apr 17 · 08:15</span><span class="v">coffee · 1</span></div>
+          <div class="row"><span class="k">apr 16 · 07:00</span><span class="v">run · 5k · 26:40</span></div>
+          <div class="row"><span class="k">apr 15 · 21:00</span><span class="v">yoga · 30m</span></div>
+          <div class="row"><span class="k">apr 15 · 13:00</span><span class="v">weigh · 72.1 kg</span></div>
+        </div>
+        <div class="section-title">QUESTS</div>
+        <div class="quest daily" style="grid-template-columns: 1fr auto; gap:6px; padding:6px 8px;">
+          <div>
+            <div style="font-size:12px;"><span class="chk"></span>walk · 30m</div>
+            <div class="meta">streak 4d</div>
+          </div>
+          <div class="xp">+10</div>
+        </div>
+        <div class="quest side" style="grid-template-columns: 1fr auto; gap:6px; padding:6px 8px; margin-top:6px;">
+          <div>
+            <div style="font-size:12px;"><span class="chk"></span>run · 5k under 26</div>
+            <div class="meta">side quest · 3 tries left</div>
+          </div>
+          <div class="xp">+80</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ================ AI LAB MODULE ================ -->
+<section class="screen" id="scr-ailab" data-screen-label="Projects">
+  <div class="term-grid">
+    <aside class="pane">
+      <div class="pane-hdr"><span>~/projects</span><span class="nn">[1]</span></div>
+      <div class="pane-body">
+        <div class="section-title">REPOS · 7</div>
+        <ul class="modlist repos">
+          <li class="active">
+            <div class="repo-row">
+              <span class="dot on"></span>
+              <span class="rname">agent-eval-v3</span>
+              <span class="rlang py">py</span>
+            </div>
+            <div class="repo-meta">alex/agent-eval-v3 · ★ 24 · main</div>
+          </li>
+          <li>
+            <div class="repo-row">
+              <span class="dot"></span>
+              <span class="rname">atlas-1</span>
+              <span class="rlang ts">ts</span>
+            </div>
+            <div class="repo-meta">alex/atlas-1 · ★ 142 · feat/widgets</div>
+          </li>
+          <li>
+            <div class="repo-row">
+              <span class="dot err"></span>
+              <span class="rname">scraper-agent</span>
+              <span class="rlang py">py</span>
+            </div>
+            <div class="repo-meta">CI failing · 2h ago</div>
+          </li>
+          <li>
+            <div class="repo-row">
+              <span class="dot"></span>
+              <span class="rname">ember-rag</span>
+              <span class="rlang py">py</span>
+            </div>
+            <div class="repo-meta">alex/ember-rag · ★ 8 · archived</div>
+          </li>
+          <li>
+            <div class="repo-row">
+              <span class="dot"></span>
+              <span class="rname">prompt-lib-v2</span>
+              <span class="rlang ts">ts</span>
+            </div>
+            <div class="repo-meta">alex/prompt-lib · ★ 31</div>
+          </li>
+          <li>
+            <div class="repo-row">
+              <span class="dot"></span>
+              <span class="rname">weekend-synth</span>
+              <span class="rlang rs">rs</span>
+            </div>
+            <div class="repo-meta">private · non-ai · music</div>
+          </li>
+          <li>
+            <div class="repo-row">
+              <span class="dot"></span>
+              <span class="rname">dotfiles</span>
+              <span class="rlang sh">sh</span>
+            </div>
+            <div class="repo-meta">alex/dotfiles · ★ 3</div>
+          </li>
+          <li><span style="color:var(--muted); font-size:11px;">+ clone repo</span></li>
+        </ul>
+
+        <div class="section-title">FILTER</div>
+        <div style="display:flex; flex-wrap:wrap; gap:4px;">
+          <span class="tag accent">ai · 5</span>
+          <span class="tag">tool · 2</span>
+          <span class="tag">active · 4</span>
+          <span class="tag ghost">archived · 1</span>
+        </div>
+
+        <div class="section-title">COMPUTE</div>
+        <div style="font-size:11px; line-height:1.7;">
+          local · M3 max<br/>
+          <span class="k" style="color:var(--muted); font-size:10px;">RAM</span>
+          <span class="mbar" style="width:120px;"><span class="f" style="right:30%;"></span></span> 70%<br/>
+          <span class="k" style="color:var(--muted); font-size:10px;">GPU</span>
+          <span class="mbar" style="width:120px;"><span class="f accent" style="right:12%;"></span></span> 88%
+        </div>
+      </div>
+    </aside>
+
+    <main class="pane">
+      <div class="pane-hdr"><span>~/projects/agent-eval-v3</span><span class="nn">[2]</span></div>
+      <div class="center-scroll">
+        <div class="module-hdr">
+          <div>
+            <div class="bc">github.com/alex/<span class="a">agent-eval-v3</span></div>
+            <h2>agent-eval-v3</h2>
+          </div>
+          <span class="lvl">★ 24</span>
+          <span class="xp">· main</span>
+          <span class="xp">· last push 4m ago</span>
+          <span style="margin-left:auto; display:flex; gap:4px;">
+            <span class="kbd">C</span>clone
+            <span class="kbd">P</span>pr
+            <span class="kbd">I</span>issue
+          </span>
+        </div>
+
+        <div style="font-size:12px; color:var(--muted); margin-bottom:12px; line-height:1.5;">
+          eval harness for tool-using agents. python · mit license · 1.2k loc<br/>
+          topics: <span class="tag">llm</span> <span class="tag">eval</span> <span class="tag">agents</span> <span class="tag">python</span>
+        </div>
+
+        <div class="stat-block">
+          <div class="h"><span>▸ repo snapshot</span><span>ci · <span style="color:var(--accent);">1 failing</span></span></div>
+          <div class="body">
+            <div class="stats-row">
+              <div class="stat-cell">
+                <div class="k">COMMITS · 30D</div>
+                <div class="v">38</div>
+                <div class="delta up">+12 vs prev</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">OPEN PRS</div>
+                <div class="v">3</div>
+                <div class="delta">1 draft</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">ISSUES</div>
+                <div class="v" style="color:var(--accent);">7</div>
+                <div class="delta">2 bugs · 1 p0</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">COVERAGE</div>
+                <div class="v" style="color:var(--accent-green);">82<span class="unit">%</span></div>
+                <div class="delta up">+4%</div>
+              </div>
+              <div class="stat-cell">
+                <div class="k">BUNDLE</div>
+                <div class="v">1.4<span class="unit">mb</span></div>
+                <div class="delta">pkg v0.4.2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title" style="border:none; margin-top:14px;">▸ RECENT COMMITS</div>
+        <div class="commits">
+          <div class="commit">
+            <span class="sha">a4c2f9d</span>
+            <span class="msg">fix: drop tools when Q is short · add length heuristic</span>
+            <span class="when">4m</span>
+          </div>
+          <div class="commit">
+            <span class="sha">7b1e3aa</span>
+            <span class="msg">chore: bump anthropic-sdk to 0.54</span>
+            <span class="when">2h</span>
+          </div>
+          <div class="commit">
+            <span class="sha">9f02c11</span>
+            <span class="msg">feat(eval): add hallucination detector · 22 new cases</span>
+            <span class="when">yday</span>
+          </div>
+          <div class="commit">
+            <span class="sha">3d8a71c</span>
+            <span class="msg">docs: readme update + quickstart</span>
+            <span class="when">2d</span>
+          </div>
+          <div class="commit">
+            <span class="sha">b0e4f52</span>
+            <span class="msg">refactor: split runner into pool + reporter</span>
+            <span class="when">3d</span>
+          </div>
+        </div>
+
+        <div class="two-col" style="margin-top:14px;">
+          <div>
+            <div class="section-title" style="border:none;">▸ OPEN PRS</div>
+            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t" style="color:var(--accent-green);">#82</span><span>fix prompt-v12 for tool_skip pattern</span><span class="tag">+142 -11</span></div>
+            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t" style="color:var(--accent-green);">#79</span><span>add retry backoff for 529s</span><span class="tag">draft</span></div>
+            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t" style="color:var(--accent-green);">#77</span><span>ci: cache hf datasets</span><span class="tag">+38 -4</span></div>
+
+            <div class="section-title" style="border:none; margin-top:14px;">▸ TOP ISSUES</div>
+            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t" style="color:var(--accent);">#91</span><span>hallucinates on short queries</span><span class="tag accent">p0</span></div>
+            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t">#88</span><span>windows paths not escaped</span><span class="tag">bug</span></div>
+            <div class="tline" style="grid-template-columns: 38px 1fr auto;"><span class="t">#84</span><span>support ollama backend</span><span class="tag yellow">feat</span></div>
+          </div>
+          <div>
+            <div class="section-title" style="border:none;">▸ COMMITS · 90D</div>
+            <div class="chart-box" style="padding:10px 8px;">
+              <svg viewBox="0 0 300 100" style="width:100%; max-width:320px; height:auto; display:block; margin:0 auto;">
+                <g stroke="var(--line)" stroke-width="1.5" fill="none">
+                  <rect x="6"   y="75" width="3" height="15"/>
+                  <rect x="12"  y="70" width="3" height="20"/>
+                  <rect x="18"  y="82" width="3" height="8"/>
+                  <rect x="24"  y="60" width="3" height="30"/>
+                  <rect x="30"  y="75" width="3" height="15"/>
+                  <rect x="36"  y="90" width="3" height="0"/>
+                  <rect x="42"  y="65" width="3" height="25"/>
+                  <rect x="48"  y="55" width="3" height="35" fill="var(--accent-3)"/>
+                  <rect x="54"  y="70" width="3" height="20"/>
+                  <rect x="60"  y="80" width="3" height="10"/>
+                  <rect x="66"  y="72" width="3" height="18"/>
+                  <rect x="72"  y="90" width="3" height="0"/>
+                  <rect x="78"  y="50" width="3" height="40" fill="var(--accent-3)"/>
+                  <rect x="84"  y="62" width="3" height="28"/>
+                  <rect x="90"  y="70" width="3" height="20"/>
+                  <rect x="96"  y="45" width="3" height="45" fill="var(--accent)"/>
+                  <rect x="102" y="60" width="3" height="30"/>
+                  <rect x="108" y="55" width="3" height="35" fill="var(--accent-3)"/>
+                  <rect x="114" y="70" width="3" height="20"/>
+                  <rect x="120" y="80" width="3" height="10"/>
+                  <rect x="126" y="40" width="3" height="50" fill="var(--accent)"/>
+                  <rect x="132" y="55" width="3" height="35" fill="var(--accent-3)"/>
+                  <rect x="138" y="65" width="3" height="25"/>
+                  <rect x="144" y="58" width="3" height="32"/>
+                  <rect x="150" y="48" width="3" height="42" fill="var(--accent-3)"/>
+                  <rect x="156" y="62" width="3" height="28"/>
+                  <rect x="162" y="35" width="3" height="55" fill="var(--accent)"/>
+                  <rect x="168" y="50" width="3" height="40" fill="var(--accent-3)"/>
+                  <rect x="174" y="68" width="3" height="22"/>
+                  <rect x="180" y="42" width="3" height="48" fill="var(--accent-3)"/>
+                  <rect x="186" y="52" width="3" height="38"/>
+                  <rect x="192" y="60" width="3" height="30"/>
+                  <rect x="198" y="32" width="3" height="58" fill="var(--accent)"/>
+                  <rect x="204" y="48" width="3" height="42" fill="var(--accent-3)"/>
+                  <rect x="210" y="40" width="3" height="50" fill="var(--accent-3)"/>
+                  <rect x="216" y="58" width="3" height="32"/>
+                  <rect x="222" y="45" width="3" height="45" fill="var(--accent-3)"/>
+                  <rect x="228" y="30" width="3" height="60" fill="var(--accent)"/>
+                  <rect x="234" y="50" width="3" height="40" fill="var(--accent-3)"/>
+                  <rect x="240" y="38" width="3" height="52" fill="var(--accent-3)"/>
+                  <rect x="246" y="28" width="3" height="62" fill="var(--accent)"/>
+                  <rect x="252" y="42" width="3" height="48" fill="var(--accent-3)"/>
+                  <rect x="258" y="35" width="3" height="55" fill="var(--accent)"/>
+                  <rect x="264" y="25" width="3" height="65" fill="var(--accent)"/>
+                  <rect x="270" y="38" width="3" height="52" fill="var(--accent-3)"/>
+                  <rect x="276" y="22" width="3" height="68" fill="var(--accent)"/>
+                  <rect x="282" y="30" width="3" height="60" fill="var(--accent)"/>
+                </g>
+                <text x="6" y="98" font-size="8" fill="var(--muted)" font-family="JetBrains Mono">jan 20</text>
+                <text x="258" y="98" font-size="8" fill="var(--accent)" font-family="JetBrains Mono">today</text>
+              </svg>
+            </div>
+            <div class="sticky-note">atlas: commit cadence is up 3× this month — but issue close rate dropped to 40%. want a triage session?</div>
+          </div>
+        </div>
+
+        <div class="section-title" style="border:none; margin-top:14px;">▸ LATEST EVAL RUN · #47</div>
+        <div class="tline" style="grid-template-columns: 60px 1fr 70px 60px;">
+          <span class="t">RUN 47</span>
+          <span>prompt-v12 · 312 cases · <span style="color:var(--accent-green);">97.0% pass</span></span>
+          <span style="color:var(--muted); font-size:11px;">$4.18</span>
+          <span class="tag accent">live</span>
+        </div>
+      </div>
+    </main>
+
+    <aside class="pane">
+      <div class="pane-hdr"><span>~/github</span><span class="nn">[3]</span></div>
+      <div class="pane-body">
+        <div class="section-title">CONTRIBUTIONS · 12W</div>
+        <div class="gh-grid" id="ghGrid"></div>
+        <div style="font-size:10px; color:var(--muted); margin-top:4px;">
+          237 commits · 12-week streak · best day: <strong style="color:var(--ink);">14 commits</strong>
+        </div>
+
+        <div class="section-title">OPEN PRS · ALL REPOS</div>
+        <div class="tline" style="grid-template-columns: 1fr auto; padding:4px 0;"><span style="font-size:11px;">agent-eval-v3 #82</span><span class="tag">review</span></div>
+        <div class="tline" style="grid-template-columns: 1fr auto; padding:4px 0;"><span style="font-size:11px;">atlas-1 #14</span><span class="tag yellow">wip</span></div>
+        <div class="tline" style="grid-template-columns: 1fr auto; padding:4px 0;"><span style="font-size:11px;">prompt-lib #9</span><span class="tag">mergeable</span></div>
+
+        <div class="section-title">CI · LAST 24H</div>
+        <div class="agent-card">
+          <div class="name"><span class="d err"></span>scraper-agent / main</div>
+          <div class="detail">OOM · 03:12 · pytest</div>
+          <div style="margin-top:4px; font-size:10px;">
+            <span class="kbd">r</span> retry &nbsp;
+            <span class="kbd">b</span> bisect &nbsp;
+            <span class="kbd">l</span> logs
+          </div>
+        </div>
+        <div class="agent-card">
+          <div class="name"><span class="d on"></span>agent-eval-v3 / main</div>
+          <div class="detail">passed · 11m ago · 1:42</div>
+        </div>
+        <div class="agent-card">
+          <div class="name"><span class="d on"></span>atlas-1 / feat/widgets</div>
+          <div class="detail">passed · 1h ago · 0:38</div>
+        </div>
+
+        <div class="section-title">AI CREDITS</div>
+        <div style="font-size:12px; line-height:1.6;">
+          anthropic · <strong>$18.40</strong> / $50<br/>
+          <span style="color:var(--muted); font-size:10px;">resets may 1</span>
+        </div>
+
+        <div class="section-title">NOTES</div>
+        <div class="sticky-note" style="font-size:15px;">
+          triage #91 first — that pattern might show up in ember-rag too. write a shared check?
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ================ HOBBIES MODULE ================ -->
+<section class="screen" id="scr-hobbies" data-screen-label="Hobbies">
+  <div class="term-grid">
+    <aside class="pane">
+      <div class="pane-hdr"><span>~/hobbies</span><span class="nn">[1]</span></div>
+      <div class="pane-body">
+        <div class="section-title">SKILLS</div>
+        <ul class="modlist">
+          <li class="active"><span class="dot on"></span>piano <span class="lvl">lvl 7</span></li>
+          <li><span class="dot on"></span>climbing <span class="lvl">lvl 4</span></li>
+          <li><span class="dot"></span>garden <span class="lvl">lvl 2</span></li>
+          <li><span class="dot"></span>chess <span class="lvl">lvl 3</span></li>
+          <li><span style="color:var(--muted);">+ start a new skill</span></li>
+        </ul>
+        <div class="section-title">STREAKS</div>
+        <div style="font-size:12px; line-height:1.8;">
+          piano · <strong>12d</strong> 🔥<br/>
+          climbing · 1d<br/>
+          chess · <span style="color:var(--muted);">0</span>
+        </div>
+        <div class="section-title">TOTAL XP</div>
+        <div style="font-size:20px; line-height:1;">4,820<span style="font-size:12px; color:var(--muted);"> hobby xp</span></div>
+      </div>
+    </aside>
+
+    <main class="pane">
+      <div class="pane-hdr"><span>~/hobbies/piano</span><span class="nn">[2]</span></div>
+      <div class="center-scroll">
+        <div class="module-hdr">
+          <div>
+            <div class="bc">~/hobbies/<span class="a">piano</span></div>
+            <h2>Piano</h2>
+          </div>
+          <span class="lvl">lvl 7</span>
+          <span class="xp">· 2100/3000 xp to lvl 8</span>
+          <span class="xp">· streak <strong style="color:var(--accent);">12d</strong> 🔥</span>
+        </div>
+
+        <div class="xp-bar" style="height:14px;"><div class="f" style="width:70%;"></div><div class="t"></div></div>
+        <div style="font-size:11px; color:var(--muted); margin-bottom:16px;">
+          next unlock at lvl 8: <strong style="color:var(--ink);">sight-read dashboard</strong> &nbsp; · &nbsp; longest streak: 41d (jan–feb)
+        </div>
+
+        <div class="section-title" style="border:none;">▸ PRACTICE · LAST 30 DAYS</div>
+        <div class="heatmap strip" id="pianoHeatmap"></div>
+        <div style="font-size:10px; color:var(--muted); display:flex; gap:10px; margin-top:4px;">
+          <span>■ skipped</span>
+          <span style="color:var(--ink);">■ 1-20m</span>
+          <span style="color:var(--accent-3);">■ 20-40m</span>
+          <span style="color:var(--accent);">■ 40m+</span>
+        </div>
+
+        <div class="two-col" style="margin-top:18px;">
+          <div>
+            <div class="section-title" style="border:none;">▸ REPERTOIRE</div>
+            <div class="tline" style="grid-template-columns: 1fr 60px 60px;"><span>Gymnopédie No. 1</span><span style="font-size:10px; color:var(--accent-green);">learned</span><span class="tag">memd</span></div>
+            <div class="tline" style="grid-template-columns: 1fr 60px 60px;"><span>Clair de Lune · opening</span><span style="font-size:10px; color:var(--accent);">wip 45%</span><span class="tag yellow">focus</span></div>
+            <div class="tline" style="grid-template-columns: 1fr 60px 60px;"><span>Arabesque No. 1</span><span style="font-size:10px; color:var(--muted);">queued</span><span class="tag ghost">next</span></div>
+            <div class="tline" style="grid-template-columns: 1fr 60px 60px;"><span>Prelude in C</span><span style="font-size:10px; color:var(--accent-green);">learned</span><span class="tag">memd</span></div>
+            <div style="font-size:10px; color:var(--muted); margin-top:6px;">+ add piece</div>
+          </div>
+          <div>
+            <div class="section-title" style="border:none;">▸ SESSIONS · 30D</div>
+            <div class="chart-box" style="padding:10px 8px;">
+              <svg viewBox="0 0 300 100" style="width:100%; max-width:320px; height:auto; display:block; margin:0 auto;">
+                <g stroke="var(--line)" stroke-width="1.5" fill="none">
+                  <rect x="6" y="70" width="6" height="20"/>
+                  <rect x="16" y="60" width="6" height="30"/>
+                  <rect x="26" y="50" width="6" height="40"/>
+                  <rect x="36" y="90" width="6" height="0"/>
+                  <rect x="46" y="65" width="6" height="25"/>
+                  <rect x="56" y="55" width="6" height="35"/>
+                  <rect x="66" y="45" width="6" height="45"/>
+                  <rect x="76" y="40" width="6" height="50" fill="var(--accent-3)"/>
+                  <rect x="86" y="45" width="6" height="45"/>
+                  <rect x="96" y="30" width="6" height="60" fill="var(--accent)"/>
+                  <rect x="106" y="55" width="6" height="35"/>
+                  <rect x="116" y="50" width="6" height="40"/>
+                  <rect x="126" y="40" width="6" height="50" fill="var(--accent-3)"/>
+                  <rect x="136" y="35" width="6" height="55" fill="var(--accent-3)"/>
+                  <rect x="146" y="25" width="6" height="65" fill="var(--accent)"/>
+                  <rect x="156" y="30" width="6" height="60" fill="var(--accent)"/>
+                  <rect x="166" y="45" width="6" height="45"/>
+                  <rect x="176" y="20" width="6" height="70" fill="var(--accent)"/>
+                  <rect x="186" y="35" width="6" height="55" fill="var(--accent-3)"/>
+                  <rect x="196" y="25" width="6" height="65" fill="var(--accent)"/>
+                  <rect x="206" y="35" width="6" height="55" fill="var(--accent-3)"/>
+                  <rect x="216" y="30" width="6" height="60" fill="var(--accent)"/>
+                  <rect x="226" y="40" width="6" height="50" fill="var(--accent-3)"/>
+                  <rect x="236" y="25" width="6" height="65" fill="var(--accent)"/>
+                  <rect x="246" y="30" width="6" height="60" fill="var(--accent)"/>
+                  <rect x="256" y="20" width="6" height="70" fill="var(--accent)"/>
+                  <rect x="266" y="35" width="6" height="55" fill="var(--accent-3)"/>
+                  <rect x="276" y="25" width="6" height="65" fill="var(--accent)"/>
+                </g>
+                <text x="6" y="98" font-size="8" fill="var(--muted)" font-family="JetBrains Mono">mar 19</text>
+                <text x="260" y="98" font-size="8" fill="var(--accent)" font-family="JetBrains Mono">apr 18</text>
+              </svg>
+            </div>
+            <div style="font-size:11px; color:var(--muted); margin-top:4px;">avg session: <strong style="color:var(--ink);">24 min</strong> · total month: <strong style="color:var(--ink);">9h 20m</strong></div>
+          </div>
+        </div>
+
+        <div class="section-title" style="border:none; margin-top:14px;">▸ UPCOMING</div>
+        <div class="tline"><span class="t">TODAY</span><span class="circle"></span><span>scales + Clair de Lune · 20m</span><span class="xp">+10</span></div>
+        <div class="tline"><span class="t">TUE</span><span class="circle"></span><span>lesson w/ J.</span><span class="tag">60m</span></div>
+        <div class="tline"><span class="t">MAY 12</span><span class="circle"></span><span>recital — <span style="color:var(--accent);">quest ✦</span></span><span class="xp">+500</span></div>
+
+        <div class="section-title" style="border:none; margin-top:14px;">▸ ACHIEVEMENTS</div>
+        <div class="badges" style="grid-template-columns:repeat(8, 1fr);">
+          <div class="badge got">★</div>
+          <div class="badge got">7d</div>
+          <div class="badge got">♩</div>
+          <div class="badge got">mem</div>
+          <div class="badge locked">30d</div>
+          <div class="badge locked">100h</div>
+          <div class="badge locked">live</div>
+          <div class="badge locked">duet</div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="pane">
+      <div class="pane-hdr"><span>~/log</span><span class="nn">[3]</span></div>
+      <div class="pane-body">
+        <div class="section-title">RECENT SESSIONS</div>
+        <div class="vitals">
+          <div class="row"><span class="k">apr 17 · 20:12</span><span class="v">28m</span></div>
+          <div class="row"><span class="k">apr 16 · 20:04</span><span class="v">22m</span></div>
+          <div class="row"><span class="k">apr 15 · 19:48</span><span class="v">35m</span></div>
+          <div class="row"><span class="k">apr 14 · 21:10</span><span class="v">18m</span></div>
+          <div class="row"><span class="k">apr 13 · 20:00</span><span class="v">24m</span></div>
+          <div class="row"><span class="k">apr 12 · 20:40</span><span class="v">30m</span></div>
+          <div class="row"><span class="k">apr 11 · 19:55</span><span class="v">26m</span></div>
+        </div>
+
+        <div class="section-title">ATLAS NOTES</div>
+        <div class="sticky-note">
+          your best sessions happen right after dinner (19:30-20:30). protect that window?
+        </div>
+        <div class="sticky-note" style="background:var(--paper-2); color:var(--ink); transform:rotate(1deg);">
+          Clair de Lune: you've slowed at bar 17 every time for 4 sessions. slow-practice it?
+        </div>
+
+        <div class="section-title">QUEST</div>
+        <div class="quest main" style="grid-template-columns: 1fr auto; gap:6px; padding:6px 8px;">
+          <div>
+            <div style="font-size:12px;"><span class="chk"></span>play at may 12 recital</div>
+            <div class="meta">24 days · main quest</div>
+          </div>
+          <div class="xp">+500</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ================ SETTINGS ================ -->
+<section class="screen" id="scr-settings" data-screen-label="Settings">
+  <div class="module-hdr">
+    <div class="bc"><span class="a">~/</span>settings</div>
+    <h2>settings</h2>
+    <div class="lvl">v0.1.0</div>
+    <div class="xp">· 6 sections · local changes saved to ~/atlas-1/config.json</div>
+  </div>
+
+  <div class="settings-layout">
+    <!-- Section nav -->
+    <aside class="settings-nav">
+      <div class="sn-hdr">sections</div>
+      <button class="sn-btn on" data-sec="identity"><span class="n">01</span> identity</button>
+      <button class="sn-btn" data-sec="appearance"><span class="n">02</span> appearance</button>
+      <button class="sn-btn" data-sec="plugins"><span class="n">03</span> plugins <span class="sn-badge">12</span></button>
+      <button class="sn-btn" data-sec="data"><span class="n">04</span> data &amp; sync</button>
+      <button class="sn-btn" data-sec="keys"><span class="n">05</span> keybindings</button>
+      <button class="sn-btn" data-sec="about"><span class="n">06</span> about</button>
+      <div class="sn-foot">
+        <div class="dim">config path</div>
+        <div class="mono">~/atlas-1/config.json</div>
+        <button class="sn-link">open in editor →</button>
+      </div>
+    </aside>
+
+    <!-- Sections -->
+    <div class="settings-body">
+
+      <!-- IDENTITY -->
+      <div class="set-sec active" data-sec="identity">
+        <div class="set-sec-hdr">
+          <div class="set-sec-title">identity</div>
+          <div class="set-sec-sub">what this console is called, and who's using it.</div>
+        </div>
+
+        <div class="set-row">
+          <div class="set-k">console name</div>
+          <div class="set-v">
+            <input type="text" class="set-input" value="Atlas 1" style="width:260px;" />
+            <div class="set-help">appears in the header, statusline, and exports. renameable any time.</div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">tagline</div>
+          <div class="set-v">
+            <input type="text" class="set-input" value="your life, as a small operating system." style="width:100%;" />
+            <div class="set-help">shown on the home screen hero and in shared links.</div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">operator</div>
+          <div class="set-v">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <div class="avatar-placeholder">M</div>
+              <div>
+                <input type="text" class="set-input" value="mira" style="width:160px;" placeholder="handle" />
+                <div class="set-help">used in commits, notes, and @-mentions.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">class / loadout</div>
+          <div class="set-v">
+            <div class="loadout-grid">
+              <div class="loadout-card">
+                <div class="lc-hdr"><span class="lc-n">01</span><span class="lc-name">the maker</span></div>
+                <div class="lc-desc">ships things. solo-builds. codes.</div>
+                <div class="lc-tags">
+                  <span class="t">+++ tasks</span><span class="t">+++ projects</span><span class="t">++ cal</span><span class="t">+ health</span>
+                </div>
+              </div>
+              <div class="loadout-card on">
+                <div class="lc-hdr"><span class="lc-n">02 ✦</span><span class="lc-name">the polymath</span><span class="lc-pick">· current</span></div>
+                <div class="lc-desc">code, body, music, people. all on.</div>
+                <div class="lc-tags">
+                  <span class="t">balanced</span><span class="t">3 focus/day</span><span class="t">daily check-in</span>
+                </div>
+              </div>
+              <div class="loadout-card">
+                <div class="lc-hdr"><span class="lc-n">03</span><span class="lc-name">the operator</span></div>
+                <div class="lc-desc">ops, inbox, household CEO.</div>
+                <div class="lc-tags">
+                  <span class="t">+++ cal</span><span class="t">+++ home</span><span class="t">++ tasks</span><span class="t">+ health</span>
+                </div>
+              </div>
+              <div class="loadout-card">
+                <div class="lc-hdr"><span class="lc-n">04</span><span class="lc-name">the athlete</span></div>
+                <div class="lc-desc">body-first. train, recover, compete.</div>
+                <div class="lc-tags">
+                  <span class="t">+++ health</span><span class="t">+++ hobbies</span><span class="t">++ cal</span><span class="t">+ tasks</span>
+                </div>
+              </div>
+              <div class="loadout-card">
+                <div class="lc-hdr"><span class="lc-n">05</span><span class="lc-name">the scholar</span></div>
+                <div class="lc-desc">reads, writes, thinks deeply.</div>
+                <div class="lc-tags">
+                  <span class="t">+++ reading</span><span class="t">+++ journal</span><span class="t">++ projects</span><span class="t">+ cal</span>
+                </div>
+              </div>
+              <div class="loadout-card">
+                <div class="lc-hdr"><span class="lc-n">06</span><span class="lc-name">the wanderer</span></div>
+                <div class="lc-desc">no presets. blank slate. build your own.</div>
+                <div class="lc-tags">
+                  <span class="t">empty start</span><span class="t">pick every module</span><span class="t">no quests</span>
+                </div>
+              </div>
+            </div>
+            <div class="set-help">changes stat weights and default quest cadence. does not remove existing data.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPEARANCE -->
+      <div class="set-sec" data-sec="appearance">
+        <div class="set-sec-hdr">
+          <div class="set-sec-title">appearance</div>
+          <div class="set-sec-sub">theme, accent, density, typography. the knobs in the tweaks panel, persisted.</div>
+        </div>
+
+        <div class="set-row">
+          <div class="set-k">mode</div>
+          <div class="set-v">
+            <div style="display:flex; gap:8px;">
+              <div class="mod-chip on">light · paper</div>
+              <div class="mod-chip">dark · phosphor</div>
+              <div class="mod-chip">auto · system</div>
+            </div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">accent color</div>
+          <div class="set-v">
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <div class="swatch on" style="--c:#c84a1e;">tomato</div>
+              <div class="swatch" style="--c:#1e5ec8;">blue</div>
+              <div class="swatch" style="--c:#1e9960;">green</div>
+              <div class="swatch" style="--c:#c88520;">amber</div>
+              <div class="swatch" style="--c:#7a1ec8;">violet</div>
+              <div class="swatch" style="--c:#c8205e;">rose</div>
+              <div class="swatch" style="--c:#205a5a;">teal</div>
+              <div class="swatch custom">#&nbsp;hex</div>
+            </div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">density</div>
+          <div class="set-v">
+            <div style="display:flex; gap:8px;">
+              <div class="mod-chip">cozy · +2px</div>
+              <div class="mod-chip on">default</div>
+              <div class="mod-chip">dense · terminal</div>
+            </div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">typography</div>
+          <div class="set-v">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px;">
+              <div>
+                <div class="dim mono" style="font-size:10px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">body</div>
+                <select class="set-input"><option>Inter (system serif/sans)</option><option selected>JetBrains Mono</option><option>Berkeley Mono</option><option>IBM Plex Mono</option></select>
+              </div>
+              <div>
+                <div class="dim mono" style="font-size:10px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">display</div>
+                <select class="set-input"><option selected>JetBrains Mono (700)</option><option>Space Grotesk</option><option>Rubik Mono One</option></select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">crt overlay</div>
+          <div class="set-v">
+            <div style="display:flex; gap:8px;">
+              <div class="mod-chip on">off</div>
+              <div class="mod-chip">light scanlines</div>
+              <div class="mod-chip">full crt</div>
+            </div>
+            <div class="set-help">only visible in dark mode. adds scanlines, phosphor bloom, and subtle flicker.</div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">game mode</div>
+          <div class="set-v">
+            <label class="toggle"><input type="checkbox" checked /><span></span></label>
+            <span style="font-size:12px; color:var(--muted); margin-left:10px;">show HP/XP/streak statusline and quest framing. off = productivity-tool feel.</span>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">sounds</div>
+          <div class="set-v">
+            <label class="toggle"><input type="checkbox" /><span></span></label>
+            <span style="font-size:12px; color:var(--muted); margin-left:10px;">subtle terminal beeps on command accept, quest complete, level-up.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLUGINS -->
+      <div class="set-sec" data-sec="plugins">
+        <div class="set-sec-hdr">
+          <div class="set-sec-title">plugins &amp; modules</div>
+          <div class="set-sec-sub">every module is a plugin. official, community, or your own. browse, enable, fork, publish.</div>
+        </div>
+
+        <div class="plug-tabs">
+          <button class="pt-btn on">installed <span class="n">12</span></button>
+          <button class="pt-btn">registry <span class="n">142</span></button>
+          <button class="pt-btn">updates <span class="n accent">3</span></button>
+          <button class="pt-btn">authoring</button>
+          <div class="pt-grow"></div>
+          <input type="text" class="set-input" placeholder="filter…" style="width:180px; font-size:11px;" />
+          <button class="onb-btn" style="padding:4px 10px; font-size:11px;">+ install from url</button>
+        </div>
+
+        <div class="plug-list">
+          <!-- Installed plugin rows -->
+          <div class="plug-row core on">
+            <div class="p-ic">◉</div>
+            <div class="p-body">
+              <div class="p-title">calendar <span class="p-badge">core</span> <span class="p-ver">v0.1.0</span></div>
+              <div class="p-desc">events, focus blocks, ics import. seeds quests from upcoming blocks.</div>
+            </div>
+            <div class="p-meta"><span class="dim">24kb</span><span class="dim">· 3 deps</span></div>
+            <label class="toggle"><input type="checkbox" checked disabled /><span></span></label>
+          </div>
+          <div class="plug-row on">
+            <div class="p-ic">❤</div>
+            <div class="p-body">
+              <div class="p-title">health <span class="p-badge">official</span> <span class="p-ver">v0.3.2</span></div>
+              <div class="p-desc">hrv, sleep, workouts, recovery trends. apple health + oura + strava adapters.</div>
+            </div>
+            <div class="p-meta"><span class="dim">88kb</span><span class="dim">· 5 deps</span></div>
+            <label class="toggle"><input type="checkbox" checked /><span></span></label>
+          </div>
+          <div class="plug-row on">
+            <div class="p-ic">▣</div>
+            <div class="p-body">
+              <div class="p-title">tasks <span class="p-badge">core</span> <span class="p-ver">v0.1.0</span></div>
+              <div class="p-desc">todos, quests, focus timer. powers the quest-board.</div>
+            </div>
+            <div class="p-meta"><span class="dim">40kb</span></div>
+            <label class="toggle"><input type="checkbox" checked disabled /><span></span></label>
+          </div>
+          <div class="plug-row on">
+            <div class="p-ic">♫</div>
+            <div class="p-body">
+              <div class="p-title">hobbies <span class="p-badge">official</span> <span class="p-ver">v0.2.1</span></div>
+              <div class="p-desc">long-horizon skill tracking. piano, climbing, languages, whatever.</div>
+            </div>
+            <div class="p-meta"><span class="dim">52kb</span></div>
+            <label class="toggle"><input type="checkbox" checked /><span></span></label>
+          </div>
+          <div class="plug-row on">
+            <div class="p-ic">⟁</div>
+            <div class="p-body">
+              <div class="p-title">projects <span class="p-badge">official</span> <span class="p-ver">v0.2.0</span></div>
+              <div class="p-desc">long builds. commits, stand-ups, agent delegations. renamed from ai-lab.</div>
+            </div>
+            <div class="p-meta"><span class="dim">71kb</span><span class="dim">· 2 deps</span></div>
+            <label class="toggle"><input type="checkbox" checked /><span></span></label>
+          </div>
+          <div class="plug-row on update">
+            <div class="p-ic">⌂</div>
+            <div class="p-body">
+              <div class="p-title">home <span class="p-badge">official</span> <span class="p-ver">v0.1.4 → <span class="accent">v0.2.0</span></span></div>
+              <div class="p-desc">household ops. bills, chores, fridge inventory. update available.</div>
+            </div>
+            <div class="p-meta"><a class="p-link">update →</a></div>
+            <label class="toggle"><input type="checkbox" checked /><span></span></label>
+          </div>
+          <div class="plug-row">
+            <div class="p-ic">₿</div>
+            <div class="p-body">
+              <div class="p-title">finance <span class="p-badge">official</span> <span class="p-ver">v0.1.1</span> <span class="p-off">disabled</span></div>
+              <div class="p-desc">budgets, net worth, accounts. plaid + csv.</div>
+            </div>
+            <div class="p-meta"><span class="dim">110kb</span></div>
+            <label class="toggle"><input type="checkbox" /><span></span></label>
+          </div>
+          <div class="plug-row">
+            <div class="p-ic">✎</div>
+            <div class="p-body">
+              <div class="p-title">journal <span class="p-badge">official</span> <span class="p-ver">v0.2.0</span> <span class="p-off">disabled</span></div>
+              <div class="p-desc">daily prompts, mood, weather. auto-links to quests.</div>
+            </div>
+            <div class="p-meta"><span class="dim">34kb</span></div>
+            <label class="toggle"><input type="checkbox" /><span></span></label>
+          </div>
+          <div class="plug-row">
+            <div class="p-ic">◈</div>
+            <div class="p-body">
+              <div class="p-title">travel <span class="p-badge community">@mira · community</span> <span class="p-ver">v0.0.7</span> <span class="p-off">disabled</span></div>
+              <div class="p-desc">trips, flights, bucket list. your own fork.</div>
+            </div>
+            <div class="p-meta"><a class="p-link">edit →</a></div>
+            <label class="toggle"><input type="checkbox" /><span></span></label>
+          </div>
+          <div class="plug-row dev">
+            <div class="p-ic">✦</div>
+            <div class="p-body">
+              <div class="p-title">garden <span class="p-badge dev">dev · local folder</span> <span class="p-ver">(unpublished)</span></div>
+              <div class="p-desc">// tomato yields, seedling log. ~/code/atlas-garden/ · hot-reloading.</div>
+            </div>
+            <div class="p-meta"><a class="p-link">reload</a><a class="p-link">publish →</a></div>
+            <label class="toggle"><input type="checkbox" checked /><span></span></label>
+          </div>
+        </div>
+
+        <div class="plug-authoring">
+          <div class="pa-hdr">authoring · make your own</div>
+          <div class="pa-body">
+            a plugin is just a folder. drop it in <span class="mono">~/atlas-1/plugins/</span> and it hot-reloads.
+            <pre class="mono-block">my-plugin/
+├── manifest.json      # name, icon, version, permissions
+├── schema.ts          # data shape (zod)
+├── ui.tsx             # screen &amp; widgets
+├── commands.ts        # /slash commands
+└── README.md</pre>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button class="onb-btn">scaffold new plugin</button>
+              <button class="onb-btn">open plugins folder</button>
+              <button class="onb-btn">docs →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATA & SYNC -->
+      <div class="set-sec" data-sec="data">
+        <div class="set-sec-hdr">
+          <div class="set-sec-title">data &amp; sync</div>
+          <div class="set-sec-sub">your vault is a folder of markdown and json files. you own it. sync it however you like.</div>
+        </div>
+
+        <div class="set-row">
+          <div class="set-k">vault path</div>
+          <div class="set-v">
+            <input type="text" class="set-input mono" value="~/atlas-1/vault/" style="width:320px;" />
+            <button class="onb-btn" style="margin-left:6px;">change…</button>
+            <div class="set-help">points at a folder on disk. safe to move — atlas re-indexes on start.</div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">vault stats</div>
+          <div class="set-v">
+            <div class="stat-grid">
+              <div class="st"><div class="v">1,284</div><div class="k">notes</div></div>
+              <div class="st"><div class="v">312</div><div class="k">quests</div></div>
+              <div class="st"><div class="v">47MB</div><div class="k">on disk</div></div>
+              <div class="st"><div class="v">14</div><div class="k">plugins</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">sync</div>
+          <div class="set-v">
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <div class="mod-chip on">git · ssh</div>
+              <div class="mod-chip">icloud drive</div>
+              <div class="mod-chip">dropbox</div>
+              <div class="mod-chip">syncthing</div>
+              <div class="mod-chip">none · local only</div>
+            </div>
+            <div class="mono-block" style="margin-top:8px;">remote: git@github.com:mira/atlas-vault.git
+branch: main  ·  last push: 14m ago  ·  12 commits ahead</div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-k">ai &amp; agents</div>
+          <div class="set-v">
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <div class="mod-chip on">local · ollama</div>
+              <div class="mod-chip on">anthropic · claude</div>
+              <div class="mod-chip">openai</div>
+              <div class="mod-chip">none · rules only</div>
+            </div>
+            <div class="set-help">agents only see what you grant per-module. defaults: read-only. runtime: bring-your-own-key.</div>
+          </div>
+        </div>
+        <div class="set-row danger">
+          <div class="set-k">danger zone</div>
+          <div class="set-v">
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="onb-btn">export full backup (.zip)</button>
+              <button class="onb-btn">import from backup…</button>
+              <button class="onb-btn" style="border-color:#c84a1e; color:#c84a1e;">reset xp &amp; streaks</button>
+              <button class="onb-btn" style="border-color:#c84a1e; color:#c84a1e;">wipe vault</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KEYBINDINGS -->
+      <div class="set-sec" data-sec="keys">
+        <div class="set-sec-hdr">
+          <div class="set-sec-title">keybindings</div>
+          <div class="set-sec-sub">everything is reachable by keyboard. rebind anything. vim mode available.</div>
+        </div>
+        <div class="kb-layout">
+          <div class="kb-col">
+            <div class="kb-hdr">global</div>
+            <div class="kb-row"><span class="kb-act">open command bar</span><span class="kb-keys"><span class="kbd">/</span></span></div>
+            <div class="kb-row"><span class="kb-act">quick switcher</span><span class="kb-keys"><span class="kbd">⌘</span><span class="kbd">K</span></span></div>
+            <div class="kb-row"><span class="kb-act">settings</span><span class="kb-keys"><span class="kbd">⌘</span><span class="kbd">,</span></span></div>
+            <div class="kb-row"><span class="kb-act">toggle theme</span><span class="kb-keys"><span class="kbd">⌘</span><span class="kbd">T</span></span></div>
+            <div class="kb-row"><span class="kb-act">toggle tweaks</span><span class="kb-keys"><span class="kbd">⌘</span><span class="kbd">.</span></span></div>
+            <div class="kb-row"><span class="kb-act">home</span><span class="kb-keys"><span class="kbd">g</span><span class="kbd">h</span></span></div>
+
+            <div class="kb-hdr">quests &amp; focus</div>
+            <div class="kb-row"><span class="kb-act">new quest</span><span class="kb-keys"><span class="kbd">n</span></span></div>
+            <div class="kb-row"><span class="kb-act">start focus block</span><span class="kb-keys"><span class="kbd">f</span></span></div>
+            <div class="kb-row"><span class="kb-act">complete quest</span><span class="kb-keys"><span class="kbd">x</span></span></div>
+            <div class="kb-row"><span class="kb-act">defer</span><span class="kb-keys"><span class="kbd">d</span></span></div>
+          </div>
+          <div class="kb-col">
+            <div class="kb-hdr">navigation</div>
+            <div class="kb-row"><span class="kb-act">next / prev panel</span><span class="kb-keys"><span class="kbd">j</span> / <span class="kbd">k</span></span></div>
+            <div class="kb-row"><span class="kb-act">next / prev module</span><span class="kb-keys"><span class="kbd">⇥</span> / <span class="kbd">⇧⇥</span></span></div>
+            <div class="kb-row"><span class="kb-act">jump to home</span><span class="kb-keys"><span class="kbd">ESC</span><span class="kbd">ESC</span></span></div>
+
+            <div class="kb-hdr">modules</div>
+            <div class="kb-row"><span class="kb-act">calendar</span><span class="kb-keys"><span class="kbd">g</span><span class="kbd">c</span></span></div>
+            <div class="kb-row"><span class="kb-act">health</span><span class="kb-keys"><span class="kbd">g</span><span class="kbd">⇧h</span></span></div>
+            <div class="kb-row"><span class="kb-act">projects</span><span class="kb-keys"><span class="kbd">g</span><span class="kbd">p</span></span></div>
+            <div class="kb-row"><span class="kb-act">hobbies</span><span class="kb-keys"><span class="kbd">g</span><span class="kbd">o</span></span></div>
+
+            <div class="kb-hdr">flavor</div>
+            <div class="kb-row"><span class="kb-act">konami code</span><span class="kb-keys"><span class="kbd">↑↑↓↓←→←→BA</span></span></div>
+          </div>
+        </div>
+        <div class="set-row" style="margin-top:14px;">
+          <div class="set-k">modal style</div>
+          <div class="set-v">
+            <div style="display:flex; gap:8px;">
+              <div class="mod-chip on">default</div>
+              <div class="mod-chip">vim</div>
+              <div class="mod-chip">emacs</div>
+              <div class="mod-chip">none · mouse</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="set-sec" data-sec="about">
+        <div class="set-sec-hdr">
+          <div class="set-sec-title">about</div>
+          <div class="set-sec-sub">atlas is open source. mit. fork it, break it, make it yours.</div>
+        </div>
+        <div class="about-grid">
+          <div class="ab-card">
+            <div class="ab-k">version</div>
+            <div class="ab-v">0.1.0 <span class="dim">· dev · a4f1c20</span></div>
+          </div>
+          <div class="ab-card">
+            <div class="ab-k">license</div>
+            <div class="ab-v">MIT</div>
+          </div>
+          <div class="ab-card">
+            <div class="ab-k">first booted</div>
+            <div class="ab-v">mar 14, 2026</div>
+          </div>
+          <div class="ab-card">
+            <div class="ab-k">days in</div>
+            <div class="ab-v">32d · 17 lvl · 312 quests</div>
+          </div>
+        </div>
+        <div class="ab-block">
+          <div class="ab-block-hdr">repo</div>
+          <div class="mono">github.com/atlas-life/console</div>
+          <div style="display:flex; gap:8px; margin-top:6px;">
+            <button class="onb-btn">view on github →</button>
+            <button class="onb-btn">open docs</button>
+            <button class="onb-btn">report issue</button>
+            <button class="onb-btn">check for updates</button>
+          </div>
+        </div>
+        <div class="ab-block">
+          <div class="ab-block-hdr">philosophy</div>
+          <div style="font-size:13px; line-height:1.7; max-width:620px;">
+            atlas is a local-first, plugin-shaped life console. your data is a folder of flat files that you own.
+            your modules are code you can read. your agents are optional and scoped. the goal is a tool you can
+            live inside for a decade and evolve with you — not a SaaS that gets sunset.
+          </div>
+        </div>
+        <div class="ab-block">
+          <div class="ab-block-hdr">credits</div>
+          <div class="dim" style="font-size:12px; line-height:1.7;">
+            core by mira &amp; contributors · type: JetBrains Mono (Apache 2.0) · inspired by every text-mode interface
+            ever made · built on the shoulders of htmx, zod, sqlite, and stubbornness.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================ COMMAND BAR ================ -->
+<div class="cmdbar">
+  <span class="prompt">atlas$</span>
+  <input class="in" id="cmdIn" placeholder="type a command, or /? to ask atlas — press ⌘K for palette" />
+  <div class="hints">
+    <span><span class="k kbd">⌘K</span>palette</span>
+    <span><span class="k kbd">⌘/</span>ask</span>
+    <span><span class="k kbd">g t</span>today</span>
+    <span><span class="k kbd">g h</span>health</span>
+    <span><span class="k kbd">F</span>focus</span>
+  </div>
+</div>
+
+<!-- ================ TWEAKS ================ -->
+<div class="tweaks" id="tweaksPanel">
+  <h4>Tweaks</h4>
+  <div class="tweak-row">
+    <label>name</label>
+    <input type="text" id="tw-name" value="Atlas 1" />
+  </div>
+  <div class="tweak-row">
+    <label>theme</label>
+    <div class="seg">
+      <button data-theme="light" class="on">light</button>
+      <button data-theme="dark">phosphor</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>accent</label>
+    <div class="seg">
+      <button data-accent="#e85d3d" class="on">tomato</button>
+      <button data-accent="#3d7ae8">blue</button>
+      <button data-accent="#2d7a3d">green</button>
+      <button data-accent="#c88520">amber</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>crt scanlines</label>
+    <div class="seg">
+      <button data-crt="off" class="on">off</button>
+      <button data-crt="on">on</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>game layer</label>
+    <div class="seg">
+      <button data-game="on" class="on">on</button>
+      <button data-game="off">off</button>
+    </div>
+  </div>
+  <div class="tweak-row" style="padding-top:6px; border-top: 1px dashed var(--muted); margin-top: 8px;">
+    <span style="font-size:9px; color:var(--muted);">// all persists to disk</span>
+  </div>
+</div>
+
+<!-- ================ SCRIPTS ================ -->
+<script>
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "name": "Atlas 1",
+  "theme": "dark",
+  "accent": "#c88520",
+  "crt": "off",
+  "game": "on"
+}/*EDITMODE-END*/;
+
+// --- Screen nav ---
+const navBtns = document.querySelectorAll('#screenNav button');
+const screens = document.querySelectorAll('.screen');
+function showScreen(id) {
+  navBtns.forEach(b => b.classList.toggle('on', b.dataset.scr === id));
+  screens.forEach(s => s.classList.toggle('on', s.id === 'scr-' + id));
+  localStorage.setItem('atlas1c-screen', id);
+  // hide statusline on boot
+  document.getElementById('statusline').style.display = (id === 'boot') ? 'none' : 'flex';
+}
+navBtns.forEach(b => b.addEventListener('click', () => showScreen(b.dataset.scr)));
+document.querySelectorAll('[data-goto]').forEach(el => {
+  el.addEventListener('click', () => showScreen(el.dataset.goto));
+});
+// --- Onboarding step navigation ---
+(() => {
+  const TOTAL = 6;
+  let cur = 1; // start on step 2 (loadout) since name is pre-filled
+  const stepper = document.getElementById('onbStepper');
+  const panels = document.querySelectorAll('.onb-panel');
+  const prog = document.getElementById('onbProg');
+  const prevBtn = document.getElementById('onbPrev');
+  const nextBtn = document.getElementById('onbNext');
+  const goBtn = document.getElementById('onbGo');
+  const sumName = document.getElementById('sumName');
+  const bootNameInput = document.getElementById('bootName');
+
+  function render() {
+    panels.forEach(p => p.classList.toggle('active', +p.dataset.step === cur));
+    if (stepper) {
+      stepper.querySelectorAll('.onb-step').forEach(s => {
+        const n = +s.dataset.step;
+        s.classList.toggle('active', n === cur);
+        s.classList.toggle('done', n < cur);
+      });
+    }
+    if (prog) prog.textContent = String(cur + 1).padStart(2, '0') + ' / 0' + TOTAL;
+    if (prevBtn) prevBtn.style.visibility = cur === 0 ? 'hidden' : 'visible';
+    const last = cur === TOTAL - 1;
+    if (nextBtn) nextBtn.style.display = last ? 'none' : 'inline-block';
+    if (goBtn) goBtn.style.display = last ? 'inline-block' : 'none';
+    // update summary on last step
+    if (last && sumName && bootNameInput) sumName.textContent = bootNameInput.value || 'Atlas 1';
+  }
+  prevBtn?.addEventListener('click', () => { if (cur > 0) { cur--; render(); } });
+  nextBtn?.addEventListener('click', () => { if (cur < TOTAL - 1) { cur++; render(); } });
+  goBtn?.addEventListener('click', () => showScreen('home'));
+  // stepper click to jump
+  stepper?.querySelectorAll('.onb-step').forEach(s => {
+    s.addEventListener('click', () => { cur = +s.dataset.step; render(); });
+  });
+  render();
+})();
+const savedScreen = localStorage.getItem('atlas1c-screen');
+if (savedScreen) showScreen(savedScreen);
+
+// --- Settings section switcher ---
+document.querySelectorAll('#scr-settings .sn-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const sec = btn.dataset.sec;
+    document.querySelectorAll('#scr-settings .sn-btn').forEach(b => b.classList.toggle('on', b === btn));
+    document.querySelectorAll('#scr-settings .set-sec').forEach(s => s.classList.toggle('active', s.dataset.sec === sec));
+  });
+});
+// Settings plugin tabs (visual only)
+document.querySelectorAll('#scr-settings .pt-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#scr-settings .pt-btn').forEach(b => b.classList.toggle('on', b === btn));
+  });
+});
+
+// --- Theme ---
+const themeBtn = document.getElementById('themeBtn');
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  themeBtn.textContent = 'theme: ' + (t === 'dark' ? 'phosphor' : 'light');
+  document.querySelectorAll('#tweaksPanel [data-theme]').forEach(b => b.classList.toggle('on', b.dataset.theme === t));
+}
+themeBtn.addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  setTweak({theme: next});
+});
+
+// --- CRT ---
+const crtBtn = document.getElementById('crtBtn');
+function applyCrt(v) {
+  if (v === 'on') {
+    document.body.classList.add('crt-force');
+    // force scanlines even in light
+    document.body.style.setProperty('--_crt', '1');
+    document.body.classList.add('crt');
+    // re-use overlay by toggling a class that always shows it
+    let style = document.getElementById('crtForce');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'crtForce';
+      style.textContent = '.crt-force::after { opacity: 0.4 !important; }';
+      document.head.appendChild(style);
+    }
+    crtBtn.classList.add('on');
+  } else {
+    document.body.classList.remove('crt-force');
+    crtBtn.classList.remove('on');
+  }
+  document.querySelectorAll('#tweaksPanel [data-crt]').forEach(b => b.classList.toggle('on', b.dataset.crt === v));
+}
+crtBtn.addEventListener('click', () => {
+  const cur = document.body.classList.contains('crt-force') ? 'on' : 'off';
+  const next = cur === 'on' ? 'off' : 'on';
+  applyCrt(next);
+  setTweak({crt: next});
+});
+
+// --- Tweaks ---
+const panel = document.getElementById('tweaksPanel');
+const tweakBtn = document.getElementById('tweakBtn');
+tweakBtn.addEventListener('click', () => panel.classList.toggle('on'));
+
+function applyAccent(c) {
+  document.documentElement.style.setProperty('--accent', c);
+  document.querySelectorAll('#tweaksPanel [data-accent]').forEach(b => b.classList.toggle('on', b.dataset.accent === c));
+}
+function applyName(n) {
+  document.getElementById('brandMark').textContent = (n || 'ATLAS·1').toUpperCase().replace(/ /g, '·');
+}
+function applyGame(v) {
+  document.body.classList.toggle('nogame', v === 'off');
+  if (v === 'off') {
+    document.querySelectorAll('.xp, .quests, .badges, .now-box .title .hand, .stat-cell .v .unit').forEach(el => {
+      // don't actually hide - just a visual hint
+    });
+  }
+  document.querySelectorAll('#tweaksPanel [data-game]').forEach(b => b.classList.toggle('on', b.dataset.game === v));
+}
+
+panel.querySelectorAll('[data-theme]').forEach(b => b.addEventListener('click', () => { applyTheme(b.dataset.theme); setTweak({theme: b.dataset.theme}); }));
+panel.querySelectorAll('[data-accent]').forEach(b => b.addEventListener('click', () => { applyAccent(b.dataset.accent); setTweak({accent: b.dataset.accent}); }));
+panel.querySelectorAll('[data-crt]').forEach(b => b.addEventListener('click', () => { applyCrt(b.dataset.crt); setTweak({crt: b.dataset.crt}); }));
+panel.querySelectorAll('[data-game]').forEach(b => b.addEventListener('click', () => { applyGame(b.dataset.game); setTweak({game: b.dataset.game}); }));
+document.getElementById('tw-name').addEventListener('input', (e) => { applyName(e.target.value); setTweak({name: e.target.value}); });
+
+function setTweak(partial) {
+  window.parent && window.parent.postMessage({type: '__edit_mode_set_keys', edits: partial}, '*');
+}
+
+// Apply defaults
+applyTheme(TWEAK_DEFAULTS.theme);
+applyAccent(TWEAK_DEFAULTS.accent);
+applyCrt(TWEAK_DEFAULTS.crt);
+applyGame(TWEAK_DEFAULTS.game);
+applyName(TWEAK_DEFAULTS.name);
+document.getElementById('tw-name').value = TWEAK_DEFAULTS.name;
+
+window.addEventListener('message', (e) => {
+  if (!e.data) return;
+  if (e.data.type === '__activate_edit_mode') panel.classList.add('on');
+  if (e.data.type === '__deactivate_edit_mode') panel.classList.remove('on');
+});
+window.parent && window.parent.postMessage({type: '__edit_mode_available'}, '*');
+
+// Boot onboarding interactions
+document.querySelectorAll('.class-card').forEach(c => {
+  c.addEventListener('click', () => {
+    document.querySelectorAll('.class-card').forEach(x => x.classList.remove('pick'));
+    c.classList.add('pick');
+  });
+});
+document.querySelectorAll('.mod-chip').forEach(c => {
+  if (c.textContent.includes('plugin') || c.textContent.includes('more')) return;
+  c.addEventListener('click', () => c.classList.toggle('on'));
+});
+document.getElementById('bootName')?.addEventListener('input', (e) => {
+  applyName(e.target.value);
+  document.getElementById('tw-name').value = e.target.value;
+  setTweak({name: e.target.value});
+});
+
+document.getElementById('pluginToggle')?.addEventListener('click', () => {
+  const p = document.getElementById('pluginPreview');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+});
+
+// Piano heatmap — 30 days × 1 row (but we use the 30-col grid)
+(() => {
+  const el = document.getElementById('pianoHeatmap');
+  if (!el) return;
+  // Horizontal 30-day strip. Each cell = one day. Shading = practice minutes.
+  // Levels: 0 skipped · 1 = 1-20m · 2 = 20-40m · 3 = 40m+
+  const levels = [
+    0,1,2, 2,0, 1,2, 2,3,1, 0,2,3, 3,2, 3,3,2, 3,0,2, 3,2,0, 1,3,3, 3,3,2
+  ];
+  // build 30 day cells — one row, wide. Weekday label above, day number below.
+  const startDate = new Date(2026, 2, 20); // mar 20, 2026
+  const wd = ['S','M','T','W','T','F','S'];
+  levels.forEach((v, i) => {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + i);
+    const day = date.getDate();
+    const isMon = day === 1;
+    const isToday = i === 29;
+
+    const c = document.createElement('div');
+    c.className = 'c' + (v ? ' l' + v : '');
+    if (isToday) c.classList.add('today');
+    if (isMon) c.classList.add('month-start');
+
+    const top = document.createElement('span');
+    top.className = 'wd';
+    top.textContent = wd[date.getDay()];
+    const bot = document.createElement('span');
+    bot.className = 'dn';
+    bot.textContent = isMon ? 'apr 1' : day;
+    c.appendChild(top);
+    c.appendChild(bot);
+    el.appendChild(c);
+  });
+})();
+
+// GitHub contribution grid — 12 weeks × 7 days
+(() => {
+  const el = document.getElementById('ghGrid');
+  if (!el) return;
+  // seeded-ish pattern — 84 cells, values 0-3 (0 = none)
+  const pattern = [
+    1,0,2,0,1,0,0, 2,3,2,1,0,2,1, 3,2,3,0,1,3,2, 1,2,3,2,0,1,0,
+    2,3,2,3,1,0,2, 1,2,1,2,3,0,1, 2,3,3,2,1,3,2, 3,2,3,3,2,1,3,
+    2,3,2,3,3,2,1, 3,3,2,3,2,3,2, 1,2,3,3,2,1,2, 3,2,3,3,3,2,3
+  ];
+  pattern.forEach(v => {
+    const c = document.createElement('div');
+    c.className = 'c' + (v ? ' l' + v : '');
+    el.appendChild(c);
+  });
+})();
+
+// Clock tick
+function tick() {
+  const d = new Date();
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mm = String(d.getMinutes()).padStart(2,'0');
+  const ss = String(d.getSeconds()).padStart(2,'0');
+  const mc = document.getElementById('miniClock');
+  if (mc) mc.textContent = `${hh}:${mm}:${ss}`;
+}
+setInterval(tick, 1000);
+tick();
+
+// Command bar focus on /
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    document.getElementById('cmdIn').focus();
+  }
+  if (e.key === 'Escape') document.getElementById('cmdIn').blur();
+});
+
+// ====== PRINT EXPORT ======
+// Force light theme, reveal all screens, wait for fonts, then print.
+document.documentElement.setAttribute('data-theme', 'light');
+document.body.classList.remove('crt');
+// Reveal all screens & onboarding steps
+document.querySelectorAll('.screen').forEach(s => s.classList.add('on'));
+document.querySelectorAll('.onb-panel').forEach(p => p.classList.add('active'));
+document.querySelectorAll('.set-sec').forEach(s => s.classList.add('active'));
+
+(async () => {
+  try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(_) {}
+  await new Promise(r => setTimeout(r, 500));
+  window.print();
+})();
+</script>
+
+</body>
+</html>

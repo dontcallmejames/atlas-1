@@ -1,0 +1,1223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280" />
+<title>Atlas 1 — Wireframe Explorations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Top bar -->
+  <header class="app-top">
+    <div class="brand">
+      <div class="mark">ATLAS 1</div>
+      <div class="sub">— life OS wireframes</div>
+      <div class="ren">[renameable]</div>
+    </div>
+    <nav class="top-nav" id="dirnav">
+      <button data-dir="d1" class="active">01 · TERMINAL</button>
+      <button data-dir="d2">02 · WIDGET GRID</button>
+      <button data-dir="d3">03 · SPATIAL CANVAS</button>
+      <button data-dir="d4">04 · GAME HUD</button>
+    </nav>
+    <div class="top-controls">
+      <button class="chip" id="themeBtn">◐ theme: light</button>
+      <button class="chip" id="tweakBtn">✎ tweaks</button>
+    </div>
+  </header>
+
+  <!-- Intro / design reasoning -->
+  <section class="intro">
+    <div>
+      <h2>Four directions, same shell</h2>
+      <p># Brief: a desktop life-OS (calendar, health, work, hobbies, AI projects, home). Plugin-style modules. Renameable per user. Wireframes, so: pencil-sketch feel, b&amp;w + small accent pops, mono + handwritten pairing. Each direction shows onboarding → home → a module or two. Flip between them up top ↑</p>
+      <p># What to look for: how dense each one feels, how AI and the command bar are treated, how navigation works, and how the "this is MY system, I named it" vibe is expressed. Click tweaks bottom-right to fiddle with the project name, theme, and density.</p>
+    </div>
+    <div class="sys-list">
+      <strong>wireframe system</strong><br/>
+      · fonts: JetBrains Mono + Caveat<br/>
+      · palette: ink on paper + <span style="color:var(--accent)">tomato</span> + <span style="color:var(--accent-2)">blue</span> + <span style="background:var(--accent-3);padding:0 4px">yellow</span><br/>
+      · rules: dashed = placeholder, solid = real UI, filled = active<br/>
+      · annotations in <span style="color:var(--accent)">tomato caveat</span><br/>
+      · all boxes slightly rotated, hand feel
+    </div>
+  </section>
+
+  <!-- ============================ DIRECTION 1: TERMINAL ============================ -->
+  <section class="dir d1 active" id="d1" data-screen-label="01 Command Terminal">
+    <div class="dir-header">
+      <div class="num">DIR 01</div>
+      <h1>Command Terminal</h1>
+      <div class="tagline">// keyboard-first · mono · dense · feels like a power tool.<br/>// home = REPL. modules = commands. AI = pipe.</div>
+    </div>
+
+    <div class="screen-strip">
+
+      <!-- Onboarding -->
+      <div class="frame" style="min-height: 380px;">
+        <span class="frame-label">01A · Onboarding (first run)</span>
+        <span class="frame-size">1280 × 380</span>
+        <div class="term-onboard">
+          <div>atlas-init v0.1.0 — type <span style="color:var(--accent)">help</span> or press tab</div>
+          <div>──────────────────────────────────────────────</div>
+          <div class="spacer"></div>
+          <div class="prompt">welcome. what should i call this thing?</div>
+          <div class="out">default: atlas</div>
+          <div class="prompt">$ name = <span style="color:var(--accent-2)">"Atlas 1"</span></div>
+          <div class="out">ok.</div>
+          <div class="spacer"></div>
+          <div class="prompt">pick your modules. space = toggle, enter = done.</div>
+          <div class="out" style="padding-left:28px;">
+            [<span style="color:var(--accent)">×</span>] calendar &nbsp;&nbsp;
+            [<span style="color:var(--accent)">×</span>] health &nbsp;&nbsp;
+            [<span style="color:var(--accent)">×</span>] tasks &nbsp;&nbsp;
+            [<span style="color:var(--accent)">×</span>] hobbies<br/>
+            [<span style="color:var(--accent)">×</span>] ai-lab &nbsp;&nbsp;
+            [<span style="color:var(--accent)">×</span>] home &nbsp;&nbsp;
+            [ ] finance &nbsp;&nbsp;
+            [ ] reading &nbsp;&nbsp;
+            [ ] people
+          </div>
+          <div class="spacer"></div>
+          <div class="prompt">theme? (light/dark/auto)</div>
+          <div class="out">&gt; <span style="color:var(--accent-2)">auto</span></div>
+          <div class="spacer"></div>
+          <div class="prompt">import data? (drag files or skip)</div>
+          <div class="out">&gt; skip</div>
+          <div class="spacer"></div>
+          <div class="prompt"><span style="color:var(--accent-3);background:var(--ink);padding:1px 6px;">booting Atlas 1...</span> <span class="blink">█</span></div>
+        </div>
+      </div>
+      <div class="note">↳ terminal onboarding — 90 seconds, all keyboard. power-user flex.</div>
+
+      <!-- Home -->
+      <div class="frame" style="min-height: 580px;">
+        <span class="frame-label">01B · Home (REPL + panels)</span>
+        <span class="frame-size">1280 × 580</span>
+        <div class="term-home">
+          <!-- Left: module nav -->
+          <div>
+            <div class="wf-title">MODULES</div>
+            <ul class="cmd-list">
+              <li class="active">~/today</li>
+              <li>~/calendar</li>
+              <li>~/health</li>
+              <li>~/tasks</li>
+              <li>~/hobbies</li>
+              <li>~/ai-lab</li>
+              <li>~/home</li>
+              <li style="color:var(--muted)">~/+ add</li>
+            </ul>
+            <div class="spacer"></div>
+            <div class="wf-title" style="margin-top:16px;">AGENTS</div>
+            <ul class="cmd-list">
+              <li><span class="circle accent"></span> inbox-triage</li>
+              <li><span class="circle filled"></span> sleep-coach</li>
+              <li><span class="circle"></span> news-digest</li>
+            </ul>
+          </div>
+
+          <!-- Center: REPL + today -->
+          <div>
+            <div class="mono" style="font-size:12px; color:var(--muted);">atlas 1 · sat apr 18 · 09:14</div>
+            <div class="wf-hand" style="font-size:32px; margin:6px 0 14px;">good morning.</div>
+
+            <div class="wf-title">TODAY</div>
+            <div class="agenda-row">
+              <span>09:30</span><span class="circle"></span>
+              <span>standup — atlas team</span>
+              <span class="tag">30m</span>
+            </div>
+            <div class="agenda-row">
+              <span>11:00</span><span class="circle filled"></span>
+              <span>deep work — onboarding PR</span>
+              <span class="tag ghost">focus</span>
+            </div>
+            <div class="agenda-row">
+              <span>13:00</span><span class="circle"></span>
+              <span>lunch w/ M.</span>
+              <span class="tag yellow">out</span>
+            </div>
+            <div class="agenda-row">
+              <span>16:30</span><span class="circle"></span>
+              <span>run · 5k easy</span>
+              <span class="tag">health</span>
+            </div>
+            <div class="agenda-row">
+              <span>20:00</span><span class="circle"></span>
+              <span>piano · scales + 1 piece</span>
+              <span class="tag">hobby</span>
+            </div>
+
+            <div class="spacer"></div>
+            <div class="wf-title">REPL</div>
+            <div class="mono" style="font-size:13px; line-height:1.7;">
+              <div><span style="color:var(--accent)">$</span> health.sleep last 7d</div>
+              <div style="color:var(--muted); padding-left:14px;">avg 7h12m · worst wed (5h48m) · score 78/100</div>
+              <div><span style="color:var(--accent)">$</span> ai-lab.runs --status=running</div>
+              <div style="color:var(--muted); padding-left:14px;">2 jobs: agent-eval-v3 (12m), dataset-rebuild (4h est)</div>
+              <div><span style="color:var(--accent)">$</span> <span class="blink">█</span></div>
+            </div>
+          </div>
+
+          <!-- Right: status -->
+          <div>
+            <div class="wf-title">STATUS</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6;">
+              ⏻ uptime &nbsp;· 14d<br/>
+              ◉ battery · <span style="color:var(--accent)">▓▓▓▓▓▓░░░░ 64%</span><br/>
+              ☾ sleep &nbsp;· 7h12<br/>
+              ♡ hrv &nbsp;&nbsp;· 48ms<br/>
+              ☕ caffeine· 1 cup<br/>
+              ✉ inbox &nbsp;· 12 unread<br/>
+            </div>
+
+            <div class="divider"></div>
+            <div class="wf-title">QUICK CAPTURE</div>
+            <div class="wf-box dashed" style="padding:14px; font-family:'JetBrains Mono',monospace; font-size:12px;">
+              type anything...<br/>
+              <span style="color:var(--muted)">/t task · /n note · /e event</span>
+            </div>
+
+            <div class="divider"></div>
+            <div class="wf-title">AGENT NUDGE</div>
+            <div class="sticky">hey — you've skipped your evening walk 3 days. reschedule?</div>
+
+            <div class="divider"></div>
+            <div class="wf-title">SHORTCUTS</div>
+            <div class="mono" style="font-size:11px; color:var(--muted); line-height:1.8;">
+              ⌘K · command palette<br/>
+              ⌘/ · ask AI<br/>
+              ⌘. · quick capture<br/>
+              g+t · today<br/>
+              g+h · health<br/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="note">↳ 3-column REPL. left = modules/agents. middle = agenda + live terminal. right = vitals + nudges.</div>
+
+      <!-- Module: AI Lab -->
+      <div class="frame" style="min-height: 440px;">
+        <span class="frame-label">01C · Module · ai-lab</span>
+        <span class="frame-size">1280 × 440</span>
+        <div class="term-module">
+          <div>
+            <div class="wf-title">$ ai-lab.projects</div>
+            <div class="mono" style="font-size:12px; line-height:1.8; margin-top:10px;">
+              <div><span style="color:var(--accent)">●</span> agent-eval-v3 &nbsp;&nbsp;<span style="color:var(--muted)">running · 12m · 43%</span></div>
+              <div style="border:1px solid var(--muted); padding:2px 6px; margin:4px 0; display:inline-block; font-size:10px;">▓▓▓▓▓░░░░░░░</div>
+              <div><span style="color:var(--muted)">○</span> dataset-rebuild &nbsp;<span style="color:var(--muted)">queued</span></div>
+              <div><span>✓</span> prompt-lib-v2 &nbsp;&nbsp;<span style="color:var(--muted)">done · 3d ago</span></div>
+              <div><span>✗</span> scraper-agent &nbsp;&nbsp;<span style="color:var(--accent)">failed · memory</span></div>
+              <div><span style="color:var(--muted)">○</span> weekend-thing &nbsp;<span style="color:var(--muted)">idle</span></div>
+            </div>
+            <div class="spacer"></div>
+            <div class="wf-title" style="margin-top:14px;">$ --new</div>
+            <div class="wf-box dashed" style="font-family:'JetBrains Mono',monospace; font-size:12px; padding:10px;">
+              name_____________<br/>
+              kind: [ script | agent | dataset | notebook ]<br/>
+              model: [ haiku · sonnet · opus · local ]<br/>
+            </div>
+          </div>
+          <div>
+            <div class="wf-title">agent-eval-v3 · live</div>
+            <div class="mono" style="font-size:11px; line-height:1.65; padding:10px; border:1px dashed var(--line); background:var(--paper-2); min-height:260px;">
+              <div style="color:var(--muted);">[09:14:02] spawned worker pool (n=8)</div>
+              <div style="color:var(--muted);">[09:14:03] loaded eval set (312 cases)</div>
+              <div>[09:14:12] case 14/312 · pass</div>
+              <div>[09:14:13] case 15/312 · <span style="color:var(--accent)">fail</span> · tool_use</div>
+              <div>[09:14:18] case 16/312 · pass</div>
+              <div>[09:14:22] case 17/312 · pass</div>
+              <div style="color:var(--accent-2);">[09:14:24] checkpoint saved</div>
+              <div>...</div>
+              <div style="color:var(--accent);">[09:26:41] case 135/312 · fail · hallucination</div>
+              <div>[09:26:44] ▓▓▓▓▓░░░░░░░ 43%</div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <span class="tag accent">pause</span>
+              <span class="tag">logs</span>
+              <span class="tag">checkpoints</span>
+              <span class="tag ghost">branch run</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="note">↳ ai-lab module · project list + streaming log. feels like htop/tmux, not like ChatGPT.</div>
+
+    </div>
+  </section>
+
+  <!-- ============================ DIRECTION 2: WIDGET GRID ============================ -->
+  <section class="dir d2" id="d2" data-screen-label="02 Widget Grid">
+    <div class="dir-header">
+      <div class="num">DIR 02</div>
+      <h1>Widget Grid Dashboard</h1>
+      <div class="tagline">// balanced cards · drag-to-arrange · each module = a resizable card.<br/>// home = a magazine. modules = their own page.</div>
+    </div>
+
+    <div class="screen-strip">
+
+      <!-- Onboarding: module picker -->
+      <div class="frame" style="min-height: 380px;">
+        <span class="frame-label">02A · Onboarding · pick your modules</span>
+        <span class="frame-size">1280 × 380</span>
+        <div style="padding: 22px 28px;">
+          <div class="row" style="justify-content:space-between; align-items:baseline;">
+            <div>
+              <div class="wf-hand" style="font-size:34px;">what's in your life?</div>
+              <div class="mono" style="font-size:12px; color:var(--muted);">// step 2 of 4 · enable the modules you want. add more later.</div>
+            </div>
+            <div class="mono" style="font-size:12px;">⬤⬤○○ &nbsp; SKIP →</div>
+          </div>
+          <div class="onboard-cards">
+            <div class="mod-card on">
+              <div class="chk"></div>
+              <div class="wf-title" style="color:inherit;opacity:.8;">01</div>
+              <div class="wf-hand" style="font-size:26px;">Calendar</div>
+              <div class="mono" style="font-size:11px; opacity:.85; margin-top:6px;">time, events, focus blocks.</div>
+            </div>
+            <div class="mod-card on">
+              <div class="chk"></div>
+              <div class="wf-title">02</div>
+              <div class="wf-hand" style="font-size:26px;">Health</div>
+              <div class="mono" style="font-size:11px; color:var(--muted); margin-top:6px;">sleep, hrv, workouts, food.</div>
+            </div>
+            <div class="mod-card on">
+              <div class="chk"></div>
+              <div class="wf-title">03</div>
+              <div class="wf-hand" style="font-size:26px;">Tasks</div>
+              <div class="mono" style="font-size:11px; color:var(--muted); margin-top:6px;">work + personal. projects.</div>
+            </div>
+            <div class="mod-card">
+              <div class="chk"></div>
+              <div class="wf-title">04</div>
+              <div class="wf-hand" style="font-size:26px;">Hobbies</div>
+              <div class="mono" style="font-size:11px; color:var(--muted); margin-top:6px;">music, garden, climbing…</div>
+            </div>
+            <div class="mod-card on">
+              <div class="chk"></div>
+              <div class="wf-title">05</div>
+              <div class="wf-hand" style="font-size:26px;">AI Lab</div>
+              <div class="mono" style="font-size:11px; opacity:.85; margin-top:6px;">agents, runs, datasets.</div>
+            </div>
+            <div class="mod-card">
+              <div class="chk"></div>
+              <div class="wf-title">06</div>
+              <div class="wf-hand" style="font-size:26px;">Home</div>
+              <div class="mono" style="font-size:11px; color:var(--muted); margin-top:6px;">errands, bills, chores.</div>
+            </div>
+            <div class="mod-card">
+              <div class="chk"></div>
+              <div class="wf-title">07</div>
+              <div class="wf-hand" style="font-size:26px;">Money</div>
+              <div class="mono" style="font-size:11px; color:var(--muted); margin-top:6px;">off by default.</div>
+            </div>
+            <div class="mod-card" style="border-style:dashed;">
+              <div class="wf-title" style="color:var(--muted);">+ plugin</div>
+              <div class="wf-hand" style="font-size:22px; color:var(--muted);">browse the registry...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="note">↳ onboarding = module shopping. selected ones become cards on the home grid.</div>
+
+      <!-- Home grid -->
+      <div class="frame" style="min-height: 700px;">
+        <span class="frame-label">02B · Home · widget grid (drag to arrange, resize edges)</span>
+        <span class="frame-size">1280 × 700</span>
+        <div class="grid-home">
+
+          <!-- Header row -->
+          <div class="widget" style="grid-column: span 12; grid-row: span 1; display:flex; align-items:center; justify-content:space-between; border:none; padding:4px 4px;">
+            <div>
+              <span class="wf-hand" style="font-size:30px;">hi, alex. it's saturday.</span>
+              <span class="mono" style="font-size:12px; color:var(--muted); margin-left:12px;">apr 18, 09:14</span>
+            </div>
+            <div class="row">
+              <span class="tag yellow">3 focus blocks today</span>
+              <span class="tag">⌘K command</span>
+              <span class="tag ghost">edit layout</span>
+            </div>
+          </div>
+
+          <!-- Today agenda (big) -->
+          <div class="widget" style="grid-column: span 5; grid-row: span 4;">
+            <div class="wlabel"><span>▦ today's agenda</span><span>↗ calendar</span></div>
+            <div class="col" style="gap:6px;">
+              <div class="row"><span class="mono" style="width:60px; font-size:11px;">09:30</span><span class="circle"></span><span class="wf-hand" style="font-size:20px;">standup</span><span class="grow"></span><span class="tag">30m</span></div>
+              <div class="row"><span class="mono" style="width:60px; font-size:11px;">11:00</span><span class="circle filled"></span><span class="wf-hand" style="font-size:20px;">deep work · onboarding PR</span><span class="grow"></span><span class="tag ghost">focus</span></div>
+              <div class="row"><span class="mono" style="width:60px; font-size:11px;">13:00</span><span class="circle"></span><span class="wf-hand" style="font-size:20px;">lunch w/ M.</span><span class="grow"></span><span class="tag yellow">out</span></div>
+              <div class="row"><span class="mono" style="width:60px; font-size:11px;">16:30</span><span class="circle"></span><span class="wf-hand" style="font-size:20px;">run · 5k easy</span><span class="grow"></span><span class="tag">health</span></div>
+              <div class="row"><span class="mono" style="width:60px; font-size:11px;">20:00</span><span class="circle"></span><span class="wf-hand" style="font-size:20px;">piano</span><span class="grow"></span><span class="tag">hobby</span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="mono" style="font-size:11px; color:var(--muted);">+ 2 tentative &nbsp;·&nbsp; click to add</div>
+          </div>
+
+          <!-- Health -->
+          <div class="widget" style="grid-column: span 4; grid-row: span 2;">
+            <div class="wlabel"><span>♡ health</span><span>7d</span></div>
+            <div class="row" style="align-items:flex-end; gap:18px;">
+              <div>
+                <div class="wf-hand" style="font-size:36px; line-height:1;">7h12</div>
+                <div class="mono" style="font-size:10px; color:var(--muted);">SLEEP AVG</div>
+              </div>
+              <div>
+                <div class="wf-hand" style="font-size:36px; line-height:1;">48<span style="font-size:20px;">ms</span></div>
+                <div class="mono" style="font-size:10px; color:var(--muted);">HRV</div>
+              </div>
+              <div>
+                <div class="wf-hand" style="font-size:36px; line-height:1; color:var(--accent);">5</div>
+                <div class="mono" style="font-size:10px; color:var(--muted);">WORKOUTS</div>
+              </div>
+            </div>
+            <svg viewBox="0 0 200 30" style="width:100%; height:30px; margin-top:8px;">
+              <polyline points="0,20 20,15 40,22 60,10 80,16 100,12 120,18 140,8 160,14 180,11 200,13"
+                fill="none" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <!-- Focus / now -->
+          <div class="widget accent" style="grid-column: span 3; grid-row: span 2;">
+            <div class="wlabel"><span>◉ now</span><span>11:04</span></div>
+            <div class="wf-hand" style="font-size:22px;">Deep work</div>
+            <div class="mono" style="font-size:11px;">onboarding-PR · 56m left</div>
+            <div class="wf-line" style="margin-top:8px;"></div>
+            <div class="wf-line short"></div>
+            <div class="row" style="margin-top:8px;">
+              <span class="tag">extend 15m</span>
+              <span class="tag">end</span>
+            </div>
+          </div>
+
+          <!-- Tasks -->
+          <div class="widget" style="grid-column: span 4; grid-row: span 3;">
+            <div class="wlabel"><span>☑ tasks</span><span>12 open</span></div>
+            <div class="col" style="gap:4px;">
+              <div class="row"><span class="circle"></span><span class="wf-hand" style="font-size:18px;">ship onboarding PR</span><span class="grow"></span><span class="tag">work</span></div>
+              <div class="row"><span class="circle filled"></span><span class="wf-hand" style="font-size:18px; text-decoration:line-through; opacity:.5;">email landlord</span><span class="grow"></span><span class="tag ghost">home</span></div>
+              <div class="row"><span class="circle"></span><span class="wf-hand" style="font-size:18px;">order climbing shoes</span><span class="grow"></span><span class="tag ghost">hobby</span></div>
+              <div class="row"><span class="circle"></span><span class="wf-hand" style="font-size:18px;">book dentist</span><span class="grow"></span><span class="tag ghost">home</span></div>
+              <div class="row"><span class="circle"></span><span class="wf-hand" style="font-size:18px;">write eval notes</span><span class="grow"></span><span class="tag">ai-lab</span></div>
+              <div class="row"><span class="circle"></span><span class="wf-hand" style="font-size:18px;">plan dad's bday</span><span class="grow"></span><span class="tag yellow">soon</span></div>
+            </div>
+            <div class="mono" style="font-size:10px; color:var(--muted); margin-top:6px;">+ new &nbsp;·&nbsp; inbox (3) &nbsp;·&nbsp; triage</div>
+          </div>
+
+          <!-- AI Lab mini -->
+          <div class="widget filled" style="grid-column: span 3; grid-row: span 3;">
+            <div class="wlabel"><span>⚙ ai-lab</span><span>2 running</span></div>
+            <div class="mono" style="font-size:11px; line-height:1.8;">
+              ● agent-eval-v3<br/>
+              &nbsp;&nbsp;▓▓▓▓▓░░░░░░ 43%<br/>
+              ○ dataset-rebuild<br/>
+              &nbsp;&nbsp;queued · ~4h<br/>
+              ✓ prompt-lib &nbsp;3d ago<br/>
+              ✗ scraper &nbsp;&nbsp;failed<br/>
+            </div>
+            <div class="divider" style="background:var(--paper); opacity:.3;"></div>
+            <div class="wf-hand" style="font-size:18px;">+ spawn run</div>
+          </div>
+
+          <!-- Hobbies -->
+          <div class="widget" style="grid-column: span 2; grid-row: span 2;">
+            <div class="wlabel"><span>♪ hobbies</span><span></span></div>
+            <div class="wf-hand" style="font-size:18px;">piano</div>
+            <div class="mono" style="font-size:10px; color:var(--muted);">streak · 12d 🔥</div>
+            <div class="spacer"></div>
+            <div class="wf-hand" style="font-size:18px;">climbing</div>
+            <div class="mono" style="font-size:10px; color:var(--muted);">last · tue</div>
+          </div>
+
+          <!-- Weather / ambient -->
+          <div class="widget" style="grid-column: span 3; grid-row: span 2;">
+            <div class="wlabel"><span>☁ ambient</span><span>brooklyn</span></div>
+            <div class="row" style="align-items:flex-end;">
+              <div class="wf-hand" style="font-size:42px; line-height:1;">62°</div>
+              <div class="mono" style="font-size:10px; color:var(--muted); margin-left:10px;">cloudy · rain at 4pm</div>
+            </div>
+            <div class="wf-line thin"></div>
+            <div class="mono" style="font-size:10px; color:var(--muted); margin-top:8px;">news · markets · air</div>
+          </div>
+
+          <!-- AI assistant strip -->
+          <div class="widget" style="grid-column: span 12; grid-row: span 1; background: var(--paper-2); border-style:dashed;">
+            <div class="row" style="justify-content:space-between;">
+              <div class="wf-hand" style="font-size:20px; color:var(--accent);">✦ ask atlas —</div>
+              <div class="mono" style="color:var(--muted); font-size:11px;">"what's on my plate this week?" · "summarize my sleep" · "start a new ai project"</div>
+              <span class="tag">⌘ /</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="note">↳ 12-col grid. cards resize/drag. filled card = active module. one universal AI prompt strip at bottom.</div>
+
+      <!-- Module: Health -->
+      <div class="frame" style="min-height: 520px;">
+        <span class="frame-label">02C · Module · health</span>
+        <span class="frame-size">1280 × 520</span>
+        <div class="module-view">
+          <div class="side">
+            <div class="wf-title">SECTIONS</div>
+            <div class="col" style="gap:4px; margin-top:6px;">
+              <div class="mono" style="font-size:12px; padding:4px 6px; background:var(--ink); color:var(--paper);">› overview</div>
+              <div class="mono" style="font-size:12px; padding:4px 6px;">sleep</div>
+              <div class="mono" style="font-size:12px; padding:4px 6px;">workouts</div>
+              <div class="mono" style="font-size:12px; padding:4px 6px;">nutrition</div>
+              <div class="mono" style="font-size:12px; padding:4px 6px;">body</div>
+              <div class="mono" style="font-size:12px; padding:4px 6px; color:var(--muted);">+ add metric</div>
+            </div>
+            <div class="divider"></div>
+            <div class="wf-title">SOURCES</div>
+            <div class="mono" style="font-size:11px; line-height:1.7; margin-top:6px;">
+              ● apple health<br/>
+              ● oura<br/>
+              ○ whoop &nbsp;<span style="color:var(--muted)">off</span><br/>
+              + connect
+            </div>
+          </div>
+          <div class="main">
+            <div class="row" style="justify-content:space-between; align-items:baseline;">
+              <div class="wf-hand" style="font-size:34px;">Health</div>
+              <div class="row">
+                <span class="tag">day</span>
+                <span class="tag accent">week</span>
+                <span class="tag">month</span>
+                <span class="tag">year</span>
+              </div>
+            </div>
+            <div class="spacer"></div>
+            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:14px;">
+              <div class="wf-box">
+                <div class="wf-title">SLEEP</div>
+                <div class="wf-hand" style="font-size:34px; line-height:1;">7h12</div>
+                <div class="mono" style="font-size:10px; color:var(--accent);">↑ +18m vs last wk</div>
+              </div>
+              <div class="wf-box">
+                <div class="wf-title">HRV</div>
+                <div class="wf-hand" style="font-size:34px; line-height:1;">48ms</div>
+                <div class="mono" style="font-size:10px; color:var(--muted);">— steady</div>
+              </div>
+              <div class="wf-box">
+                <div class="wf-title">WORKOUTS</div>
+                <div class="wf-hand" style="font-size:34px; line-height:1;">5</div>
+                <div class="mono" style="font-size:10px; color:var(--muted);">2 run · 2 climb · 1 yoga</div>
+              </div>
+              <div class="wf-box" style="background:var(--accent-3);">
+                <div class="wf-title">SCORE</div>
+                <div class="wf-hand" style="font-size:34px; line-height:1;">78 <span style="font-size:14px;">/ 100</span></div>
+                <div class="mono" style="font-size:10px;">good week</div>
+              </div>
+            </div>
+            <div class="spacer"></div>
+            <div class="wf-box" style="min-height:160px;">
+              <div class="wf-title">SLEEP · 7d</div>
+              <svg viewBox="0 0 700 100" style="width:100%; height:120px;">
+                <g>
+                  <rect x="10" y="40" width="70" height="50" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                  <rect x="100" y="20" width="70" height="70" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                  <rect x="190" y="55" width="70" height="35" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                  <rect x="280" y="30" width="70" height="60" fill="var(--accent)" stroke="var(--line)" stroke-width="1.5"/>
+                  <rect x="370" y="25" width="70" height="65" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                  <rect x="460" y="45" width="70" height="45" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                  <rect x="550" y="15" width="70" height="75" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+                  <text x="10" y="100" font-family="JetBrains Mono" font-size="9" fill="var(--muted)">MON</text>
+                  <text x="100" y="100" font-family="JetBrains Mono" font-size="9" fill="var(--muted)">TUE</text>
+                  <text x="190" y="100" font-family="JetBrains Mono" font-size="9" fill="var(--muted)">WED</text>
+                  <text x="280" y="100" font-family="JetBrains Mono" font-size="9" fill="var(--muted)">THU</text>
+                  <text x="370" y="100" font-family="JetBrains Mono" font-size="9" fill="var(--muted)">FRI</text>
+                  <text x="460" y="100" font-family="JetBrains Mono" font-size="9" fill="var(--muted)">SAT</text>
+                  <text x="550" y="100" font-family="JetBrains Mono" font-size="9" fill="var(--muted)">SUN</text>
+                </g>
+              </svg>
+            </div>
+            <div class="spacer"></div>
+            <div class="row">
+              <span class="sticky" style="max-width:400px;">atlas noticed: you sleep 40min longer on days you walk after dinner.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="note">↳ module page = L-nav + main. every module has same shell: overview cards on top, a big chart, an AI insight.</div>
+
+    </div>
+  </section>
+
+  <!-- ============================ DIRECTION 3: SPATIAL CANVAS ============================ -->
+  <section class="dir d3" id="d3" data-screen-label="03 Spatial Canvas">
+    <div class="dir-header">
+      <div class="num">DIR 03</div>
+      <h1>Spatial Canvas</h1>
+      <div class="tagline">// infinite plane · drag anything anywhere · zoom out = life at a glance.<br/>// modules are regions, not pages. connections are literal lines.</div>
+    </div>
+
+    <div class="screen-strip">
+
+      <!-- Onboarding: drag first nodes -->
+      <div class="frame" style="min-height: 460px;">
+        <span class="frame-label">03A · Onboarding · place your modules on the canvas</span>
+        <span class="frame-size">1280 × 460</span>
+        <div class="spatial-onboard">
+          <div>
+            <div class="mono" style="font-size:12px; color:var(--muted);">// 03 of 05</div>
+            <div class="wf-hand" style="font-size:34px;">drop your modules<br/>anywhere you want.</div>
+            <div class="mono" style="font-size:12px; margin-top:10px; max-width:320px;">drag the pieces on the right onto your canvas. arrange them however makes sense — we'll remember. you can rearrange later with one keystroke.</div>
+            <div class="divider"></div>
+            <div class="wf-title">available</div>
+            <div class="row" style="flex-wrap:wrap; gap:8px; margin-top:8px;">
+              <span class="tag">calendar</span>
+              <span class="tag">health</span>
+              <span class="tag">tasks</span>
+              <span class="tag ghost">hobbies</span>
+              <span class="tag ghost">ai-lab</span>
+              <span class="tag ghost">home</span>
+              <span class="tag ghost">+ more</span>
+            </div>
+            <div class="spacer"></div>
+            <div class="mono" style="font-size:11px; color:var(--muted);">pro tip: group things that belong together. health + food live on the left. work + ai live on the right. whatever works.</div>
+          </div>
+          <div style="position:relative; border: var(--rule) dashed var(--line); background-color:var(--paper-2); background-image: linear-gradient(var(--muted) 1px, transparent 1px), linear-gradient(90deg, var(--muted) 1px, transparent 1px); background-size: 30px 30px; min-height: 340px;">
+            <div style="position:absolute; left:24px; top:30px;" class="wf-box thick" >
+              <div class="wf-title">CALENDAR</div>
+              <div class="wf-hand" style="font-size:18px;">today · 3 events</div>
+            </div>
+            <div style="position:absolute; left:220px; top:80px;" class="wf-box thick" >
+              <div class="wf-title">HEALTH</div>
+              <div class="wf-hand" style="font-size:18px;">78 / 100</div>
+            </div>
+            <div style="position:absolute; left:70px; top:180px; transform:rotate(2deg);" class="wf-box dashed">
+              <div class="wf-title" style="color:var(--accent);">drop here</div>
+              <div class="wf-hand" style="font-size:18px; color:var(--accent);">...tasks?</div>
+            </div>
+            <svg style="position:absolute; inset:0; pointer-events:none;" viewBox="0 0 600 340" preserveAspectRatio="none">
+              <path d="M 100 60 Q 160 60 200 100" stroke="var(--accent)" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="note">↳ onboarding IS the canvas. user arranges their life physically. this is the identity of the product.</div>
+
+      <!-- Home canvas -->
+      <div class="frame" style="min-height: 640px;">
+        <span class="frame-label">03B · Home · the canvas</span>
+        <span class="frame-size">1280 × 640</span>
+        <div class="canvas-home" style="position:relative;">
+
+          <!-- cards -->
+          <div class="card accent" style="left: 40px; top: 40px; width: 260px; transform: rotate(-1.2deg);">
+            <h5>▦ TODAY</h5>
+            <div class="wf-hand" style="font-size:22px;">sat · apr 18</div>
+            <div class="mono" style="font-size:11px;">5 events · 3 focus blocks</div>
+            <div class="divider"></div>
+            <div class="mono" style="font-size:11px; line-height:1.7;">
+              09:30 standup<br/>
+              11:00 deep work<br/>
+              13:00 lunch · M.<br/>
+              16:30 run 5k<br/>
+            </div>
+          </div>
+
+          <div class="card" style="left: 340px; top: 60px; width: 240px; transform: rotate(0.8deg);">
+            <h5>♡ HEALTH</h5>
+            <div class="row" style="gap:14px;">
+              <div><div class="wf-hand" style="font-size:26px; line-height:1;">7h12</div><div class="mono" style="font-size:9px; color:var(--muted);">SLEEP</div></div>
+              <div><div class="wf-hand" style="font-size:26px; line-height:1;">48ms</div><div class="mono" style="font-size:9px; color:var(--muted);">HRV</div></div>
+              <div><div class="wf-hand" style="font-size:26px; line-height:1; color:var(--accent);">5</div><div class="mono" style="font-size:9px; color:var(--muted);">WKOUTS</div></div>
+            </div>
+            <svg viewBox="0 0 200 20" style="width:100%; margin-top:6px;"><polyline points="0,15 20,10 40,14 60,6 80,12 100,8 120,14 140,5 160,10 180,7 200,9" fill="none" stroke="var(--line)" stroke-width="1.2"/></svg>
+          </div>
+
+          <div class="card" style="left: 620px; top: 40px; width: 200px;">
+            <h5>☑ TASKS · 12</h5>
+            <div class="mono" style="font-size:11px; line-height:1.6;">
+              ○ ship onboarding PR<br/>
+              ✓ <span style="text-decoration:line-through; opacity:.5;">email landlord</span><br/>
+              ○ climbing shoes<br/>
+              ○ write eval notes<br/>
+              <span style="color:var(--muted)">+ 8 more</span>
+            </div>
+          </div>
+
+          <div class="card dark" style="left: 850px; top: 50px; width: 260px; transform: rotate(1.5deg);">
+            <h5 style="color:var(--paper); opacity:.7;">⚙ AI LAB</h5>
+            <div class="mono" style="font-size:11px; line-height:1.7;">
+              ● agent-eval-v3 · 43%<br/>
+              &nbsp;&nbsp;▓▓▓▓▓░░░░░░<br/>
+              ○ dataset-rebuild · queued<br/>
+              ✓ prompt-lib · 3d<br/>
+              ✗ scraper · failed
+            </div>
+          </div>
+
+          <div class="card" style="left: 120px; top: 280px; width: 200px;">
+            <h5>♪ HOBBIES</h5>
+            <div class="wf-hand" style="font-size:20px;">piano · 12d 🔥</div>
+            <div class="wf-hand" style="font-size:20px;">climbing · tue</div>
+            <div class="wf-hand" style="font-size:20px; color:var(--muted);">garden · 3w ago</div>
+          </div>
+
+          <div class="card" style="left: 380px; top: 280px; width: 260px; transform: rotate(-0.8deg);">
+            <h5>⌂ HOME</h5>
+            <div class="mono" style="font-size:11px; line-height:1.7;">
+              □ dentist appt<br/>
+              □ bday · dad · may 3<br/>
+              □ rent · due 5d<br/>
+              <span style="color:var(--accent)">!</span> water plants<br/>
+            </div>
+          </div>
+
+          <div class="card" style="left: 700px; top: 300px; width: 340px;">
+            <h5>✦ ASK ATLAS</h5>
+            <div class="wf-hand" style="font-size:20px; color:var(--muted);">what should i do with this hour?</div>
+            <div class="divider"></div>
+            <div class="mono" style="font-size:11px;">&gt; suggestions appear here · voice · text · clipboard</div>
+          </div>
+
+          <!-- connector lines between related cards -->
+          <svg class="connector" style="inset:0; width:100%; height:100%;" viewBox="0 0 1280 640" preserveAspectRatio="none">
+            <path d="M 300 100 Q 330 120 340 130" stroke="var(--accent)" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+            <path d="M 580 150 Q 600 170 620 140" stroke="var(--accent-2)" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+            <path d="M 220 280 Q 240 250 260 200" stroke="var(--muted)" stroke-width="1" fill="none" stroke-dasharray="2 3"/>
+          </svg>
+
+          <!-- Zoom & minimap -->
+          <div class="zoom">
+            <button>−</button>
+            <button>1×</button>
+            <button>+</button>
+            <button style="width:auto; padding: 0 10px;">fit</button>
+          </div>
+          <div class="mini-map">
+            <div style="position:absolute; left:8px; top:8px; width:14px; height:14px; background:var(--accent-3);"></div>
+            <div style="position:absolute; left:30px; top:12px; width:12px; height:10px; background:var(--line);"></div>
+            <div style="position:absolute; left:50px; top:8px; width:10px; height:10px; background:var(--line);"></div>
+            <div style="position:absolute; left:72px; top:10px; width:14px; height:12px; background:var(--line);"></div>
+            <div style="position:absolute; left:14px; top:40px; width:12px; height:10px; background:var(--line);"></div>
+            <div style="position:absolute; left:34px; top:40px; width:18px; height:12px; background:var(--line);"></div>
+            <div style="position:absolute; left:60px; top:44px; width:22px; height:12px; background:var(--line);"></div>
+            <div class="viewport" style="left:4px; top:4px; width:90px; height:62px;"></div>
+          </div>
+
+          <!-- floating command bar -->
+          <div style="position:absolute; left:50%; top:14px; transform: translateX(-50%); display:flex; gap:6px; align-items:center; background:var(--paper); border: var(--rule-bold) solid var(--line); padding:6px 14px; box-shadow: 3px 3px 0 var(--line); z-index:20;">
+            <span class="mono" style="font-size:12px; color:var(--accent);">⌘K</span>
+            <span class="wf-hand" style="font-size:18px; color:var(--muted);">type, or drag a module onto the canvas...</span>
+          </div>
+
+          <!-- Callout -->
+          <div style="position:absolute; right:30px; bottom:120px; max-width:180px; transform: rotate(2deg);">
+            <div class="sticky">zoom out = the whole year. pinch.</div>
+          </div>
+
+        </div>
+      </div>
+      <div class="note">↳ infinite plane, spatially arranged. cards overlap, connect, cluster. mini-map bottom right. pinch to timescale (day→week→year).</div>
+
+      <!-- Module expanded -->
+      <div class="frame" style="min-height: 500px;">
+        <span class="frame-label">03C · Module · calendar (expanded in place)</span>
+        <span class="frame-size">1280 × 500</span>
+        <div class="module-view">
+          <div>
+            <div class="wf-title">VIEWS</div>
+            <div class="col" style="gap:6px; margin-top:8px;">
+              <div class="mono" style="font-size:12px; padding:4px 8px; background:var(--ink); color:var(--paper);">day</div>
+              <div class="mono" style="font-size:12px; padding:4px 8px;">week</div>
+              <div class="mono" style="font-size:12px; padding:4px 8px;">month</div>
+              <div class="mono" style="font-size:12px; padding:4px 8px;">year · heatmap</div>
+              <div class="mono" style="font-size:12px; padding:4px 8px;">timeline</div>
+            </div>
+            <div class="divider"></div>
+            <div class="wf-title">CALENDARS</div>
+            <div class="mono" style="font-size:11px; line-height:1.8; margin-top:6px;">
+              ● work<br/>
+              ● personal<br/>
+              ● health<br/>
+              ○ birthdays<br/>
+            </div>
+          </div>
+          <div>
+            <div class="wf-hand" style="font-size:28px;">sat · apr 18</div>
+            <div class="mono" style="font-size:11px; color:var(--muted);">drag events. drop tasks onto time.</div>
+            <div class="spacer"></div>
+            <div style="position:relative; border: var(--rule) solid var(--line); min-height:320px;">
+              <div style="position:absolute; left:0; top:0; bottom:0; width:40px; border-right: 1px dashed var(--muted); font-family: 'JetBrains Mono', monospace; font-size:9px; color:var(--muted);">
+                <div style="padding:4px;">9</div>
+                <div style="padding:44px 4px 0;">11</div>
+                <div style="padding:44px 4px 0;">13</div>
+                <div style="padding:44px 4px 0;">15</div>
+                <div style="padding:44px 4px 0;">17</div>
+                <div style="padding:44px 4px 0;">19</div>
+              </div>
+              <div style="position:absolute; left:50px; top:6px; right:10px; height:20px; background:var(--accent-3); border:1px solid var(--line); padding: 2px 6px; font-size:10px;" class="mono">09:30 standup</div>
+              <div style="position:absolute; left:50px; top:42px; right:10px; height:60px; background:var(--ink); color:var(--paper); border:1px solid var(--line); padding: 4px 8px;" class="mono"><div style="font-size:11px;">deep work</div><div style="font-size:9px; opacity:.7;">11:00 – 13:00 · onboarding PR</div></div>
+              <div style="position:absolute; left:50px; top:116px; right:10px; height:26px; background:var(--paper); border:1px solid var(--line); padding: 4px 8px;" class="mono"><div style="font-size:11px;">lunch · M.</div></div>
+              <div style="position:absolute; left:50px; top:196px; right:10px; height:26px; background:var(--accent); color:var(--paper); border:1px solid var(--line); padding: 4px 8px;" class="mono"><div style="font-size:11px;">run · 5k easy</div></div>
+              <div style="position:absolute; left:50px; top:248px; right:10px; height:24px; border:1.5px dashed var(--muted); padding: 2px 8px;" class="mono" style_="color:var(--muted)">
+                <span class="mono" style="font-size:10px; color:var(--muted);">+ drag a task here</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="wf-title">UNSCHEDULED</div>
+            <div class="col" style="gap:6px; margin-top:8px;">
+              <div class="wf-box" style="padding:6px 8px; background:var(--accent-3);"><span class="wf-hand" style="font-size:16px;">write eval notes · 30m</span></div>
+              <div class="wf-box" style="padding:6px 8px;"><span class="wf-hand" style="font-size:16px;">call mom · 15m</span></div>
+              <div class="wf-box" style="padding:6px 8px;"><span class="wf-hand" style="font-size:16px;">piano scales · 20m</span></div>
+              <div class="wf-box" style="padding:6px 8px;"><span class="wf-hand" style="font-size:16px;">order shoes · 5m</span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="sticky" style="font-size:15px;">atlas: you have a 45m gap at 15:15 — slot "write eval notes"?</div>
+          </div>
+        </div>
+      </div>
+      <div class="note">↳ modules open "in place" — the canvas zooms into that cluster. drag tasks onto the time grid to schedule them. 3-pane interior.</div>
+
+    </div>
+  </section>
+
+  <!-- ============================ DIRECTION 4: GAME HUD ============================ -->
+  <section class="dir d4" id="d4" data-screen-label="04 Game HUD">
+    <div class="dir-header">
+      <div class="num">DIR 04</div>
+      <h1>Game HUD · Life Console</h1>
+      <div class="tagline">// playful · stats &amp; bars &amp; meters · "what's my HP today?"<br/>// home = status readout. modules = skill trees.</div>
+    </div>
+
+    <div class="screen-strip">
+
+      <!-- Onboarding: class select -->
+      <div class="frame" style="min-height: 440px;">
+        <span class="frame-label">04A · Onboarding · "who are you?"</span>
+        <span class="frame-size">1280 × 440</span>
+        <div class="hud-onboard">
+          <div class="row" style="justify-content:space-between; align-items:baseline;">
+            <div>
+              <div class="mono" style="font-size:11px; color:var(--muted);">NEW · GAME · START</div>
+              <div class="wf-hand" style="font-size:40px;">pick a starting loadout</div>
+              <div class="mono" style="font-size:12px; color:var(--muted);">// these are just defaults — you can toggle every module after. pick the one that feels right.</div>
+            </div>
+            <div class="mono" style="font-size:12px;">hero name: <span style="border-bottom:1.5px solid var(--line); padding: 0 14px;"><span class="wf-hand" style="font-size:20px;">Atlas 1</span></span></div>
+          </div>
+
+          <div class="class-pick">
+            <div class="class-card">
+              <div class="wf-title">CLASS · 01</div>
+              <div class="wf-hand" style="font-size:30px;">the maker</div>
+              <div class="mono" style="font-size:11px; color:var(--muted);">ships things. codes. solo-builds.</div>
+              <div class="spacer"></div>
+              <div class="mono" style="font-size:10px; line-height:1.8;">
+                +++ tasks<br/>
+                +++ ai-lab<br/>
+                ++&nbsp; calendar<br/>
+                +&nbsp;&nbsp; health<br/>
+              </div>
+            </div>
+            <div class="class-card pick">
+              <div class="wf-title" style="color:inherit; opacity:.7;">CLASS · 02 &nbsp;✦ PICKED</div>
+              <div class="wf-hand" style="font-size:30px;">the polymath</div>
+              <div class="mono" style="font-size:11px;">code, body, music, family. all on.</div>
+              <div class="spacer"></div>
+              <div class="mono" style="font-size:10px; line-height:1.8;">
+                ++ every module · balanced<br/>
+                ++ calendar prominent<br/>
+                ++ 3 focus blocks / day<br/>
+                +&nbsp; daily check-in<br/>
+              </div>
+            </div>
+            <div class="class-card">
+              <div class="wf-title">CLASS · 03</div>
+              <div class="wf-hand" style="font-size:30px;">the operator</div>
+              <div class="mono" style="font-size:11px; color:var(--muted);">ops, inbox, household CEO.</div>
+              <div class="spacer"></div>
+              <div class="mono" style="font-size:10px; line-height:1.8;">
+                +++ calendar<br/>
+                +++ home + errands<br/>
+                ++&nbsp; tasks<br/>
+                +&nbsp;&nbsp; health<br/>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:18px; justify-content:space-between;">
+            <span class="mono" style="color:var(--muted); font-size:11px;">[ESC] back &nbsp;·&nbsp; [SPACE] customize modules &nbsp;·&nbsp; [ENTER] let's go</span>
+            <span class="tag accent">START →</span>
+          </div>
+        </div>
+      </div>
+      <div class="note">↳ onboarding = RPG character select. picks seed the defaults. all fully editable after.</div>
+
+      <!-- Home HUD -->
+      <div class="frame" style="min-height: 700px;">
+        <span class="frame-label">04B · Home · the HUD</span>
+        <span class="frame-size">1280 × 700</span>
+        <div class="hud-home">
+
+          <!-- Stat bar top -->
+          <div class="hud-top">
+            <div class="stat">
+              <div class="sname">♡ HP · wellbeing</div>
+              <div class="snum">78<span style="font-size:20px; color:var(--muted);">/100</span></div>
+              <div class="bar"><div class="fill accent" style="right:22%;"></div></div>
+            </div>
+            <div class="stat">
+              <div class="sname">⚡ ENERGY</div>
+              <div class="snum">64<span style="font-size:20px; color:var(--muted);">%</span></div>
+              <div class="bar"><div class="fill" style="right:36%;"></div></div>
+            </div>
+            <div class="stat">
+              <div class="sname">✦ FOCUS · today</div>
+              <div class="snum">2<span style="font-size:20px; color:var(--muted);">/3 blocks</span></div>
+              <div class="bar"><div class="fill accent" style="right:33%;"></div></div>
+            </div>
+            <div class="stat">
+              <div class="sname">⊙ STREAKS</div>
+              <div class="snum">12d</div>
+              <div class="mono" style="font-size:10px; color:var(--muted); margin-top:2px;">piano · longest: 41d</div>
+            </div>
+            <div class="stat">
+              <div class="sname">◎ LVL</div>
+              <div class="snum">17</div>
+              <div class="mono" style="font-size:10px; color:var(--muted); margin-top:2px;">2,340 xp · next: 3,000</div>
+            </div>
+          </div>
+
+          <!-- Middle panel -->
+          <div class="hud-mid">
+            <!-- Left: quests / tasks -->
+            <div>
+              <div class="wf-title">ACTIVE QUESTS</div>
+              <div class="col" style="gap:10px; margin-top:8px;">
+                <div class="wf-box">
+                  <div class="row" style="justify-content:space-between;"><span class="wf-title">MAIN</span><span class="tag accent">+120 xp</span></div>
+                  <div class="wf-hand" style="font-size:20px;">ship onboarding PR</div>
+                  <div class="mono" style="font-size:10px; color:var(--muted);">work · due today</div>
+                </div>
+                <div class="wf-box">
+                  <div class="row" style="justify-content:space-between;"><span class="wf-title">SIDE</span><span class="tag">+40 xp</span></div>
+                  <div class="wf-hand" style="font-size:20px;">climb 5.10</div>
+                  <div class="mono" style="font-size:10px; color:var(--muted);">hobby · streak +1</div>
+                </div>
+                <div class="wf-box">
+                  <div class="row" style="justify-content:space-between;"><span class="wf-title">DAILY</span><span class="tag ghost">+10 xp</span></div>
+                  <div class="wf-hand" style="font-size:20px;">piano 20m</div>
+                </div>
+                <div class="wf-box dashed">
+                  <div class="wf-hand" style="font-size:16px; color:var(--muted);">+ accept a quest...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Center: today focus -->
+            <div>
+              <div class="focus-box">
+                <div class="label">NOW PLAYING</div>
+                <div class="mono" style="font-size:11px; color:var(--muted);">11:04 · 56 min remaining</div>
+                <div class="wf-hand" style="font-size:44px; line-height:1;">Deep Work</div>
+                <div class="mono" style="font-size:12px; margin-top:6px;">onboarding-PR · ⌘/ to end</div>
+                <div class="bar" style="height:12px; margin-top:12px;"><div class="fill accent" style="right:40%;"></div></div>
+              </div>
+
+              <div class="wf-title">NEXT UP</div>
+              <div class="col" style="gap:6px; margin-top:8px;">
+                <div class="row" style="justify-content:space-between;"><span class="wf-hand" style="font-size:20px;">13:00 · lunch w/ M.</span><span class="tag yellow">out</span></div>
+                <div class="row" style="justify-content:space-between;"><span class="wf-hand" style="font-size:20px;">16:30 · run · 5k</span><span class="tag">health</span></div>
+                <div class="row" style="justify-content:space-between;"><span class="wf-hand" style="font-size:20px;">20:00 · piano</span><span class="tag">hobby</span></div>
+              </div>
+
+              <div class="divider"></div>
+              <div class="wf-title">ATLAS says</div>
+              <div class="sticky" style="transform:rotate(-0.8deg); font-size:17px;">nice pace. 2 focus blocks done — one more unlocks your "deep work" badge this week.</div>
+            </div>
+
+            <!-- Right: inventory / ai lab -->
+            <div>
+              <div class="wf-title">INVENTORY · AI-LAB</div>
+              <div class="col" style="gap:6px; margin-top:8px;">
+                <div class="wf-box"><div class="row" style="justify-content:space-between;"><span class="mono" style="font-size:12px;">● agent-eval-v3</span><span class="tag accent">LIVE</span></div><div class="mono" style="font-size:10px; color:var(--muted);">▓▓▓▓▓░░░░░ 43%</div></div>
+                <div class="wf-box"><div class="row" style="justify-content:space-between;"><span class="mono" style="font-size:12px;">○ dataset-rebuild</span><span class="tag ghost">QUEUE</span></div></div>
+                <div class="wf-box"><div class="row" style="justify-content:space-between;"><span class="mono" style="font-size:12px;">✓ prompt-lib-v2</span><span class="tag">DONE</span></div></div>
+                <div class="wf-box"><div class="row" style="justify-content:space-between;"><span class="mono" style="font-size:12px;">✗ scraper</span><span class="tag" style="background:var(--accent);color:var(--paper);">ERR</span></div></div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="wf-title">EQUIPPED MODULES</div>
+              <div class="row" style="flex-wrap:wrap; gap:6px; margin-top:8px;">
+                <span class="tag blue">calendar</span>
+                <span class="tag blue">health</span>
+                <span class="tag blue">tasks</span>
+                <span class="tag blue">hobbies</span>
+                <span class="tag blue">ai-lab</span>
+                <span class="tag blue">home</span>
+                <span class="tag ghost">+ find plugins</span>
+              </div>
+
+              <div class="divider"></div>
+              <div class="wf-title">BADGES · WEEK</div>
+              <div class="row" style="gap:6px; margin-top:6px;">
+                <div class="wf-box" style="width:50px; height:50px; display:flex; align-items:center; justify-content:center;"><span class="wf-hand" style="font-size:22px;">★</span></div>
+                <div class="wf-box" style="width:50px; height:50px; display:flex; align-items:center; justify-content:center;"><span class="wf-hand" style="font-size:22px;">♡</span></div>
+                <div class="wf-box dashed" style="width:50px; height:50px; display:flex; align-items:center; justify-content:center;"><span class="wf-hand" style="font-size:22px; color:var(--muted);">?</span></div>
+                <div class="wf-box dashed" style="width:50px; height:50px; display:flex; align-items:center; justify-content:center;"><span class="wf-hand" style="font-size:22px; color:var(--muted);">?</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom bar -->
+          <div class="hud-bottom">
+            <span><span class="key">TAB</span> switch module</span>
+            <span><span class="key">⌘K</span> command</span>
+            <span><span class="key">⌘/</span> atlas</span>
+            <span><span class="key">F</span> focus mode</span>
+            <span><span class="key">ESC</span> pause</span>
+            <span class="grow"></span>
+            <span style="color:var(--accent);">● SAT 09:14 · atlas 1 v0.1 · connected</span>
+          </div>
+
+        </div>
+      </div>
+      <div class="note">↳ top stat bar (health/energy/focus/streak/lvl). middle: quests · now-playing · inventory. bottom: keybinds. playful but dense.</div>
+
+      <!-- Module: Hobbies skill tree -->
+      <div class="frame" style="min-height: 520px;">
+        <span class="frame-label">04C · Module · hobbies (skill tree)</span>
+        <span class="frame-size">1280 × 520</span>
+        <div class="module-view">
+          <div>
+            <div class="row" style="justify-content:space-between; align-items:baseline;">
+              <div class="wf-hand" style="font-size:32px;">hobbies</div>
+              <div class="row"><span class="tag">list</span><span class="tag accent">tree</span><span class="tag">calendar</span></div>
+            </div>
+            <div class="mono" style="font-size:11px; color:var(--muted);">// level up by doing. streaks count double.</div>
+            <div class="spacer"></div>
+            <div style="position:relative; border: var(--rule) dashed var(--line); min-height: 360px; padding: 18px;">
+              <div class="wf-box" style="position:absolute; left:20px; top:20px; width:140px;">
+                <div class="wf-title">PIANO · LVL 7</div>
+                <div class="wf-hand" style="font-size:18px;">scales · sight-read</div>
+                <div class="mono" style="font-size:10px; color:var(--accent);">streak · 12d</div>
+              </div>
+              <div class="wf-box" style="position:absolute; left:200px; top:80px; width:140px; background:var(--accent-3);">
+                <div class="wf-title">CLIMBING · LVL 4</div>
+                <div class="wf-hand" style="font-size:18px;">V3 onsight</div>
+                <div class="mono" style="font-size:10px;">last · tue</div>
+              </div>
+              <div class="wf-box" style="position:absolute; left:20px; top:180px; width:140px;">
+                <div class="wf-title">GARDEN · LVL 2</div>
+                <div class="wf-hand" style="font-size:18px; color:var(--muted);">dormant · 3w</div>
+              </div>
+              <div class="wf-box dashed" style="position:absolute; left:200px; top:220px; width:140px;">
+                <div class="wf-title" style="color:var(--muted);">LOCKED</div>
+                <div class="wf-hand" style="font-size:16px; color:var(--muted);">woodworking?</div>
+              </div>
+              <div class="wf-box dashed" style="position:absolute; left:380px; top:140px; width:140px;">
+                <div class="wf-title" style="color:var(--muted);">+ new hobby</div>
+              </div>
+              <svg style="position:absolute; inset:0; pointer-events:none;" viewBox="0 0 560 360" preserveAspectRatio="none">
+                <path d="M 160 50 Q 180 70 200 100" stroke="var(--line)" stroke-width="1.3" fill="none" stroke-dasharray="3 3"/>
+                <path d="M 90 100 Q 90 140 90 180" stroke="var(--line)" stroke-width="1.3" fill="none" stroke-dasharray="3 3"/>
+                <path d="M 340 100 Q 360 130 380 150" stroke="var(--line)" stroke-width="1.3" fill="none" stroke-dasharray="3 3"/>
+                <path d="M 340 240 Q 360 230 380 220" stroke="var(--line)" stroke-width="1.3" fill="none" stroke-dasharray="3 3"/>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <div class="wf-title">PIANO · LVL 7</div>
+            <div class="wf-hand" style="font-size:28px;">scales &amp; 1 piece · 20m</div>
+            <div class="bar" style="height:14px; border:1.5px solid var(--line); margin-top:8px; position:relative;"><div style="position:absolute; inset:0; right:30%; background: var(--accent);"></div></div>
+            <div class="mono" style="font-size:10px; color:var(--muted); margin-top:4px;">2,100 / 3,000 xp to lvl 8</div>
+
+            <div class="divider"></div>
+            <div class="wf-title">LAST 30 DAYS</div>
+            <div class="row" style="flex-wrap:wrap; gap:3px; margin-top:8px;">
+              <!-- heatmap 30 cells -->
+              <div style="display:grid; grid-template-columns: repeat(15, 14px); gap:3px;">
+                <!-- generated cells -->
+              </div>
+            </div>
+            <div id="piano-heatmap" style="display:grid; grid-template-columns: repeat(15, 16px); gap:3px; margin-top:6px;"></div>
+
+            <div class="divider"></div>
+            <div class="wf-title">UPCOMING</div>
+            <div class="col" style="gap:4px; margin-top:6px;">
+              <div class="wf-hand" style="font-size:18px;">today 20:00 · scales + 1 piece</div>
+              <div class="wf-hand" style="font-size:18px; color:var(--muted);">tue · lesson w/ J.</div>
+              <div class="wf-hand" style="font-size:18px; color:var(--muted);">may 12 · recital</div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="wf-title">UNLOCKED</div>
+            <div class="row" style="gap:8px; margin-top:6px; flex-wrap:wrap;">
+              <span class="tag">★ 7-day streak</span>
+              <span class="tag">★ first piece memorized</span>
+              <span class="tag ghost">? 30-day streak</span>
+              <span class="tag ghost">? perform live</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="note">↳ module = skill tree + detail panel. heatmap shows practice days. XP, levels, unlockables. leans into the game metaphor.</div>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- Tweaks panel -->
+<div class="tweaks" id="tweaksPanel">
+  <h4>Tweaks</h4>
+  <div class="tweak-row">
+    <label>project name</label>
+    <input type="text" id="tw-name" value="Atlas 1" />
+  </div>
+  <div class="tweak-row">
+    <label>theme</label>
+    <div class="seg">
+      <button data-theme="light" class="on">light</button>
+      <button data-theme="dark">dark</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>accent</label>
+    <div class="seg">
+      <button data-accent="#e85d3d" class="on">tomato</button>
+      <button data-accent="#3d7ae8">blue</button>
+      <button data-accent="#2a8a5f">forest</button>
+      <button data-accent="#b347d9">violet</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>density</label>
+    <div class="seg">
+      <button data-density="0.9">sparse</button>
+      <button data-density="1" class="on">std</button>
+      <button data-density="1.15">dense</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>font pair</label>
+    <div class="seg">
+      <button data-font="caveat" class="on">caveat</button>
+      <button data-font="kalam">kalam</button>
+    </div>
+  </div>
+  <div class="tweak-row" style="padding-top:6px; border-top: 1px dashed var(--muted); margin-top: 10px;">
+    <span style="font-size: 10px; color: var(--muted);">// changes apply to all 4 directions</span>
+  </div>
+</div>
+
+<script>
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "project_name": "Atlas 1",
+    "theme": "light",
+    "accent": "#e85d3d",
+    "density": 1.15,
+    "font_pair": "caveat"
+  }/*EDITMODE-END*/;
+
+  // --- Direction nav ---
+  const navBtns = document.querySelectorAll('#dirnav button');
+  const dirs = document.querySelectorAll('.dir');
+  function showDir(id) {
+    navBtns.forEach(b => b.classList.toggle('active', b.dataset.dir === id));
+    dirs.forEach(d => d.classList.toggle('active', d.id === id));
+    localStorage.setItem('atlas1-dir', id);
+  }
+  navBtns.forEach(b => b.addEventListener('click', () => showDir(b.dataset.dir)));
+  const savedDir = localStorage.getItem('atlas1-dir');
+  if (savedDir) showDir(savedDir);
+
+  // --- Theme toggle ---
+  const themeBtn = document.getElementById('themeBtn');
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    themeBtn.textContent = (t === 'dark' ? '◑ theme: dark' : '◐ theme: light');
+    document.querySelectorAll('#tweaksPanel [data-theme]').forEach(b => b.classList.toggle('on', b.dataset.theme === t));
+  }
+  themeBtn.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = cur === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    setTweak({theme: next});
+  });
+
+  // --- Tweaks panel ---
+  const panel = document.getElementById('tweaksPanel');
+  const tweakBtn = document.getElementById('tweakBtn');
+  let tweaksOpen = false;
+  tweakBtn.addEventListener('click', () => {
+    tweaksOpen = !tweaksOpen;
+    panel.classList.toggle('on', tweaksOpen);
+  });
+
+  function applyAccent(c) {
+    document.documentElement.style.setProperty('--accent', c);
+    document.querySelectorAll('#tweaksPanel [data-accent]').forEach(b => b.classList.toggle('on', b.dataset.accent === c));
+  }
+  function applyDensity(v) {
+    document.documentElement.style.fontSize = (18 * v) + 'px';
+    document.querySelectorAll('#tweaksPanel [data-density]').forEach(b => b.classList.toggle('on', parseFloat(b.dataset.density) === v));
+  }
+  function applyFont(f) {
+    const fam = f === 'kalam' ? "'Kalam', 'Caveat', cursive" : "'Caveat', 'Kalam', cursive";
+    document.documentElement.style.setProperty('--hand-font', fam);
+    document.querySelectorAll('.wf-hand, .hand, .brand .sub, .dir-header h1, .intro h2').forEach(el => {
+      el.style.fontFamily = fam;
+    });
+    document.querySelectorAll('#tweaksPanel [data-font]').forEach(b => b.classList.toggle('on', b.dataset.font === f));
+  }
+  function applyName(n) {
+    document.querySelector('.brand .mark').textContent = (n || 'ATLAS 1').toUpperCase();
+  }
+
+  panel.querySelectorAll('[data-theme]').forEach(b => b.addEventListener('click', () => { applyTheme(b.dataset.theme); setTweak({theme: b.dataset.theme}); }));
+  panel.querySelectorAll('[data-accent]').forEach(b => b.addEventListener('click', () => { applyAccent(b.dataset.accent); setTweak({accent: b.dataset.accent}); }));
+  panel.querySelectorAll('[data-density]').forEach(b => b.addEventListener('click', () => { const v = parseFloat(b.dataset.density); applyDensity(v); setTweak({density: v}); }));
+  panel.querySelectorAll('[data-font]').forEach(b => b.addEventListener('click', () => { applyFont(b.dataset.font); setTweak({font_pair: b.dataset.font}); }));
+  document.getElementById('tw-name').addEventListener('input', (e) => { applyName(e.target.value); setTweak({project_name: e.target.value}); });
+
+  function setTweak(partial) {
+    window.parent && window.parent.postMessage({type: '__edit_mode_set_keys', edits: partial}, '*');
+  }
+
+  // Apply defaults on load
+  applyTheme(TWEAK_DEFAULTS.theme);
+  applyAccent(TWEAK_DEFAULTS.accent);
+  applyDensity(TWEAK_DEFAULTS.density);
+  applyFont(TWEAK_DEFAULTS.font_pair);
+  applyName(TWEAK_DEFAULTS.project_name);
+  document.getElementById('tw-name').value = TWEAK_DEFAULTS.project_name;
+
+  // Edit-mode protocol
+  window.addEventListener('message', (e) => {
+    if (!e.data) return;
+    if (e.data.type === '__activate_edit_mode') { tweaksOpen = true; panel.classList.add('on'); }
+    if (e.data.type === '__deactivate_edit_mode') { tweaksOpen = false; panel.classList.remove('on'); }
+  });
+  window.parent && window.parent.postMessage({type: '__edit_mode_available'}, '*');
+
+  // Piano heatmap generator
+  const hm = document.getElementById('piano-heatmap');
+  if (hm) {
+    const pattern = [3,2,3,0,1,3,2, 3,3,1,0,2,3,3, 2,3,3,1,3,0,2, 3,2,0,1,3,3,3, 2,3];
+    pattern.forEach(v => {
+      const cell = document.createElement('div');
+      cell.style.width = '16px';
+      cell.style.height = '16px';
+      cell.style.border = '1px solid var(--line)';
+      const fills = ['transparent', 'rgba(0,0,0,0.12)', 'var(--accent-3)', 'var(--accent)'];
+      cell.style.background = fills[v];
+      hm.appendChild(cell);
+    });
+  }
+</script>
+
+</body>
+</html>
