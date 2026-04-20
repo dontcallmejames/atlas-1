@@ -6,6 +6,9 @@
   "scripts": {
     "test": "vitest run"
   },
+  "dependencies": {
+    "@atlas/core": "workspace:*"
+  },
   "devDependencies": {
     "vitest": "^2.1.0"
   }

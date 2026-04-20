@@ -64,6 +64,10 @@ importers:
   packages/ui: {}
 
   plugins/tasks:
+    dependencies:
+      '@atlas/core':
+        specifier: workspace:*
+        version: link:../../packages/core
     devDependencies:
       vitest:
         specifier: ^2.1.0
