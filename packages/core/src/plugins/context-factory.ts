@@ -79,14 +79,6 @@ export function createContext(params: {
     ui: {
       registerView: (screenId, loader) =>
         core.mounts.addView({ pluginId, screenId, loader }),
-      registerStatuslineSegment: () => () => {},
-    },
-    settings: {
-      register: () => () => {},
-    },
-    theme: {
-      currentTokens: () => ({}),
-      registerPack: () => () => {},
     },
   };
 }

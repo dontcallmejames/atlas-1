@@ -9,14 +9,6 @@ export interface NavApi {
 }
 export interface UiApi {
   registerView(screenId: string, loader: () => Promise<unknown>): () => void;
-  registerStatuslineSegment(segment: { id: string; render: (state: unknown) => string }): () => void;
-}
-export interface SettingsApi {
-  register(schema: unknown): () => void;
-}
-export interface ThemeApi {
-  currentTokens(): Record<string, string>;
-  registerPack(id: string, css: string): () => void;
 }
 
 export interface PluginContext {
@@ -27,8 +19,6 @@ export interface PluginContext {
   readonly xp: XpApi;
   readonly nav: NavApi;
   readonly ui: UiApi;
-  readonly settings: SettingsApi;
-  readonly theme: ThemeApi;
 }
 
 export interface Plugin {

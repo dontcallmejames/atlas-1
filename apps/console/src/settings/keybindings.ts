@@ -6,7 +6,7 @@ export function renderKeybindings(el: HTMLElement, runtime: Runtime): void {
   header.className = "set-sec-hdr";
   header.innerHTML =
     '<div class="set-sec-title">keybindings</div>' +
-    '<div class="set-sec-sub">every registered command. type <code>/</code> to focus the REPL; enter runs the command.</div>';
+    '<div class="set-sec-sub">keyboard shortcuts are fixed in v0.8. customization is planned for a future release. below is the current command list — type <code>/</code> to focus the REPL; enter runs the command.</div>';
   el.appendChild(header);
 
   const commands = [...runtime.commands.list()].sort((a, b) => a.id.localeCompare(b.id));
@@ -22,7 +22,6 @@ export function renderKeybindings(el: HTMLElement, runtime: Runtime): void {
     "<tr style=\"text-align:left;opacity:0.6;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;\">" +
     '<th style="padding:6px 8px;">command</th>' +
     '<th style="padding:6px 8px;">hint</th>' +
-    '<th style="padding:6px 8px;">keybind</th>' +
     "</tr>";
   table.appendChild(thead);
 
@@ -38,13 +37,8 @@ export function renderKeybindings(el: HTMLElement, runtime: Runtime): void {
     hint.style.padding = "6px 8px";
     hint.style.opacity = "0.8";
     hint.textContent = c.hint ?? "";
-    const kb = document.createElement("td");
-    kb.style.padding = "6px 8px";
-    kb.style.opacity = "0.5";
-    kb.textContent = c.keybind ?? "";
     tr.appendChild(id);
     tr.appendChild(hint);
-    tr.appendChild(kb);
     tbody.appendChild(tr);
   }
   table.appendChild(tbody);

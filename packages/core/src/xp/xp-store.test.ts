@@ -96,3 +96,45 @@ describe("XpStore", () => {
     expect(snapshots).toEqual([10, 15]);
   });
 });
+
+describe("XpStore streak", () => {
+  let dir: string;
+  let vault: NodeVaultFs;
+
+  beforeEach(async () => {
+    dir = await mkdtemp(join(tmpdir(), "atlas-xp-streak-"));
+    vault = new NodeVaultFs(dir);
+  });
+  afterEach(async () => {
+    await rm(dir, { recursive: true, force: true });
+  });
+
+  it("is 0 with no events", async () => {
+    const store = new XpStore(vault, { base: 500, gameMode: true });
+    await store.load();
+    expect(store.getState().streak).toBe(0);
+  });
+
+  it("is 1 after a single event today", async () => {
+    const store = new XpStore(vault, { base: 500, gameMode: true });
+    await store.load();
+    store.award({ amount: 10, reason: "t", source: "test", kind: "xp" });
+    await store.flush();
+    expect(store.getState().streak).toBe(1);
+  });
+
+  it("counts consecutive local-calendar days, gaps reset", async () => {
+    const today = new Date();
+    const yest = new Date(today); yest.setDate(today.getDate() - 1);
+    const dayBefore = new Date(today); dayBefore.setDate(today.getDate() - 2);
+    const gap = new Date(today); gap.setDate(today.getDate() - 5);
+    const lines = [gap, dayBefore, yest, today].map((d) => JSON.stringify({
+      ts: d.getTime(), source: "test", delta: 1, reason: "t", kind: "xp",
+    })).join("\n") + "\n";
+    await vault.write(".atlas/xp.log", lines);
+
+    const store = new XpStore(vault, { base: 500, gameMode: true });
+    await store.load();
+    expect(store.getState().streak).toBe(3);
+  });
+});

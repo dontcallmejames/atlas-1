@@ -14,8 +14,6 @@ export interface Command {
   id: string;
   hint?: string;
   run: CommandHandler;
-  /** optional default keybind, user can override via .atlas/keybindings.json */
-  keybind?: string;
 }
 
 export interface CommandApi {

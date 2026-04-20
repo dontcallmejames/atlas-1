@@ -97,20 +97,4 @@ describe("createContext", () => {
     expect(env.core.mounts.listViews()).toHaveLength(0);
   });
 
-  it("settings/theme stub APIs exist and return disposer fns", async () => {
-    const env = await setup();
-    dir = env.dir;
-    const ctx = createContext({ pluginId: "tasks", core: env.core });
-    const offSeg = ctx.ui.registerStatuslineSegment({
-      id: "seg",
-      render: () => "x",
-    });
-    const offSettings = ctx.settings.register({});
-    const offTheme = ctx.theme.registerPack("id", "css");
-    for (const off of [offSeg, offSettings, offTheme]) {
-      expect(typeof off).toBe("function");
-      off();
-    }
-    expect(ctx.theme.currentTokens()).toEqual({});
-  });
 });

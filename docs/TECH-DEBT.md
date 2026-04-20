@@ -12,7 +12,7 @@ Status legend: 🔴 not started · 🟡 in progress · 🟢 done · ⚪ deferred
 
 | # | Item | Source | Status |
 |---|------|--------|--------|
-| 1 | Wire or remove dead SDK surfaces — `registerStatuslineSegment`, `settings.register`, `theme.*`, `Command.keybind`, `XpState.streak` | code-quality HIGH, forker-readiness HIGH | 🔴 |
+| 1 | Wire or remove dead SDK surfaces — `registerStatuslineSegment`, `settings.register`, `theme.*`, `Command.keybind`, `XpState.streak` | code-quality HIGH, forker-readiness HIGH | 🟢 |
 | 2 | Fix onboarding — explicit vault-picker step, wire summary to real choices, keyboard nav (Enter/Esc) | uiux HIGH | 🔴 |
 | 3 | Command-bar MVP feedback — autocomplete-on-type, visible error on unknown command, up-arrow history | uiux HIGH | 🔴 |
 | 4 | Remove advertised-but-unwired shortcuts from Home/cmdbar chrome | uiux HIGH | 🔴 |

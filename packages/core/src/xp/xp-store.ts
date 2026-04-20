@@ -19,6 +19,7 @@ type Listener = (state: XpState) => void;
 
 export class XpStore {
   private state: XpState = emptyState();
+  private lastXpDate: string | null = null;
   private readonly listeners = new Set<Listener>();
   private writeChain: Promise<void> = Promise.resolve();
 
@@ -29,6 +30,7 @@ export class XpStore {
 
   async load(): Promise<void> {
     this.state = emptyState();
+    this.lastXpDate = null;
     if (!(await this.vault.exists(LOG_PATH))) return;
     const raw = await this.vault.read(LOG_PATH);
     const lines = raw.split("\n").filter((l) => l.trim().length > 0);
@@ -77,6 +79,18 @@ export class XpStore {
     if (kind === "xp") {
       next.xp = Math.max(0, next.xp + event.delta);
       next.lvl = xpToLevel(next.xp, this.options.base);
+      const today = ymdLocal(event.ts);
+      if (this.lastXpDate === null) {
+        next.streak = 1;
+      } else if (this.lastXpDate === today) {
+        // same day, streak unchanged
+      } else {
+        const prev = new Date(this.lastXpDate + "T00:00:00");
+        const curr = new Date(today + "T00:00:00");
+        const diff = Math.round((curr.getTime() - prev.getTime()) / 86400000);
+        next.streak = diff === 1 ? next.streak + 1 : 1;
+      }
+      this.lastXpDate = today;
     } else if (kind === "hp") {
       next.hp = clamp(event.delta >= 0 && event.delta <= 100 ? event.delta : next.hp + event.delta);
     } else if (kind === "nrg") {
@@ -94,4 +108,12 @@ function emptyState(): XpState {
 
 function clamp(n: number): number {
   return Math.max(0, Math.min(100, n));
+}
+
+function ymdLocal(ts: number): string {
+  const d = new Date(ts);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
