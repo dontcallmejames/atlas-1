@@ -9,119 +9,124 @@ export interface BootDeps {
 }
 
 /**
- * Drive the existing boot screen's 6-step wizard. Step elements in the
- * prototype have class `.boot-step` with `data-step="1".."6"`, a stepper
- * with `.stepper [data-step]`, prev/next buttons `#bootPrev`, `#bootNext`,
- * and a `#bootGo` button on step 6.
+ * Drive the prototype's onboarding wizard. DOM structure:
+ *
+ *   #onbStepper > .onb-step[data-step="0".."5"]  (labels 01..06; .active on current, .done on earlier)
+ *   .ask.onb-panel[data-step="0".."5"]           (display:none except .active)
+ *   #onbPrev / #onbNext / #onbGo                 (go shown only on last step)
+ *   #onbProg                                     (text "NN / 06")
+ *   #bootName                                    (instance-name input)
+ *   .class-card[data-class]                      (loadout cards; .pick marks the chosen one)
+ *
+ * The prototype does not include a dedicated vault-picker control in any panel,
+ * so we open the Tauri folder dialog when the user clicks BOOT ATLAS\u00b71 if no
+ * vault path has been set yet.
  */
 export function initOnboarding(deps: BootDeps): () => void {
   const { config, vault, onComplete } = deps;
 
   showScreen("boot");
 
-  const steps = document.querySelectorAll<HTMLElement>(".boot-step");
-  const prevBtn = document.getElementById("bootPrev");
-  const nextBtn = document.getElementById("bootNext");
-  const goBtn = document.getElementById("bootGo");
-  const counter = document.getElementById("bootCounter");
-  const stepperBtns = document.querySelectorAll<HTMLElement>(".stepper [data-step]");
+  const panels = Array.from(
+    document.querySelectorAll<HTMLElement>(".onb-panel[data-step]"),
+  ).sort((a, b) => Number(a.dataset.step) - Number(b.dataset.step));
+  const stepperBtns = Array.from(
+    document.querySelectorAll<HTMLElement>("#onbStepper .onb-step[data-step]"),
+  );
+  const prevBtn = document.getElementById("onbPrev");
+  const nextBtn = document.getElementById("onbNext");
+  const goBtn = document.getElementById("onbGo");
+  const prog = document.getElementById("onbProg");
 
-  let current = 1;
-  const total = steps.length || 6;
+  const total = panels.length || 6;
+  let current = 0; // zero-indexed
+
+  const pad2 = (n: number): string => String(n).padStart(2, "0");
 
   const setStep = (n: number): void => {
-    current = Math.max(1, Math.min(total, n));
-    steps.forEach((s) => s.classList.toggle("on", s.dataset.step === String(current)));
-    stepperBtns.forEach((b) => b.classList.toggle("on", b.dataset.step === String(current)));
-    if (counter) counter.textContent = `${String(current).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
-    if (prevBtn) prevBtn.toggleAttribute("disabled", current === 1);
-    if (nextBtn) nextBtn.textContent = current === total ? "BOOT ATLAS\u00b71" : "next \u2192";
-    if (goBtn) goBtn.style.display = current === total ? "" : "none";
+    current = Math.max(0, Math.min(total - 1, n));
+    panels.forEach((p) => p.classList.toggle("active", Number(p.dataset.step) === current));
+    stepperBtns.forEach((b) => {
+      const s = Number(b.dataset.step);
+      b.classList.toggle("active", s === current);
+      b.classList.toggle("done", s < current);
+    });
+    if (prog) prog.textContent = `${pad2(current + 1)} / ${pad2(total)}`;
+    if (prevBtn) prevBtn.toggleAttribute("disabled", current === 0);
+    const isLast = current === total - 1;
+    if (nextBtn) nextBtn.style.display = isLast ? "none" : "";
+    if (goBtn) goBtn.style.display = isLast ? "" : "none";
   };
 
-  setStep(1);
+  setStep(0);
 
   const onPrev = (): void => setStep(current - 1);
-  const onNext = (): void => {
-    if (current === total) void finish();
-    else setStep(current + 1);
-  };
+  const onNext = (): void => setStep(current + 1);
 
   stepperBtns.forEach((b) => {
     const n = Number(b.dataset.step);
-    if (!Number.isNaN(n)) b.addEventListener("click", () => setStep(n));
+    if (!Number.isNaN(n)) {
+      b.addEventListener("click", () => setStep(n));
+      b.style.cursor = "pointer";
+    }
   });
 
   prevBtn?.addEventListener("click", onPrev);
   nextBtn?.addEventListener("click", onNext);
 
   const nameInput = document.getElementById("bootName") as HTMLInputElement | null;
-  nameInput?.addEventListener("input", () => {
+  if (nameInput) {
+    // Seed config with the default value so the instance name is stable
+    // even if the user never edits the field.
     config.update({ name: nameInput.value });
-  });
+    nameInput.addEventListener("input", () => {
+      config.update({ name: nameInput.value });
+    });
+  }
 
   const classCards = document.querySelectorAll<HTMLElement>(".class-card[data-class]");
+  const prePicked = document.querySelector<HTMLElement>(".class-card.pick[data-class]");
+  if (prePicked?.dataset.class) config.update({ operator: prePicked.dataset.class });
   classCards.forEach((card) => {
     card.addEventListener("click", () => {
-      classCards.forEach((c) => c.classList.remove("on"));
-      card.classList.add("on");
+      classCards.forEach((c) => c.classList.remove("pick"));
+      card.classList.add("pick");
       const cls = card.dataset.class;
       if (cls) config.update({ operator: cls });
     });
   });
 
-  const modChips = document.querySelectorAll<HTMLElement>(".mod-chip[data-mod]");
-  modChips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      chip.classList.toggle("on");
-    });
+  // Mod chips are visual-only for v1 (plugin install lands in M7). Let them
+  // toggle so the UI feels responsive, but we do not persist their state.
+  document.querySelectorAll<HTMLElement>(".mod-chip").forEach((chip) => {
+    chip.addEventListener("click", () => chip.classList.toggle("on"));
   });
 
-  const bootTheme = document.getElementById("boot-theme") as HTMLSelectElement | null;
-  bootTheme?.addEventListener("change", () => {
-    const v = bootTheme.value;
-    if (v === "light" || v === "dark") config.update({ theme: v });
-  });
-  const bootCrt = document.getElementById("boot-crt") as HTMLInputElement | null;
-  bootCrt?.addEventListener("change", () => config.update({ crt: bootCrt.checked }));
-  const bootDensity = document.getElementById("boot-density") as HTMLSelectElement | null;
-  bootDensity?.addEventListener("change", () => {
-    const v = bootDensity.value;
-    if (v === "comfy" || v === "compact") config.update({ density: v });
-  });
-  document.querySelectorAll<HTMLElement>(".boot-accent[data-c]").forEach((b) => {
-    b.addEventListener("click", () => {
-      const hex = b.dataset.c;
-      if (hex) config.update({ accent: hex });
-    });
-  });
-
-  const pickBtn = document.getElementById("bootPickVault");
-  const vaultPathOut = document.getElementById("bootVaultPath");
-  pickBtn?.addEventListener("click", async () => {
-    const { pickVaultFolder } = await import("../core/pick-vault-folder.js");
-    const picked = await pickVaultFolder();
-    if (picked) {
-      config.update({ vaultPath: picked });
-      if (vaultPathOut) vaultPathOut.textContent = picked;
+  const onGo = async (): Promise<void> => {
+    if (goBtn) goBtn.toggleAttribute("disabled", true);
+    try {
+      let path = config.get().vaultPath;
+      if (!path) {
+        const { pickVaultFolder } = await import("../core/pick-vault-folder.js");
+        const picked = await pickVaultFolder();
+        if (!picked) return;
+        path = picked;
+        config.update({ vaultPath: path });
+      }
+      await vault.setVaultRoot(path);
+      config.update({ onboarded: true });
+      await config.save();
+      await onComplete();
+    } finally {
+      if (goBtn) goBtn.toggleAttribute("disabled", false);
     }
-  });
-
-  async function finish(): Promise<void> {
-    const { vaultPath } = config.get();
-    if (!vaultPath) {
-      setStep(5);
-      return;
-    }
-    await vault.setVaultRoot(vaultPath);
-    config.update({ onboarded: true });
-    await config.save();
-    await onComplete();
-  }
+  };
+  goBtn?.addEventListener("click", () => void onGo());
 
   return () => {
     prevBtn?.removeEventListener("click", onPrev);
     nextBtn?.removeEventListener("click", onNext);
+    goBtn?.replaceWith(goBtn.cloneNode(true));
   };
 }
 
