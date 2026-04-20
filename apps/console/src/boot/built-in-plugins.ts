@@ -3,10 +3,9 @@ import type { Plugin, PluginContext } from "@atlas/sdk";
 import { createContext } from "@atlas/core";
 
 // Vite resolves this at build time to static imports of every main.js under
-// plugins/*. Each module's default export is a class implementing Plugin.
-// The path is relative to apps/console/src/boot/ — two levels up lands at
-// apps/console/, then ../.. from there reaches the repo root's plugins/.
-const pluginModules = import.meta.glob("../../plugins/*/main.js", {
+// <repo>/plugins/*. Path is relative to this file (apps/console/src/boot/):
+// ../ → src/, ../../ → apps/console/, ../../../ → apps/, ../../../../ → repo root.
+const pluginModules = import.meta.glob("../../../../plugins/*/main.js", {
   eager: true,
 }) as Record<string, { default: new () => Plugin }>;
 
