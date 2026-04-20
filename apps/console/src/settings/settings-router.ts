@@ -1,13 +1,14 @@
 import type { Runtime } from "@atlas/core";
 import { renderIdentity } from "./identity.js";
 import { renderAppearance } from "./appearance.js";
+import { renderPlugins } from "./plugins.js";
 
 type Renderer = (el: HTMLElement, runtime: Runtime) => void;
 
 const RENDERERS: Record<string, Renderer> = {
   identity: renderIdentity,
   appearance: renderAppearance,
-  // plugins, keys, about wired in later tasks
+  plugins: renderPlugins,
 };
 
 /**
