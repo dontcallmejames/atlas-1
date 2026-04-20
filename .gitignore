@@ -1,0 +1,29 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# build outputs
+dist/
+build/
+target/
+*.tsbuildinfo
+
+# tauri
+src-tauri/target/
+src-tauri/gen/
+src-tauri/WixTools/
+
+# env / local
+.env
+.env.local
+.DS_Store
+Thumbs.db
+
+# editors
+.vscode/
+.idea/
+*.swp
+
+# playwright
+playwright-report/
+test-results/
