@@ -4,6 +4,7 @@ import { EventBus } from "./events/event-bus.js";
 import { XpStore } from "./xp/xp-store.js";
 import { ConfigStore } from "./config/config-store.js";
 import { PluginLoader } from "./plugins/plugin-loader.js";
+import { MountRegistry } from "./plugins/mount-registry.js";
 
 export interface RuntimeOptions {
   vault: VaultFs;
@@ -18,6 +19,7 @@ export interface Runtime {
   xp: XpStore;
   config: ConfigStore;
   plugins: PluginLoader;
+  mounts: MountRegistry;
   load(): Promise<void>;
   unload(): Promise<void>;
 }
@@ -32,10 +34,11 @@ export async function createRuntime(options: RuntimeOptions): Promise<Runtime> {
   const events = new EventBus();
   const xp = new XpStore(vault, { base: c.xpPerLevelBase, gameMode: c.gameMode });
   await xp.load();
+  const mounts = new MountRegistry();
 
   const plugins = new PluginLoader({
     vaultRoot,
-    core: { vault, commands, events, xp },
+    core: { vault, commands, events, xp, mounts },
   });
 
   return {
@@ -45,6 +48,7 @@ export async function createRuntime(options: RuntimeOptions): Promise<Runtime> {
     xp,
     config,
     plugins,
+    mounts,
     async load() {
       await plugins.loadAll();
       events.emit("app:ready", undefined);

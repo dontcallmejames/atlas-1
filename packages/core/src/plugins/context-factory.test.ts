@@ -7,6 +7,7 @@ import { CommandRegistry } from "../commands/command-registry.js";
 import { EventBus } from "../events/event-bus.js";
 import { XpStore } from "../xp/xp-store.js";
 import { createContext } from "./context-factory.js";
+import { MountRegistry } from "./mount-registry.js";
 
 async function setup() {
   const dir = await mkdtemp(join(tmpdir(), "atlas-ctx-"));
@@ -15,9 +16,10 @@ async function setup() {
   const events = new EventBus();
   const xp = new XpStore(vault, { base: 500, gameMode: true });
   await xp.load();
+  const mounts = new MountRegistry();
   return {
     dir,
-    core: { vault, commands, events, xp },
+    core: { vault, commands, events, xp, mounts },
   };
 }
 
@@ -66,19 +68,46 @@ describe("createContext", () => {
     expect(state.xp).toBe(30);
   });
 
-  it("nav/ui/settings/theme APIs exist and return disposer fns", async () => {
+  it("nav.register appends to the mount registry and returns a disposer", async () => {
     const env = await setup();
     dir = env.dir;
     const ctx = createContext({ pluginId: "tasks", core: env.core });
-    const offNav = ctx.nav.register({ id: "tasks", label: "tasks" });
-    const offView = ctx.ui.registerView("tasks", async () => ({}));
+    const off = ctx.nav.register({ id: "tasks", label: "tasks" });
+    expect(env.core.mounts.listNavs()).toHaveLength(1);
+    expect(env.core.mounts.listNavs()[0]).toMatchObject({
+      pluginId: "tasks",
+      id: "tasks",
+      label: "tasks",
+    });
+    off();
+    expect(env.core.mounts.listNavs()).toHaveLength(0);
+  });
+
+  it("ui.registerView appends to the mount registry and returns a disposer", async () => {
+    const env = await setup();
+    dir = env.dir;
+    const ctx = createContext({ pluginId: "tasks", core: env.core });
+    const off = ctx.ui.registerView("tasks", async () => ({}));
+    expect(env.core.mounts.listViews()).toHaveLength(1);
+    expect(env.core.mounts.listViews()[0]).toMatchObject({
+      pluginId: "tasks",
+      screenId: "tasks",
+    });
+    off();
+    expect(env.core.mounts.listViews()).toHaveLength(0);
+  });
+
+  it("settings/theme stub APIs exist and return disposer fns", async () => {
+    const env = await setup();
+    dir = env.dir;
+    const ctx = createContext({ pluginId: "tasks", core: env.core });
     const offSeg = ctx.ui.registerStatuslineSegment({
       id: "seg",
       render: () => "x",
     });
     const offSettings = ctx.settings.register({});
     const offTheme = ctx.theme.registerPack("id", "css");
-    for (const off of [offNav, offView, offSeg, offSettings, offTheme]) {
+    for (const off of [offSeg, offSettings, offTheme]) {
       expect(typeof off).toBe("function");
       off();
     }

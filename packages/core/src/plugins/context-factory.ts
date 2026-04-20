@@ -8,12 +8,14 @@ import type { CommandRegistry } from "../commands/command-registry.js";
 import type { EventBus } from "../events/event-bus.js";
 import type { XpStore } from "../xp/xp-store.js";
 import { scopeVaultFs } from "../vault/scoped-vault-fs.js";
+import { MountRegistry } from "./mount-registry.js";
 
 export interface CoreHandles {
   vault: VaultFs;
   commands: CommandRegistry;
   events: EventBus;
   xp: XpStore;
+  mounts: MountRegistry;
 }
 
 export function createContext(params: {
@@ -54,12 +56,12 @@ export function createContext(params: {
       getState: () => core.xp.getState(),
       onChange: (listener) => core.xp.onChange(listener),
     },
-    // M2 stubs — M3 wires real implementations.
     nav: {
-      register: () => () => {},
+      register: (item) => core.mounts.addNav({ pluginId, ...item }),
     },
     ui: {
-      registerView: () => () => {},
+      registerView: (screenId, loader) =>
+        core.mounts.addView({ pluginId, screenId, loader }),
       registerStatuslineSegment: () => () => {},
     },
     settings: {
