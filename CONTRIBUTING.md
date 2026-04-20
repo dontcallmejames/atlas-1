@@ -54,6 +54,32 @@ export default class HelloPlugin {
 
 Reference: the three built-in plugins (`plugins/tasks`, `plugins/journal`, `plugins/habits`) cover the common patterns — command registration, vault IO, XP awards, UI views, and event subscriptions. Read those before reading `packages/core`; the SDK surface is the contract.
 
+## Plugin trust model
+
+Atlas 1 loads built-in plugins into the same webview as the console shell. Plugins therefore have the full privileges of the console: they can read and write to the DOM, call `fetch`, call every exposed Tauri IPC command, and they share memory with other plugins.
+
+The `ctx.vault` wrapper that each plugin receives is **defence-in-depth, not a sandbox**. It scopes ordinary vault calls to `plugins/<your-id>/`, but a hostile plugin can bypass it by importing `@tauri-apps/api/core` and calling `invoke("vault_read", { path: "..." })` directly. Treat the wrapper as a coordination tool (it keeps plugins from clobbering each other by accident), not as a security control.
+
+Atlas 1 is designed for forks where the author controls the full plugin set. Do not install a plugin you have not read. If you ship Atlas publicly, ship it as a template that users fork and customise — do not build a plugin marketplace on top of v1.
+
+**What a plugin can do:**
+- Read and write files anywhere in the vault via the IPC surface (bypassing `scopeVaultFs`).
+- Register arbitrary commands in the command registry.
+- Subscribe to every event on the bus.
+- Register global keyboard listeners on `window`.
+- Issue `fetch` calls to any network destination not blocked by CSP.
+
+**What CSP currently blocks:**
+- Loading scripts from domains other than `self` — a malicious plugin cannot inject a remote payload by adding a `<script src="...">`.
+- Connecting to arbitrary origins via `fetch` — only `self` and the Tauri IPC channels. This means a malicious plugin cannot exfiltrate data over `fetch` to an attacker-controlled domain without first being able to execute arbitrary script, which CSP blocks.
+
+**Planned hardening (v2+):**
+- Move plugins into Web Workers or an `<iframe srcdoc>` sandbox with a `postMessage`-only bridge.
+- Enforce `permissions` from `manifest.json` at the Rust IPC layer, not just in JS.
+- Restrict `set_vault_root` to onboarding so a plugin can't repoint the vault at runtime.
+
+If any of these ship earlier than v2, the above list should be trimmed accordingly.
+
 ## Tests
 
 ```bash
