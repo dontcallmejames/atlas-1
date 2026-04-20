@@ -59,6 +59,8 @@ async function boot(): Promise<void> {
       }, 60_000);
       // App is fully wired; fire the ready event so @on app:ready rituals can run.
       rt.events.emit("app:ready", undefined);
+      const { initGlobalShortcut } = await import("./boot/global-shortcut.js");
+      await initGlobalShortcut(rt.config.get().globalShortcut);
       try { localStorage.setItem("atlas1c-vault", tempConfig.get().vaultPath); } catch { /* ignore */ }
       showScreen("home");
       // eslint-disable-next-line no-console
@@ -80,6 +82,8 @@ async function boot(): Promise<void> {
   }, 60_000);
   // App is fully wired; fire the ready event so @on app:ready rituals can run.
   runtime.events.emit("app:ready", undefined);
+  const { initGlobalShortcut } = await import("./boot/global-shortcut.js");
+  await initGlobalShortcut(runtime.config.get().globalShortcut);
   try { localStorage.setItem("atlas1c-vault", vaultRoot); } catch { /* ignore */ }
 
   if (!runtime.config.get().onboarded) {
