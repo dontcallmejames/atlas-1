@@ -1,6 +1,6 @@
 {
   "name": "atlas-1",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "description": "Atlas 1 — an open-source life console (terminal × game HUD).",
   "license": "MIT",
