@@ -1,67 +1,71 @@
 # Atlas 1
 
-An open-source **life console** — terminal × game HUD for managing calendar, hobbies, health, work, play, and AI projects. Local-first, plain-text vault, plugin-based.
+> **Life console** — terminal × game HUD for managing calendar, hobbies, health, work, play, and AI projects. Local-first, plain-text vault, plugin-based. Open-source and forkable.
 
-> Status: v0.1.0 — M1 skeleton. The shell renders, plugins are stubs. See `docs/superpowers/plans/` for the roadmap.
+[![ci](https://github.com/dontcallmejames/atlas-1/actions/workflows/ci.yml/badge.svg)](https://github.com/dontcallmejames/atlas-1/actions/workflows/ci.yml)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-## Quick start
+## What it is
 
-**Prerequisites:**
-- Node 20+
-- pnpm 9+ (`npm i -g pnpm`)
-- Rust stable (https://rustup.rs)
-- Platform-specific Tauri prerequisites: https://v2.tauri.app/start/prerequisites
-  - **Windows:** Microsoft C++ Build Tools + WebView2 (ships with Win11).
-  - **macOS:** Xcode Command Line Tools.
-  - **Linux:** `libwebkit2gtk-4.1-dev`, `build-essential`, others — see link.
+Atlas 1 is a single desktop app that pulls the parts of your life worth tracking — tasks, journal, habits, rituals — into one keyboard-driven console. Everything lives as plain text in a folder you own. Everything extensible is a plugin.
 
-**Install:**
+Why a fork, not an account: your data stays local, your instance is yours, and the author's opinions (XP bars, HP/NRG/FOCUS, terminal aesthetic) are one fork away from whatever you prefer.
+
+## Install (released installer)
+
+Grab the latest installer for your OS from the [Releases page](https://github.com/dontcallmejames/atlas-1/releases).
+
+Atlas 1 is not code-signed. You'll see a warning:
+- **Windows:** SmartScreen → "More info" → "Run anyway".
+- **macOS:** Right-click the `.app` → Open → "Open anyway".
+- **Linux:** `chmod +x` the AppImage if needed.
+
+On first launch the onboarding wizard walks you through naming your instance and picking a vault folder.
+
+## Install (run from source)
 
 ```bash
+git clone https://github.com/dontcallmejames/atlas-1.git
+cd atlas-1
 pnpm install
-```
-
-**Run the desktop app in dev mode:**
-
-```bash
 pnpm tauri:dev
 ```
 
-A native window opens rendering the Life Console prototype. First run compiles the Rust backend (~2–5 min); subsequent runs are fast.
+**Prerequisites:** Node 20+, pnpm 9+, Rust stable, and your platform's Tauri prerequisites: https://v2.tauri.app/start/prerequisites.
 
-**Run just the webview in a browser:**
+## Use it
 
-```bash
-pnpm dev
-# open http://localhost:1420
-```
+Press `Ctrl+Shift+Space` (configurable) from anywhere to bring Atlas forward with the command bar focused. Some starter commands:
 
-**Build a distributable:**
+- `/tasks.add buy milk` — add a task. `/tasks.done 1`, `/tasks.list`.
+- `/journal.today` — open today's daily note.
+- `/habits.log meditate` — log a habit completion.
+- `/ritual morning` — run a ritual (chain of commands from a `.ritual` file).
+- `/go settings` — open the settings panel. `/go home`, `/go tasks`.
+
+## Fork it
+
+Atlas 1 is built to be forked. Your fork is your instance — change the plugin set, the aesthetic, the default rituals, the onboarding copy. The SDK contract (`packages/sdk/`) is stable; the runtime is yours to bend.
+
+Start here: [`CONTRIBUTING.md`](./CONTRIBUTING.md) — dev setup, repo layout, how to write a plugin.
+
+## Repo layout
+
+- `apps/console/` — webview UI (TypeScript).
+- `src-tauri/` — Rust backend.
+- `packages/sdk/` — plugin authoring API (start here for plugin authors).
+- `packages/core/` — runtime.
+- `plugins/{tasks,journal,habits}/` — built-in plugins.
+- `docs/superpowers/specs/` — design specs.
+- `docs/superpowers/plans/` — implementation plans.
+
+## Build a distributable yourself
 
 ```bash
 pnpm tauri:build
 # installers land in src-tauri/target/release/bundle/
 ```
 
-## Repo layout
-
-- `apps/console` — Lit/TypeScript webview (the UI).
-- `src-tauri` — Rust backend (window, FS, IPC).
-- `packages/sdk` — plugin authoring API (stub in M1).
-- `packages/core` — runtime: command registry, vault adapter, event bus, XP store (stub in M1).
-- `packages/ui` — shared Lit components (stub in M1).
-- `plugins/{tasks,journal,habits}` — built-in v1 plugins (stubs in M1).
-- `docs/superpowers/specs` — design specs.
-- `docs/superpowers/plans` — implementation plans.
-
-## Testing
-
-```bash
-pnpm test       # unit tests (none yet in M1)
-pnpm test:e2e   # Playwright smoke test
-pnpm typecheck  # tsc across all packages
-```
-
 ## License
 
-MIT — see `LICENSE`.
+MIT — see [LICENSE](./LICENSE).
