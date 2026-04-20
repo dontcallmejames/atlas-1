@@ -60,6 +60,47 @@ describe("serializeHabits", () => {
   });
 });
 
+describe("habits parser (no js-yaml)", () => {
+  it("parses the canonical habits.yaml shape", () => {
+    const yaml = `habits:
+  - id: workout
+    name: Workout
+    xp: 30
+  - id: read
+    name: Read 20 min
+    xp: 10
+`;
+    expect(parseHabits(yaml)).toEqual([
+      { id: "workout", name: "Workout", xp: 30 },
+      { id: "read", name: "Read 20 min", xp: 10 },
+    ]);
+  });
+
+  it("round-trips parse -> serialize -> parse", () => {
+    const habits = [
+      { id: "meditate", name: "Meditate", xp: 15 },
+      { id: "walk", name: "Evening walk", xp: 10 },
+    ];
+    expect(parseHabits(serializeHabits(habits))).toEqual(habits);
+  });
+
+  it("tolerates blank lines and trailing whitespace", () => {
+    const yaml = `habits:
+  - id: a
+    name: A
+    xp: 5
+
+  - id: b
+    name: B
+    xp: 7
+`;
+    expect(parseHabits(yaml)).toEqual([
+      { id: "a", name: "A", xp: 5 },
+      { id: "b", name: "B", xp: 7 },
+    ]);
+  });
+});
+
 describe("parseLog", () => {
   it("parses JSONL entries, one per line", () => {
     const src = [

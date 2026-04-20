@@ -1,5 +1,3 @@
-import yaml from "js-yaml";
-
 /**
  * @typedef {Object} Habit
  * @property {string} id
@@ -15,40 +13,76 @@ import yaml from "js-yaml";
  */
 
 /**
- * Parse habits.yaml.
+ * Parse a habits.yaml file with the canonical flat shape:
+ *   habits:
+ *     - id: <slug>
+ *       name: <string>
+ *       xp: <integer>
+ *
+ * Tolerates blank lines, comments, and trailing whitespace. Does NOT support
+ * nested keys, lists of strings, multiline strings, anchors, or any other
+ * YAML feature. If we ever need those, switch back to js-yaml.
+ *
+ * Returns [] for an empty/missing file or when no valid entries are found.
+ * Entries missing id or name are dropped. Missing xp defaults to 10.
+ *
  * @param {string} source
  * @returns {Habit[]}
  */
 export function parseHabits(source) {
   if (!source || !source.trim()) return [];
-  let parsed;
-  try {
-    parsed = yaml.load(source);
-  } catch {
-    return [];
+  const lines = source.split(/\r?\n/);
+  let i = 0;
+  while (i < lines.length && (!lines[i].trim() || lines[i].trim().startsWith("#"))) i++;
+  if (i >= lines.length || !/^habits\s*:\s*(\[\s*\])?\s*$/.test(lines[i])) return [];
+  i++;
+  const raw = [];
+  let current = null;
+  for (; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const dash = line.match(/^\s*-\s*(\w+)\s*:\s*(.*)$/);
+    if (dash) {
+      if (current) raw.push(current);
+      current = {};
+      current[dash[1]] = dash[2].trim();
+      continue;
+    }
+    const kv = line.match(/^\s*(\w+)\s*:\s*(.*)$/);
+    if (kv && current) {
+      current[kv[1]] = kv[2].trim();
+    }
   }
-  const list = (parsed && parsed.habits) || [];
-  if (!Array.isArray(list)) return [];
+  if (current) raw.push(current);
   const out = [];
-  for (const h of list) {
-    if (!h || typeof h !== "object") continue;
+  for (const h of raw) {
     if (typeof h.id !== "string" || typeof h.name !== "string") continue;
+    const xpRaw = h.xp;
+    const xpNum = typeof xpRaw === "string" && xpRaw !== "" ? Number(xpRaw) : NaN;
     out.push({
       id: h.id,
       name: h.name,
-      xp: typeof h.xp === "number" ? h.xp : 10,
+      xp: Number.isFinite(xpNum) ? xpNum : 10,
     });
   }
   return out;
 }
 
 /**
- * Serialize habits back to YAML.
+ * Serialize habits back to the canonical shape. Does not preserve comments
+ * or formatting from the original file.
  * @param {Habit[]} habits
  * @returns {string}
  */
 export function serializeHabits(habits) {
-  return yaml.dump({ habits });
+  const lines = ["habits:"];
+  for (const h of habits) {
+    lines.push(`  - id: ${h.id}`);
+    lines.push(`    name: ${h.name}`);
+    lines.push(`    xp: ${h.xp}`);
+  }
+  return lines.join("\n") + "\n";
 }
 
 /**

@@ -7,8 +7,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@atlas/core": "workspace:*",
-    "js-yaml": "^4.1.0"
+    "@atlas/core": "workspace:*"
   },
   "devDependencies": {
     "vitest": "^2.1.0"
