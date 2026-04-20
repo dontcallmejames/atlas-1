@@ -1,6 +1,6 @@
 [package]
 name = "atlas-1"
-version = "0.1.0"
+version = "0.8.0"
 description = "Atlas 1 — life console"
 authors = ["Jim Fordham"]
 edition = "2021"
