@@ -1,8 +1,11 @@
 export { CommandRegistry } from "./commands/command-registry.js";
 export { parseCommand } from "./commands/parser.js";
 export { EventBus } from "./events/event-bus.js";
-export { NodeVaultFs } from "./vault/node-vault-fs.js";
 export { scopeVaultFs } from "./vault/scoped-vault-fs.js";
+// NodeVaultFs is a Node-only driver (imports node:fs/promises). It is not
+// re-exported here to keep @atlas/core webview-safe. Import it from the deep
+// path in tests and Node tooling:
+//   import { NodeVaultFs } from "@atlas/core/src/vault/node-vault-fs.js";
 export { ConfigStore } from "./config/config-store.js";
 export { DEFAULT_CONFIG } from "./config/defaults.js";
 export { XpStore } from "./xp/xp-store.js";

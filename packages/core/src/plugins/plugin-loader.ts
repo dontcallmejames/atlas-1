@@ -1,5 +1,3 @@
-import { pathToFileURL } from "node:url";
-import { resolve } from "node:path";
 import type { Plugin, PluginContext } from "@atlas/sdk";
 import type { CoreHandles } from "./context-factory.js";
 import { createContext } from "./context-factory.js";
@@ -69,6 +67,11 @@ export class PluginLoader {
   }
 
   private async loadOne(entry: PluginsJsonEntry): Promise<LoadedPlugin | null> {
+    // Lazy-import Node built-ins so the webview bundle (browser/Tauri) does
+    // not pull them in at module-evaluation time. Plugin loading itself is
+    // only meaningful in a Node/Tauri runtime, not in the browser preview.
+    const { pathToFileURL } = await import("node:url");
+    const { resolve } = await import("node:path");
     const mainPath = resolve(this.options.vaultRoot, entry.path, "main.js");
     const moduleUrl = pathToFileURL(mainPath).href;
     let mod: { default: new () => Plugin };
