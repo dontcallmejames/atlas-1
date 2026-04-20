@@ -36,11 +36,28 @@ export function createContext(params: {
       return core.commands.register({ ...command, id: fullId });
     },
     unregister: (id) => core.commands.unregister(`${pluginId}.${id}`),
-    invoke: (id, args) =>
-      core.commands.invoke(id.includes(".") ? id : `${pluginId}.${id}`, args),
+    invoke: (id, args) => {
+      // Prefer the plugin-namespaced form when it exists so plugins can call
+      // their own commands by short name (`invoke("add")` → `tasks.add`).
+      // Fall back to the raw id so plugins can also call core / other-plugin
+      // commands like `invoke("go", ["home"])` without the context rewriting
+      // them to `journal.go`.
+      if (!id.includes(".")) {
+        const namespaced = `${pluginId}.${id}`;
+        if (core.commands.has(namespaced)) {
+          return core.commands.invoke(namespaced, args);
+        }
+      }
+      return core.commands.invoke(id, args);
+    },
     list: () => core.commands.list(),
-    has: (id) =>
-      core.commands.has(id.includes(".") ? id : `${pluginId}.${id}`),
+    has: (id) => {
+      if (!id.includes(".")) {
+        const namespaced = `${pluginId}.${id}`;
+        if (core.commands.has(namespaced)) return true;
+      }
+      return core.commands.has(id);
+    },
   };
 
   const events: EventApi = core.events;
