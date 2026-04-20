@@ -1,2 +1,6 @@
-// @atlas/sdk — plugin authoring surface. Populated in M2.
-export {};
+export * from "./plugin.js";
+export * from "./commands.js";
+export * from "./events.js";
+export * from "./vault.js";
+export * from "./xp.js";
+export * from "./config.js";
