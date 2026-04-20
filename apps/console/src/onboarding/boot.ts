@@ -69,7 +69,9 @@ export function initOnboarding(deps: BootDeps): () => void {
       r.appendChild(vv);
       el.appendChild(r);
     };
-    row("name", name);
+    const operatorName = (document.getElementById("bootOperator") as HTMLInputElement | null)?.value?.trim() || "(operator)";
+    row("instance", name);
+    row("operator", operatorName);
     row("modules", activeMods.join(" · ") || "(none)");
     row("vault", vaultLabel);
   };
@@ -113,6 +115,14 @@ export function initOnboarding(deps: BootDeps): () => void {
     config.update({ name: nameInput.value });
     nameInput.addEventListener("input", () => {
       config.update({ name: nameInput.value });
+      renderSummary();
+    });
+  }
+
+  const operatorInput = document.getElementById("bootOperator") as HTMLInputElement | null;
+  if (operatorInput) {
+    operatorInput.addEventListener("input", () => {
+      config.update({ operatorName: operatorInput.value.trim() });
       renderSummary();
     });
   }

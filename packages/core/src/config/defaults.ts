@@ -4,6 +4,7 @@ export const DEFAULT_CONFIG: AtlasConfig = {
   name: "Atlas 1",
   tagline: "life console",
   operator: "operator",
+  operatorName: "",
   theme: "light",
   accent: "#e85d3d",
   density: "comfy",

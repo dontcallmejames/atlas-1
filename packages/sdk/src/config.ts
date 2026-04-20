@@ -5,6 +5,7 @@ export interface AtlasConfig {
   name: string;
   tagline: string;
   operator: string;
+  operatorName: string;
   theme: ThemeMode;
   accent: string;
   density: Density;

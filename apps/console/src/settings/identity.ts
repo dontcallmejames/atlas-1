@@ -25,8 +25,13 @@ export function renderIdentity(el: HTMLElement, runtime: Runtime): void {
     void runtime.config.save();
   })));
 
-  el.appendChild(makeRow("operator", makeInput(c.operator, { placeholder: "handle", width: "220px" }, (v) => {
+  el.appendChild(makeRow("operator class", makeInput(c.operator, { placeholder: "handle", width: "220px" }, (v) => {
     runtime.config.update({ operator: v });
+    void runtime.config.save();
+  })));
+
+  el.appendChild(makeRow("your name", makeInput(c.operatorName, { placeholder: "used in greetings", width: "220px" }, (v) => {
+    runtime.config.update({ operatorName: v.trim() });
     void runtime.config.save();
   })));
 }

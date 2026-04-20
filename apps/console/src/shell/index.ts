@@ -5,6 +5,7 @@ import { initNav } from "./nav.js";
 import { initCmdbar } from "./cmdbar.js";
 import { initStatusline } from "./statusline.js";
 import { initTweaks } from "./tweaks.js";
+import { initHomeGreeting } from "./home.js";
 import { initMountPoints } from "./mount-points.js";
 import { registerCoreCommands } from "./core-commands.js";
 import { initSettings } from "../settings/settings-router.js";
@@ -18,5 +19,6 @@ export async function initShell(runtime: Runtime): Promise<void> {
   initCmdbar(runtime);
   initStatusline(runtime);
   initTweaks(runtime);
+  initHomeGreeting(runtime);
   initSettings(runtime);
 }

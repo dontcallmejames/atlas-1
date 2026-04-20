@@ -12,6 +12,8 @@
   --accent-2: #3d7ae8;
   --accent-3: #f0c850;
   --accent-green: #2d7a3d;
+  --scrollbar-thumb: rgba(26, 26, 26, 0.18);
+  --scrollbar-thumb-hover: rgba(26, 26, 26, 0.38);
   --rule: 1.5px;
   --rule-bold: 2.5px;
 }
@@ -26,6 +28,8 @@
   --accent-2: #6aa0ff;
   --accent-3: #ffd864;
   --accent-green: #66ff88;
+  --scrollbar-thumb: rgba(200, 230, 200, 0.18);
+  --scrollbar-thumb-hover: rgba(200, 230, 200, 0.38);
 }
 
 [data-theme="dark"] body {
@@ -41,6 +45,12 @@ html, body {
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-size: 13px;
   line-height: 1.5;
+  height: 100vh;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
 }
 
 .hand { font-family: 'JetBrains Mono', 'Courier New', monospace; font-weight: 600; letter-spacing: -0.01em; }
@@ -79,9 +89,21 @@ html, body {
 .chrome .title-group { display: flex; align-items: center; gap: 14px; }
 .chrome .brand {
   font-weight: 700;
-  letter-spacing: 0.06em;
-  border: var(--rule-bold) solid var(--line);
+  letter-spacing: 0.08em;
   padding: 3px 10px;
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 18px;
+  line-height: 1;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.chrome .brand:hover { color: var(--accent); }
+.chrome .brand:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 .chrome .sub { color: var(--muted); font-size: 11px; }
 .chrome .screens { display: flex; gap: 2px; }
@@ -109,8 +131,8 @@ html, body {
 .chrome .chip.on { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 
 /* ---------- Screen frame ---------- */
-.screen { display: none; }
-.screen.on { display: block; }
+.screen { display: none; flex: 1; min-height: 0; overflow: hidden; }
+.screen.on { display: flex; flex-direction: column; }
 
 /* status line under chrome */
 .statusline {
@@ -151,7 +173,8 @@ html, body {
 .term-grid {
   display: grid;
   grid-template-columns: 220px 1fr 280px;
-  min-height: calc(100vh - 60px);
+  flex: 1;
+  min-height: 0;
   position: relative;
 }
 .pane {
@@ -159,6 +182,7 @@ html, body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 .pane:last-child { border-right: none; }
 
@@ -183,6 +207,7 @@ html, body {
   padding: 10px;
   overflow-y: auto;
   flex: 1;
+  min-height: 0;
 }
 
 /* ---------- Module list (left) ---------- */
@@ -233,8 +258,64 @@ html, body {
 .center-scroll {
   padding: 16px 20px 60px;
   overflow-y: auto;
-  max-height: calc(100vh - 86px);
+  flex: 1;
+  min-height: 0;
   font-size: 13px;
+}
+
+/* ---------- Custom scrollbars (themed, subtle, global) ---------- */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+/* WebKit / Chromium (Tauri) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:active {
+  background: var(--accent);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Auto-hide thumb on pane scroll containers when not interacting. */
+.pane-body::-webkit-scrollbar-thumb,
+.center-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  background-clip: padding-box;
+  transition: background 0.15s ease-out;
+}
+.pane-body:hover::-webkit-scrollbar-thumb,
+.center-scroll:hover::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  background-clip: padding-box;
+}
+.pane-body::-webkit-scrollbar-thumb:hover,
+.center-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
+.pane-body::-webkit-scrollbar-thumb:active,
+.center-scroll::-webkit-scrollbar-thumb:active {
+  background: var(--accent);
+  background-clip: padding-box;
 }
 
 .ascii-banner {
@@ -553,8 +634,8 @@ html, body {
 
 /* ---------- Command bar (bottom) ---------- */
 .cmdbar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
+  position: relative;
+  flex: 0 0 auto;
   background: var(--ink); color: var(--paper);
   padding: 7px 16px;
   font-size: 12px;
@@ -1521,14 +1602,15 @@ html, body {
   padding: 2px 6px;
   width: 130px;
 }
-.tweak-row .seg { display: flex; gap: 2px; }
+.tweak-row .seg { display: flex; flex-wrap: wrap; gap: 3px; justify-content: flex-end; max-width: 160px; }
 .tweak-row .seg button {
-  font: inherit; font-size: 10px;
-  background: transparent; color: var(--ink);
+  font: inherit; font-size: 11px;
+  background: var(--paper); color: var(--ink);
   border: 1px solid var(--line);
-  padding: 2px 6px; cursor: pointer;
+  padding: 3px 8px; cursor: pointer;
 }
-.tweak-row .seg button.on { background: var(--ink); color: var(--paper); }
+.tweak-row .seg button:hover:not(.on) { background: var(--paper-2); }
+.tweak-row .seg button.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
 /* Tiny bar-chart rows */
 .barline {

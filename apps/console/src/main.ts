@@ -30,7 +30,26 @@ async function startRuntime(vault: VaultFs, vaultRoot: string): Promise<Runtime>
   runtime.events.emit("app:ready", undefined);
   await initGlobalShortcut(runtime.config.get().globalShortcut);
   try { localStorage.setItem("atlas1c-vault", vaultRoot); } catch { /* ignore */ }
+
+  // Reflect the instance name in the OS window title; update on config change.
+  void syncWindowTitle(runtime);
+
   return runtime;
+}
+
+async function syncWindowTitle(runtime: Runtime): Promise<void> {
+  try {
+    const { getCurrentWindow } = await import("@tauri-apps/api/window");
+    const win = getCurrentWindow();
+    const apply = (): void => {
+      const name = runtime.config.get().name?.trim() || "Atlas 1";
+      void win.setTitle(name);
+    };
+    apply();
+    runtime.config.subscribe(apply);
+  } catch {
+    // Not running under Tauri, or window API unavailable. Ignore.
+  }
 }
 
 async function boot(): Promise<void> {

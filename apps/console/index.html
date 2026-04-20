@@ -14,8 +14,8 @@
 <!-- ================ TOP CHROME ================ -->
 <header class="chrome">
   <div class="title-group">
-    <div class="brand" id="brandMark">ATLAS·1</div>
-    <div class="sub">life console <span style="color:var(--accent);">v0.1.0</span> · <span id="clockStr">sat · apr 18 · 09:14</span></div>
+    <button class="brand" id="brandMark" type="button" title="go home" aria-label="go home">┌ ATLAS·1 ┐</button>
+    <div class="sub"><span style="color:var(--accent);">v0.1.0</span> · <span id="clockStr">sat · apr 18 · 09:14</span></div>
   </div>
   <nav class="screens" id="screenNav">
     <button data-scr="boot">boot</button>
@@ -34,7 +34,6 @@
 
 <!-- ================ STATUS LINE ================ -->
 <div class="statusline" id="statusline">
-  <div class="seg inv"><span>ATLAS·1</span></div>
   <div class="seg"><span class="k">LVL</span><strong>17</strong><span class="k">XP</span><span class="mbar"><span class="f accent" style="right:22%;"></span></span><span>2340/3000</span></div>
   <div class="seg"><span class="k">HP</span><span class="mbar"><span class="f green" style="right:22%;"></span></span><span>78</span></div>
   <div class="seg"><span class="k">NRG</span><span class="mbar"><span class="f" style="right:36%;"></span></span><span>64</span></div>
@@ -87,14 +86,8 @@
       <div class="pane-hdr"><span>~/today</span><span class="nn">[2] · 80×48</span></div>
       <div class="center-scroll">
 
-        <pre class="ascii-banner">  ┌──────────────────────────────────────────────────────┐
-  │   ╔═╗ ╔╦╗ ╦   ╔═╗ ╔═╗    ·   LIFE  CONSOLE           │
-  │   ╠═╣  ║  ║   ╠═╣ ╚═╗    ·   v0.1.0 · sat apr 18     │
-  │   ╩ ╩  ╩  ╩═╝ ╩ ╩ ╚═╝  · 1  ·   lvl 17 · 2340 xp     │
-  └──────────────────────────────────────────────────────┘</pre>
-
         <div class="greet-line">
-          <span class="hand" style="font-size:22px; color:var(--ink);">good morning, alex.</span>
+          <span class="hand" style="font-size:22px; color:var(--ink);">good morning, operator.</span>
           &nbsp;·&nbsp; you're <span class="lvl">lvl 17</span> · <span style="color:var(--accent-green);">+240 xp</span> since wed ·
           streak <strong>12d</strong>
         </div>
@@ -345,9 +338,9 @@
     <!-- Q1: name -->
     <div class="ask onb-panel" data-step="0">
       <div class="q">› [01/06] what should i call this console?</div>
-      <div class="hint">// this becomes your product name — appears everywhere. renameable later via <span class="kbd">:rename</span>.</div>
+      <div class="hint">// this becomes your product name — appears in the header, title bar, and statusline. renameable later in settings.</div>
       <div style="margin-top:6px;">
-        <span class="lbl">name ❯</span>
+        <span class="lbl">instance ❯</span>
         <input type="text" id="bootName" value="Atlas 1"
           style="background:transparent; border:none; border-bottom:1.5px solid var(--accent); font:inherit; font-size:16px; color:var(--ink); padding:2px 4px; width:220px; outline:none;" />
         <span class="blink" style="color:var(--accent);">█</span>
@@ -359,6 +352,14 @@
         <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">hq</span>
         <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">bridge</span>
         <span class="mod-chip" style="display:inline-block; margin:2px 2px; padding:1px 6px; font-size:10px; cursor:pointer;">northstar</span>
+      </div>
+      <div class="q" style="margin-top:18px;">› and what should i call you?</div>
+      <div class="hint">// used for greetings. leave blank for a generic "operator".</div>
+      <div style="margin-top:6px;">
+        <span class="lbl">operator ❯</span>
+        <input type="text" id="bootOperator" placeholder="your name"
+          style="background:transparent; border:none; border-bottom:1.5px solid var(--accent); font:inherit; font-size:16px; color:var(--ink); padding:2px 4px; width:220px; outline:none;" />
+        <span class="blink" style="color:var(--accent);">█</span>
       </div>
     </div>
 
@@ -1769,14 +1770,18 @@ branch: main  ·  last push: 14m ago  ·  12 commits ahead</div>
 <div class="tweaks" id="tweaksPanel">
   <h4>Tweaks</h4>
   <div class="tweak-row">
-    <label>name</label>
+    <label>instance</label>
     <input type="text" id="tw-name" value="Atlas 1" />
+  </div>
+  <div class="tweak-row">
+    <label>operator</label>
+    <input type="text" id="tw-operator" placeholder="your name" />
   </div>
   <div class="tweak-row">
     <label>theme</label>
     <div class="seg">
       <button data-theme="light" class="on">light</button>
-      <button data-theme="dark">phosphor</button>
+      <button data-theme="dark">dark</button>
     </div>
   </div>
   <div class="tweak-row">

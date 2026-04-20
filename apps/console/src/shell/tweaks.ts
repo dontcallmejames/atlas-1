@@ -2,9 +2,17 @@ import type { Runtime } from "@atlas/core";
 
 /**
  * Wire the floating tweaks panel (#tweaksPanel) to the ConfigStore.
- * The panel has inputs for: name (#tw-name), accent swatch buttons (.tw-accent[data-c]),
- * CRT checkbox (#tw-crt), game-mode checkbox (#tw-game), density select (#tw-density).
- * The trigger is the #tweakBtn chip in top chrome.
+ *
+ * Panel controls (HTML in apps/console/index.html):
+ *  - #tw-name                 instance name input
+ *  - #tw-operator             operator (person) name input
+ *  - button[data-theme]       theme toggle (light | dark)
+ *  - button[data-accent]      accent color swatches
+ *  - button[data-crt]         CRT scanlines (on | off)
+ *  - button[data-game]        game layer (on | off)
+ *
+ * The trigger is the #tweakBtn chip in the top chrome. The panel shows when
+ * #tweaksPanel has the `on` class (see .tweaks.on in console.css).
  */
 export function initTweaks(runtime: Runtime): () => void {
   const panel = document.getElementById("tweaksPanel");
@@ -12,27 +20,35 @@ export function initTweaks(runtime: Runtime): () => void {
   if (!panel || !trigger) return () => {};
 
   const togglePanel = (): void => {
-    panel.classList.toggle("open");
+    panel.classList.toggle("on");
   };
   trigger.addEventListener("click", togglePanel);
 
   const nameInput = document.getElementById("tw-name") as HTMLInputElement | null;
-  const crtInput = document.getElementById("tw-crt") as HTMLInputElement | null;
-  const gameInput = document.getElementById("tw-game") as HTMLInputElement | null;
-  const densityInput = document.getElementById("tw-density") as HTMLSelectElement | null;
-  const accentBtns = document.querySelectorAll<HTMLButtonElement>(".tw-accent[data-c]");
+  const operatorInput = document.getElementById("tw-operator") as HTMLInputElement | null;
+  const themeBtns = panel.querySelectorAll<HTMLButtonElement>("button[data-theme]");
+  const accentBtns = panel.querySelectorAll<HTMLButtonElement>("button[data-accent]");
+  const crtBtns = panel.querySelectorAll<HTMLButtonElement>("button[data-crt]");
+  const gameBtns = panel.querySelectorAll<HTMLButtonElement>("button[data-game]");
 
+  // Pull current state into the panel so .on reflects reality.
   const applyFromConfig = (): void => {
     const c = runtime.config.get();
-    if (nameInput) nameInput.value = c.name;
-    if (crtInput) crtInput.checked = c.crt;
-    if (gameInput) gameInput.checked = c.gameMode;
-    if (densityInput) densityInput.value = c.density;
+    if (nameInput && document.activeElement !== nameInput) nameInput.value = c.name;
+    if (operatorInput && document.activeElement !== operatorInput) operatorInput.value = c.operatorName;
     document.documentElement.style.setProperty("--accent", c.accent);
-    accentBtns.forEach((b) => b.classList.toggle("on", b.dataset.c === c.accent));
-    // Also update the brand mark since name shows there
+
+    themeBtns.forEach((b) => b.classList.toggle("on", b.dataset.theme === c.theme));
+    accentBtns.forEach((b) => b.classList.toggle("on", b.dataset.accent === c.accent));
+    crtBtns.forEach((b) => b.classList.toggle("on", (b.dataset.crt === "on") === c.crt));
+    gameBtns.forEach((b) => b.classList.toggle("on", (b.dataset.game === "on") === c.gameMode));
+
+    // Update the brand mark with the ASCII bracket treatment.
     const brand = document.getElementById("brandMark");
-    if (brand) brand.textContent = c.name.toUpperCase().replace(/\s+/g, "\u00B7");
+    if (brand) {
+      const label = c.name.toUpperCase().replace(/\s+/g, "\u00B7");
+      brand.textContent = `\u250C ${label} \u2510`;
+    }
   };
   applyFromConfig();
   const offConfig = runtime.config.subscribe(applyFromConfig);
@@ -49,29 +65,34 @@ export function initTweaks(runtime: Runtime): () => void {
     nameInput.addEventListener("input", h);
     handlers.push({ el: nameInput, type: "input", h });
   }
-  if (crtInput) {
-    const h: EventListener = () => saveAnd({ crt: crtInput.checked });
-    crtInput.addEventListener("change", h);
-    handlers.push({ el: crtInput, type: "change", h });
+  if (operatorInput) {
+    const h: EventListener = () => saveAnd({ operatorName: operatorInput.value.trim() });
+    operatorInput.addEventListener("input", h);
+    handlers.push({ el: operatorInput, type: "input", h });
   }
-  if (gameInput) {
-    const h: EventListener = () => saveAnd({ gameMode: gameInput.checked });
-    gameInput.addEventListener("change", h);
-    handlers.push({ el: gameInput, type: "change", h });
-  }
-  if (densityInput) {
+  themeBtns.forEach((btn) => {
     const h: EventListener = () => {
-      const v = densityInput.value;
-      if (v === "comfy" || v === "compact") saveAnd({ density: v });
+      const v = btn.dataset.theme;
+      if (v === "light" || v === "dark") saveAnd({ theme: v });
     };
-    densityInput.addEventListener("change", h);
-    handlers.push({ el: densityInput, type: "change", h });
-  }
+    btn.addEventListener("click", h);
+    handlers.push({ el: btn, type: "click", h });
+  });
   accentBtns.forEach((btn) => {
     const h: EventListener = () => {
-      const c = btn.dataset.c;
-      if (c) saveAnd({ accent: c });
+      const v = btn.dataset.accent;
+      if (v) saveAnd({ accent: v });
     };
+    btn.addEventListener("click", h);
+    handlers.push({ el: btn, type: "click", h });
+  });
+  crtBtns.forEach((btn) => {
+    const h: EventListener = () => saveAnd({ crt: btn.dataset.crt === "on" });
+    btn.addEventListener("click", h);
+    handlers.push({ el: btn, type: "click", h });
+  });
+  gameBtns.forEach((btn) => {
+    const h: EventListener = () => saveAnd({ gameMode: btn.dataset.game === "on" });
     btn.addEventListener("click", h);
     handlers.push({ el: btn, type: "click", h });
   });
