@@ -14,6 +14,8 @@ export { PluginLoader } from "./plugins/plugin-loader.js";
 export { createContext } from "./plugins/context-factory.js";
 export { MountRegistry } from "./plugins/mount-registry.js";
 export type { NavItem, ScreenView } from "./plugins/mount-registry.js";
+export { loadPluginState, savePluginState, setPluginEnabled } from "./plugins/plugin-state.js";
+export type { PluginState, PluginStateEntry } from "./plugins/plugin-state.js";
 export { createRuntime } from "./runtime.js";
 export type { Runtime, RuntimeOptions } from "./runtime.js";
 export { RitualRegistry } from "./rituals/registry.js";
